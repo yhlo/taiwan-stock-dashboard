@@ -1,0 +1,972 @@
+import os
+import sys
+import json
+import time
+import datetime
+import requests
+import pandas as pd
+import io
+
+# Ensure directories exist
+os.makedirs("data", exist_ok=True)
+os.makedirs("data/cache", exist_ok=True)
+
+def is_in_ipython():
+    return False
+
+def western_to_roc_date(date_str):
+    year = int(date_str[:4])
+    month = date_str[4:6]
+    day = date_str[6:]
+    roc_year = year - 1911
+    return f"{roc_year}/{month}/{day}"
+
+def fetch_data_with_cache(url, cache_path, is_today=False, delay=0.8):
+    if os.path.exists(cache_path):
+        with open(cache_path, "r", encoding="utf-8") as f:
+            try:
+                data = json.load(f)
+                if data.get("stat") == "NO_DATA":
+                    pass
+                else:
+                    return data
+            except Exception:
+                pass
+                
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36"
+    }
+    
+    url_name = url.split("?")[0].split("/")[-1]
+    print(f"Fetching {url_name}...")
+    time.sleep(delay)
+    
+    try:
+        response = requests.get(url, headers=headers, timeout=15)
+        if response.status_code == 200:
+            data = response.json()
+            
+            has_data = False
+            if "stat" in data and data["stat"] == "OK" and "data" in data and len(data["data"]) > 0:
+                has_data = True
+            elif "aaData" in data and len(data["aaData"]) > 0:
+                has_data = True
+            elif "tables" in data and len(data["tables"]) > 0 and len(data["tables"][0].get("data", [])) > 0:
+                has_data = True
+                
+            if has_data:
+                with open(cache_path, "w", encoding="utf-8") as f:
+                    json.dump(data, f, ensure_ascii=False, indent=2)
+                return data
+            else:
+                if not is_today:
+                    no_data_content = {"stat": "NO_DATA"}
+                    with open(cache_path, "w", encoding="utf-8") as f:
+                        json.dump(no_data_content, f, ensure_ascii=False, indent=2)
+                    return no_data_content
+                return data
+    except Exception as e:
+        print(f"Error fetching {url_name}: {e}", file=sys.stderr)
+    return None
+
+def parse_twse_t86(api_response):
+    fields = [f.strip() for f in api_response.get("fields", [])]
+    data = api_response.get("data", [])
+    
+    try:
+        idx_symbol = fields.index("證券代號")
+    except ValueError:
+        idx_symbol = 0
+    try:
+        idx_name = fields.index("證券名稱")
+    except ValueError:
+        idx_name = 1
+        
+    idx_foreign = -1
+    for f in ["外陸資買賣超股數(不含外資自營商)", "外陸資買賣超股數", "外資及陸資買賣超股數(不含外資自營商)", "外資及陸資買賣超股數"]:
+        if f in fields:
+            idx_foreign = fields.index(f)
+            break
+    if idx_foreign == -1:
+        idx_foreign = 4
+        
+    idx_trust = -1
+    if "投信買賣超股數" in fields:
+        idx_trust = fields.index("投信買賣超股數")
+    else:
+        idx_trust = 10
+        
+    idx_dealer = -1
+    if "自營商買賣超股數" in fields:
+        idx_dealer = fields.index("自營商買賣超股數")
+    else:
+        idx_dealer = 11
+        
+    idx_total = -1
+    if "三大法人買賣超股數" in fields:
+        idx_total = fields.index("三大法人買賣超股數")
+    else:
+        idx_total = 18
+        
+    rows = []
+    for r in data:
+        def clean(val):
+            if val is None:
+                return 0
+            val_str = str(val).replace(",", "").strip()
+            try:
+                return int(val_str)
+            except ValueError:
+                return 0
+                
+        def get_val_safe(row, idx):
+            if idx >= 0 and idx < len(row):
+                return clean(row[idx])
+            return 0
+            
+        symbol = str(r[idx_symbol]).strip() if idx_symbol < len(r) else ""
+        name = str(r[idx_name]).strip() if idx_name < len(r) else ""
+        
+        foreign = get_val_safe(r, idx_foreign)
+        trust = get_val_safe(r, idx_trust)
+        dealer = get_val_safe(r, idx_dealer)
+        total = get_val_safe(r, idx_total)
+        
+        rows.append({
+            "Symbol": symbol,
+            "Name": name,
+            "Foreign": foreign,
+            "Trust": trust,
+            "Dealer": dealer,
+            "Total": total
+        })
+    return pd.DataFrame(rows)
+
+def parse_tpex_t86(api_response):
+    data = []
+    if "tables" in api_response and len(api_response["tables"]) > 0:
+        data = api_response["tables"][0].get("data", [])
+    elif "aaData" in api_response:
+        data = api_response["aaData"]
+        
+    rows = []
+    for r in data:
+        if len(r) >= 24:
+            symbol = str(r[0]).strip()
+            name = str(r[1]).strip()
+            
+            def clean(val):
+                if val is None:
+                    return 0
+                val_str = str(val).replace(",", "").strip()
+                try:
+                    return int(val_str)
+                except ValueError:
+                    return 0
+                    
+            foreign = clean(r[10])
+            trust = clean(r[13])
+            dealer = clean(r[22])
+            total = clean(r[23])
+            
+            rows.append({
+                "Symbol": symbol,
+                "Name": name,
+                "Foreign": foreign,
+                "Trust": trust,
+                "Dealer": dealer,
+                "Total": total
+            })
+        elif len(r) >= 19:
+            symbol = str(r[0]).strip()
+            name = str(r[1]).strip()
+            
+            def clean(val):
+                if val is None:
+                    return 0
+                val_str = str(val).replace(",", "").strip()
+                try:
+                    return int(val_str)
+                except ValueError:
+                    return 0
+                    
+            foreign = clean(r[4])
+            trust = clean(r[10])
+            dealer = clean(r[17])
+            total = clean(r[18])
+            
+            rows.append({
+                "Symbol": symbol,
+                "Name": name,
+                "Foreign": foreign,
+                "Trust": trust,
+                "Dealer": dealer,
+                "Total": total
+            })
+    return pd.DataFrame(rows)
+
+def load_t86_both_markets(date_str, cache_dir, is_today=False):
+    twse_url = f"https://www.twse.com.tw/rwd/zh/fund/T86?response=json&date={date_str}&selectType=ALLBUT0999"
+    twse_cache = os.path.join(cache_dir, f"T86_{date_str}.json")
+    twse_data = fetch_data_with_cache(twse_url, twse_cache, is_today)
+    
+    if twse_data and twse_data.get("stat") == "NO_DATA":
+        if not is_today:
+            tpex_cache = os.path.join(cache_dir, f"TPEX_T86_{date_str}.json")
+            if not os.path.exists(tpex_cache):
+                try:
+                    with open(tpex_cache, "w", encoding="utf-8") as f:
+                        json.dump({"stat": "NO_DATA"}, f)
+                except Exception:
+                    pass
+        return None
+
+    roc_date = western_to_roc_date(date_str)
+    tpex_url = f"https://www.tpex.org.tw/web/stock/3insti/daily_trade/3itrade_hedge_result.php?l=zh-tw&o=json&se=EW&t=D&d={roc_date}"
+    tpex_cache = os.path.join(cache_dir, f"TPEX_T86_{date_str}.json")
+    tpex_data = fetch_data_with_cache(tpex_url, tpex_cache, is_today)
+    
+    has_twse = twse_data and twse_data.get("stat") == "OK" and "data" in twse_data and len(twse_data["data"]) > 0
+    has_tpex = False
+    if tpex_data:
+        if "aaData" in tpex_data and len(tpex_data["aaData"]) > 0:
+            has_tpex = True
+        elif "tables" in tpex_data and len(tpex_data["tables"]) > 0 and len(tpex_data["tables"][0].get("data", [])) > 0:
+            has_tpex = True
+            
+    if not (has_twse or has_tpex):
+        return None
+        
+    df_twse = pd.DataFrame()
+    if has_twse:
+        df_twse = parse_twse_t86(twse_data)
+        df_twse["Market"] = "上市 (TWSE)"
+        
+    df_tpex = pd.DataFrame()
+    if has_tpex:
+        df_tpex = parse_tpex_t86(tpex_data)
+        df_tpex["Market"] = "上櫃 (TPEx)"
+        
+    df_combined = pd.concat([df_twse, df_tpex], ignore_index=True)
+    return df_combined
+
+def find_latest_trading_days(n=20):
+    import yfinance as yf
+    print("Pre-checking trading days using Yahoo Finance...")
+    try:
+        ticker = yf.Ticker("^TWII")
+        hist = ticker.history(period="60d")
+        if not hist.empty:
+            dates = hist.index.strftime("%Y%m%d").tolist()
+            dates.sort(reverse=True)
+            return dates[:n]
+    except Exception as e:
+        print(f"Error fetching from yfinance: {e}, falling back to manual date generation", file=sys.stderr)
+        
+    trading_days = []
+    current_date = datetime.date.today()
+    if current_date.weekday() == 5:
+        current_date -= datetime.timedelta(days=1)
+    elif current_date.weekday() == 6:
+        current_date -= datetime.timedelta(days=2)
+        
+    checked = 0
+    while len(trading_days) < n and checked < n * 3:
+        if current_date.weekday() not in (5, 6):
+            trading_days.append(current_date.strftime("%Y%m%d"))
+        current_date -= datetime.timedelta(days=1)
+        checked += 1
+    return trading_days
+
+def calculate_streaks(df_list):
+    all_symbols = set()
+    symbol_to_name = {}
+    symbol_to_market = {}
+    
+    for df in df_list:
+        for _, row in df.iterrows():
+            sym = row["Symbol"]
+            all_symbols.add(sym)
+            symbol_to_name[sym] = row["Name"]
+            symbol_to_market[sym] = row["Market"]
+            
+    symbol_data = {}
+    for sym in all_symbols:
+        symbol_data[sym] = {
+            "Foreign": [0] * len(df_list),
+            "Trust": [0] * len(df_list),
+            "Dealer": [0] * len(df_list),
+            "Total": [0] * len(df_list)
+        }
+        
+    for i, df in enumerate(df_list):
+        df_indexed = df.set_index("Symbol")
+        for sym in all_symbols:
+            if sym in df_indexed.index:
+                row = df_indexed.loc[sym]
+                if isinstance(row, pd.DataFrame):
+                    row = row.iloc[0]
+                symbol_data[sym]["Foreign"][i] = row["Foreign"]
+                symbol_data[sym]["Trust"][i] = row["Trust"]
+                symbol_data[sym]["Dealer"][i] = row["Dealer"]
+                symbol_data[sym]["Total"][i] = row["Total"]
+                
+    def get_streak_days(vals):
+        if not vals or vals[0] == 0:
+            return 0
+        is_buying = vals[0] > 0
+        streak = 0
+        for val in vals:
+            if is_buying and val > 0:
+                streak += 1
+            elif not is_buying and val < 0:
+                streak -= 1
+            else:
+                break
+        return streak
+
+    streak_results = []
+    for sym in all_symbols:
+        data = symbol_data[sym]
+        foreign_streak = get_streak_days(data["Foreign"])
+        trust_streak = get_streak_days(data["Trust"])
+        dealer_streak = get_streak_days(data["Dealer"])
+        total_streak = get_streak_days(data["Total"])
+        
+        streak_results.append({
+            "Symbol": sym,
+            "Name": symbol_to_name[sym],
+            "Market": symbol_to_market[sym],
+            "Foreign_Streak": foreign_streak,
+            "Foreign_Latest": data["Foreign"][0],
+            "Trust_Streak": trust_streak,
+            "Trust_Latest": data["Trust"][0],
+            "Dealer_Streak": dealer_streak,
+            "Dealer_Latest": data["Dealer"][0],
+            "Total_Streak": total_streak,
+            "Total_Latest": data["Total"][0]
+        })
+        
+    return pd.DataFrame(streak_results)
+
+def fetch_taifex_futures_oi(date_str, cache_dir):
+    cache_path = os.path.join(cache_dir, f"futures_oi_{date_str}.json")
+    if os.path.exists(cache_path):
+        with open(cache_path, "r", encoding="utf-8") as f:
+            try:
+                return json.load(f)
+            except Exception:
+                pass
+                
+    formatted_date = f"{date_str[:4]}/{date_str[4:6]}/{date_str[6:]}"
+    url = "https://www.taifex.com.tw/cht/3/futContractsDate"
+    payload = {"queryDate": formatted_date}
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36"
+    }
+    
+    print(f"Fetching Futures OI from TAIFEX for {formatted_date}...")
+    time.sleep(1.0)
+    
+    try:
+        from bs4 import BeautifulSoup
+        res = requests.post(url, data=payload, headers=headers, timeout=15)
+        if res.status_code == 200:
+            soup = BeautifulSoup(res.text, "html.parser")
+            rows = soup.find_all("tr")
+            for i, r in enumerate(rows):
+                cells = [td.get_text().strip() for td in r.find_all(["td", "th"])]
+                if len(cells) > 1 and "臺股期貨" in cells[1]:
+                    def clean_int(val):
+                        return int(val.replace(",", "").strip())
+                    
+                    dealers_long = clean_int(cells[9])
+                    dealers_short = clean_int(cells[11])
+                    dealers_net = clean_int(cells[13])
+                    
+                    cells_trust = [td.get_text().strip() for td in rows[i+1].find_all(["td", "th"])]
+                    trust_long = clean_int(cells_trust[7])
+                    trust_short = clean_int(cells_trust[9])
+                    trust_net = clean_int(cells_trust[11])
+                    
+                    cells_foreign = [td.get_text().strip() for td in rows[i+2].find_all(["td", "th"])]
+                    foreign_long = clean_int(cells_foreign[7])
+                    foreign_short = clean_int(cells_foreign[9])
+                    foreign_net = clean_int(cells_foreign[11])
+                    
+                    result = {
+                        "Date": date_str,
+                        "Dealers": {"Long": dealers_long, "Short": dealers_short, "Net": dealers_net},
+                        "Trust": {"Long": trust_long, "Short": trust_short, "Net": trust_net},
+                        "Foreign": {"Long": foreign_long, "Short": foreign_short, "Net": foreign_net}
+                    }
+                    
+                    with open(cache_path, "w", encoding="utf-8") as f:
+                        json.dump(result, f, ensure_ascii=False, indent=2)
+                    return result
+    except Exception as e:
+        print(f"Error parsing futures OI: {e}", file=sys.stderr)
+    return None
+
+def fetch_taifex_options_max_oi(date_str, cache_dir):
+    cache_path = os.path.join(cache_dir, f"options_oi_{date_str}.json")
+    if os.path.exists(cache_path):
+        with open(cache_path, "r", encoding="utf-8") as f:
+            try:
+                return json.load(f)
+            except Exception:
+                pass
+                
+    formatted_date = f"{date_str[:4]}/{date_str[4:6]}/{date_str[6:]}"
+    url = "https://www.taifex.com.tw/cht/3/optDailyMarketReport"
+    payload = {
+        "queryDate": formatted_date,
+        "commodity_id": "TXO",
+        "MarketCode": "0"
+    }
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36"
+    }
+    
+    print(f"Fetching Options OI from TAIFEX for {formatted_date}...")
+    time.sleep(1.0)
+    
+    try:
+        from bs4 import BeautifulSoup
+        from collections import defaultdict
+        res = requests.post(url, data=payload, headers=headers, timeout=15)
+        if res.status_code == 200:
+            soup = BeautifulSoup(res.text, "html.parser")
+            rows = soup.find_all("tr")
+            
+            month_oi = defaultdict(int)
+            row_data = []
+            
+            for r in rows:
+                cells = [td.get_text().strip() for td in r.find_all(["td", "th"])]
+                if len(cells) >= 16 and cells[0] == "TXO":
+                    month = cells[1]
+                    strike = int(cells[3])
+                    cp = cells[4]
+                    try:
+                        oi = int(cells[15].replace(",", "").strip())
+                    except ValueError:
+                        oi = 0
+                    month_oi[month] += oi
+                    row_data.append({
+                        "Month": month,
+                        "Strike": strike,
+                        "CP": cp,
+                        "OI": oi
+                    })
+            
+            if month_oi:
+                active_month = max(month_oi, key=month_oi.get)
+                
+                call_oi = defaultdict(int)
+                put_oi = defaultdict(int)
+                
+                for item in row_data:
+                    if item["Month"] == active_month:
+                        if item["CP"] == "Call":
+                            call_oi[item["Strike"]] += item["OI"]
+                        elif item["CP"] == "Put":
+                            put_oi[item["Strike"]] += item["OI"]
+                
+                max_call_strike = max(call_oi, key=call_oi.get)
+                max_call_val = call_oi[max_call_strike]
+                
+                max_put_strike = max(put_oi, key=put_oi.get)
+                max_put_val = put_oi[max_put_strike]
+                
+                result = {
+                    "Date": date_str,
+                    "ActiveMonth": active_month,
+                    "MaxCallStrike": max_call_strike,
+                    "MaxCallOI": max_call_val,
+                    "MaxPutStrike": max_put_strike,
+                    "MaxPutOI": max_put_val
+                }
+                
+                with open(cache_path, "w", encoding="utf-8") as f:
+                    json.dump(result, f, ensure_ascii=False, indent=2)
+                return result
+    except Exception as e:
+        print(f"Error parsing options OI: {e}", file=sys.stderr)
+    return None
+
+def check_settlement_week(date_str):
+    try:
+        year = int(date_str[:4])
+        month = int(date_str[4:6])
+        day = int(date_str[6:])
+        current_date = datetime.date(year, month, day)
+        
+        first_day_of_month = datetime.date(year, month, 1)
+        first_weekday = first_day_of_month.weekday()
+        
+        days_to_wed = (2 - first_weekday) % 7
+        first_wed = first_day_of_month + datetime.timedelta(days=days_to_wed)
+        third_wed = first_wed + datetime.timedelta(days=14)
+        
+        settlement_mon = third_wed - datetime.timedelta(days=2)
+        
+        if settlement_mon <= current_date <= third_wed:
+            return True, third_wed.strftime("%Y/%m/%d")
+    except Exception:
+        pass
+    return False, None
+
+def generate_trend_chart(futures_history, cache_dir):
+    import yfinance as yf
+    import matplotlib
+    matplotlib.use('Agg')
+    import matplotlib.pyplot as plt
+    
+    try:
+        import matplotlib.font_manager as fm
+        font_path = "data/cache/NotoSansCJKtc-Regular.otf"
+        if not os.path.exists(font_path):
+            print("Downloading Noto Sans CJK TC Font...")
+            font_url = "https://github.com/googlefonts/noto-cjk/raw/main/Sans/OTF/TraditionalChinese/NotoSansCJKtc-Regular.otf"
+            res = requests.get(font_url, timeout=30)
+            if res.status_code == 200:
+                with open(font_path, "wb") as f:
+                    f.write(res.content)
+        if os.path.exists(font_path):
+            fm.fontManager.addfont(font_path)
+            font_name = fm.FontProperties(fname=font_path).get_name()
+            matplotlib.rcParams['font.sans-serif'] = [font_name, 'sans-serif']
+    except Exception as e:
+        print(f"Warning: Failed to setup custom font: {e}", file=sys.stderr)
+        matplotlib.rcParams['font.sans-serif'] = ['Microsoft JhengHei', 'SimHei', 'sans-serif']
+        
+    matplotlib.rcParams['axes.unicode_minus'] = False
+    
+    dates = [item[0] for item in futures_history]
+    foreign_nets = [item[1]["Foreign"]["Net"] for item in futures_history]
+    
+    if not dates:
+        return None, []
+        
+    start_date_str = f"{dates[0][:4]}-{dates[0][4:6]}-{dates[0][6:]}"
+    end_date = datetime.datetime.strptime(dates[-1], "%Y%m%d") + datetime.timedelta(days=2)
+    end_date_str = end_date.strftime("%Y-%m-%d")
+    
+    try:
+        print("Downloading Index prices from Yahoo Finance...")
+        ticker = yf.Ticker("^TWII")
+        hist = ticker.history(start=start_date_str, end=end_date_str)
+        if hist.empty:
+            print("Failed to download index quotes.", file=sys.stderr)
+            return None, []
+            
+        hist.index = hist.index.strftime("%Y%m%d")
+        
+        aligned_dates = []
+        aligned_prices = []
+        aligned_nets = []
+        
+        for d, net in zip(dates, foreign_nets):
+            if d in hist.index:
+                aligned_dates.append(f"{d[4:6]}/{d[6:]}")
+                aligned_prices.append(hist.loc[d]["Close"])
+                aligned_nets.append(net)
+                
+        if not aligned_dates:
+            print("Failed to align dates.", file=sys.stderr)
+            return None, []
+            
+        fig, ax1 = plt.subplots(figsize=(10, 5))
+        
+        color = 'tab:blue'
+        ax1.set_xlabel('交易日', fontweight='bold')
+        ax1.set_ylabel('大盤收盤指數', color=color, fontweight='bold')
+        ax1.plot(aligned_dates, aligned_prices, color=color, marker='o', linewidth=2, label='大盤指數')
+        ax1.tick_params(axis='y', labelcolor=color)
+        ax1.grid(True, linestyle='--', alpha=0.5)
+        
+        ax2 = ax1.twinx()
+        color = 'tab:red'
+        ax2.set_ylabel('外資期貨淨未平倉口數 (口)', color=color, fontweight='bold')
+        
+        bar_colors = ['#ff4d4d' if val >= 0 else '#22c55e' for val in aligned_nets]
+        bars = ax2.bar(aligned_dates, aligned_nets, color=bar_colors, alpha=0.35, width=0.4, label='外資淨 OI')
+        
+        for bar in bars:
+            height = bar.get_height()
+            label_y = height + (1000 if height >= 0 else -3000)
+            ax2.text(bar.get_x() + bar.get_width()/2., label_y,
+                     f'{int(height):,}',
+                     ha='center', va='bottom', fontsize=8, color='black', alpha=0.7)
+                     
+        ax2.axhline(0, color='gray', linestyle='-', linewidth=0.8, alpha=0.5)
+        ax2.tick_params(axis='y', labelcolor=color)
+        
+        plt.title('台股大盤指數與外資期貨淨未平倉口數走勢疊圖', fontsize=14, fontweight='bold')
+        fig.tight_layout()
+        
+        output_path = "data/futures_trend.png"
+        plt.savefig(output_path, dpi=300)
+        plt.close()
+        print(f"Chart generated and saved to: {output_path}")
+        return output_path, aligned_prices
+    except Exception as e:
+        print(f"Error generating chart: {e}", file=sys.stderr)
+    return None, []
+
+def scrape_daily_stock_quotes(date_str):
+    quotes_map = {}
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36"
+    }
+    
+    # 1. TWSE
+    try:
+        url_twse = f"https://www.twse.com.tw/rwd/zh/afterTrading/MI_INDEX?response=json&date={date_str}&type=ALLBUT0999"
+        print(f"Fetching TWSE MI_INDEX for {date_str}...")
+        res = requests.get(url_twse, headers=headers, timeout=20)
+        if res.status_code == 200:
+            data = res.json()
+            if "tables" in data and len(data["tables"]) > 8:
+                table = data["tables"][8]
+                fields = table.get("fields", [])
+                rows = table.get("data", [])
+                
+                if "證券代號" in fields:
+                    print(f"Parsing TWSE quotes ({len(rows)} stocks)...")
+                    for r in rows:
+                        if len(r) >= 11:
+                            sym = str(r[0]).strip()
+                            vol = str(r[2]).replace(",", "").strip()
+                            open_p = str(r[5]).replace(",", "").strip()
+                            high_p = str(r[6]).replace(",", "").strip()
+                            low_p = str(r[7]).replace(",", "").strip()
+                            close_p = str(r[8]).replace(",", "").strip()
+                            
+                            def clean_float(val):
+                                try:
+                                    return float(val)
+                                except ValueError:
+                                    return 0.0
+                                    
+                            vol_val = clean_float(vol) // 1000
+                            open_val = clean_float(open_p)
+                            high_val = clean_float(high_p)
+                            low_val = clean_float(low_p)
+                            close_val = clean_float(close_p)
+                            
+                            change_sign = str(r[9]).strip()
+                            change_val = clean_float(str(r[10]).replace(",", "").strip())
+                            if "-" in change_sign or "綠" in change_sign:
+                                change_val = -change_val
+                                
+                            quotes_map[sym] = {
+                                "Open": open_val,
+                                "High": high_val,
+                                "Low": low_val,
+                                "Close": close_val,
+                                "Change": change_val,
+                                "Volume": int(vol_val)
+                            }
+    except Exception as e:
+        print(f"Error fetching TWSE daily quotes: {e}", file=sys.stderr)
+        
+    # 2. TPEx
+    try:
+        url_tpex = "https://www.tpex.org.tw/openapi/v1/tpex_mainboard_daily_close_quotes"
+        print("Fetching TPEx OpenAPI quotes...")
+        res = requests.get(url_tpex, headers=headers, timeout=25)
+        if res.status_code == 200:
+            data = res.json()
+            print(f"Parsing TPEx quotes ({len(data)} stocks)...")
+            for r in data:
+                sym = str(r.get("SecuritiesCompanyCode", "")).strip()
+                
+                def clean_float(val):
+                    if val is None:
+                        return 0.0
+                    val_str = str(val).replace(",", "").strip()
+                    try:
+                        return float(val_str)
+                    except ValueError:
+                        return 0.0
+                        
+                vol = clean_float(r.get("TradingShares", 0)) // 1000
+                open_p = clean_float(r.get("Open", 0))
+                high_p = clean_float(r.get("High", 0))
+                low_p = clean_float(r.get("Low", 0))
+                close_p = clean_float(r.get("Close", 0))
+                change_val = clean_float(r.get("Change", 0))
+                
+                quotes_map[sym] = {
+                    "Open": open_p,
+                    "High": high_p,
+                    "Low": low_p,
+                    "Close": close_p,
+                    "Change": change_val,
+                    "Volume": int(vol)
+                }
+    except Exception as e:
+        print(f"Error fetching TPEx daily quotes: {e}", file=sys.stderr)
+        
+    return quotes_map
+
+def load_market_summary(date_str, cache_dir, is_today=False):
+    twse_url = f"https://www.twse.com.tw/rwd/zh/fund/BFI82U?response=json&dayDate={date_str}&type=day"
+    twse_cache = os.path.join(cache_dir, f"BFI82U_{date_str}.json")
+    twse_data = fetch_data_with_cache(twse_url, twse_cache, is_today)
+    
+    roc_date = western_to_roc_date(date_str)
+    tpex_url = f"https://www.tpex.org.tw/web/stock/3insti/3insti_summary/3itrdsum_result.php?l=zh-tw&t=D&d={roc_date}&p=1&o=json"
+    tpex_cache = os.path.join(cache_dir, f"TPEX_BFI82U_{date_str}.json")
+    tpex_data = fetch_data_with_cache(tpex_url, tpex_cache, is_today)
+    
+    summary_rows = []
+    
+    if twse_data and twse_data.get("stat") == "OK" and "data" in twse_data:
+        for row in twse_data["data"]:
+            if len(row) >= 4:
+                summary_rows.append({
+                    "Market": "上市 (TWSE)",
+                    "Category": row[0].strip(),
+                    "Buy": row[1],
+                    "Sell": row[2],
+                    "Net": row[3]
+                })
+                
+    tpex_rows = []
+    if tpex_data:
+        if "tables" in tpex_data and len(tpex_data["tables"]) > 0:
+            tpex_rows = tpex_data["tables"][0].get("data", [])
+        elif "aaData" in tpex_data:
+            tpex_rows = tpex_data["aaData"]
+            
+    for row in tpex_rows:
+        if len(row) >= 4:
+            summary_rows.append({
+                "Market": "上櫃 (TPEx)",
+                "Category": row[0].strip(),
+                "Buy": row[1],
+                "Sell": row[2],
+                "Net": row[3]
+            })
+            
+    return summary_rows
+
+def load_industry_mapping(cache_dir):
+    mapping_cache_path = os.path.join(cache_dir, "industry_mapping.json")
+    if os.path.exists(mapping_cache_path):
+        with open(mapping_cache_path, "r", encoding="utf-8") as f:
+            try:
+                return json.load(f)
+            except Exception:
+                pass
+                
+    print("Downloading industry mapping file...")
+    mapping = {}
+    
+    industry_map = {
+        "01": "水泥工業", "02": "食品工業", "03": "塑膠工業", "04": "紡織纖維",
+        "05": "電機機械", "06": "電器電纜", "08": "玻璃陶瓷", "09": "造紙工業",
+        "10": "鋼鐵工業", "11": "橡膠工業", "12": "汽車工業", "13": "電子工業",
+        "14": "建材營造", "15": "航運業", "16": "觀光餐旅", "17": "金融保險",
+        "18": "貿易百貨", "19": "綜合", "20": "其他", "21": "化學工業",
+        "22": "生技醫療業", "23": "油電燃氣業", "24": "半導體業",
+        "25": "電腦及週邊設備業", "26": "光電業", "27": "通信網路業",
+        "28": "電子零組件業", "29": "電子通路業", "30": "資訊服務業",
+        "31": "其他電子業", "32": "文化創意業", "33": "農業科技業",
+        "35": "綠能環保", "36": "數位雲端", "37": "運動休閒", "38": "居家生活"
+    }
+    
+    headers_req = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36"
+    }
+    
+    try:
+        res_l = requests.get("https://mopsfin.twse.com.tw/opendata/t187ap03_L.csv", headers=headers_req, timeout=15)
+        if res_l.status_code == 200:
+            res_l.encoding = 'utf-8-sig'
+            df_l = pd.read_csv(io.StringIO(res_l.text))
+            for _, row in df_l.iterrows():
+                code = str(row["公司代號"]).strip()
+                ind_code = str(row["產業別"]).strip()
+                if len(ind_code) == 1:
+                    ind_code = "0" + ind_code
+                ind_name = industry_map.get(ind_code, "其他")
+                mapping[code] = ind_name
+    except Exception as e:
+        print(f"Warning: Failed to load TWSE industry mapping: {e}", file=sys.stderr)
+        
+    try:
+        res_o = requests.get("https://mopsfin.twse.com.tw/opendata/t187ap03_O.csv", headers=headers_req, timeout=15)
+        if res_o.status_code == 200:
+            res_o.encoding = 'utf-8-sig'
+            df_o = pd.read_csv(io.StringIO(res_o.text))
+            for _, row in df_o.iterrows():
+                code = str(row["公司代號"]).strip()
+                ind_code = str(row["產業別"]).strip()
+                if len(ind_code) == 1:
+                    ind_code = "0" + ind_code
+                ind_name = industry_map.get(ind_code, "其他")
+                mapping[code] = ind_name
+    except Exception as e:
+        print(f"Warning: Failed to load TPEx industry mapping: {e}", file=sys.stderr)
+        
+    if mapping:
+        with open(mapping_cache_path, "w", encoding="utf-8") as f:
+            json.dump(mapping, f, ensure_ascii=False, indent=2)
+            
+    return mapping
+
+def clean_old_cache(cache_dir, keep_days=45):
+    if not os.path.exists(cache_dir):
+        return
+    try:
+        current_time = time.time()
+        limit_seconds = keep_days * 24 * 60 * 60
+        cleaned_count = 0
+        for filename in os.listdir(cache_dir):
+            if filename in ("industry_mapping.json", "NotoSansCJKtc-Regular.otf"):
+                continue
+            filepath = os.path.join(cache_dir, filename)
+            if os.path.isfile(filepath):
+                file_mtime = os.path.getmtime(filepath)
+                if (current_time - file_mtime) > limit_seconds:
+                    os.remove(filepath)
+                    cleaned_count += 1
+        if cleaned_count > 0:
+            print(f"Cleaned up {cleaned_count} old cache files.")
+    except Exception:
+        pass
+
+def main():
+    cache_dir = "data/cache"
+    
+    # 1. Find the latest 20 trading days
+    trading_days = find_latest_trading_days(n=20)
+    if not trading_days:
+        print("Failed to identify trading days.", file=sys.stderr)
+        sys.exit(1)
+        
+    latest_date = trading_days[0]
+    print(f"Latest Trading Day: {latest_date[:4]}/{latest_date[4:6]}/{latest_date[6:]}")
+    
+    # 2. Download and cache T86 data
+    day_dfs = []
+    today_str = datetime.date.today().strftime("%Y%m%d")
+    
+    for d in trading_days:
+        is_today = (d == today_str)
+        # Skip today if it is before 3 PM
+        if is_today and datetime.datetime.now().time() < datetime.time(15, 0):
+            continue
+        df = load_t86_both_markets(d, cache_dir, is_today)
+        if df is not None:
+            day_dfs.append((d, df))
+            
+    if not day_dfs:
+        print("No stock trading data found.", file=sys.stderr)
+        sys.exit(1)
+        
+    latest_active_date = day_dfs[0][0]
+    print(f"Latest Active Date for Data: {latest_active_date}")
+    
+    # 3. Calculate Streaks
+    df_list = [item[1] for item in day_dfs]
+    df_streaks = calculate_streaks(df_list)
+    
+    # 4. Fetch Daily closing quotes for OHL and Price data
+    quotes_map = scrape_daily_stock_quotes(latest_active_date)
+    
+    # 5. Load industry mapping
+    industry_mapping = load_industry_mapping(cache_dir)
+    
+    # 6. Merge quotes and industry mapping into streaks
+    final_streaks = []
+    for _, row in df_streaks.iterrows():
+        sym = row["Symbol"]
+        quote = quotes_map.get(sym, {"Open": 0.0, "High": 0.0, "Low": 0.0, "Close": 0.0, "Change": 0.0, "Volume": 0})
+        ind = industry_mapping.get(sym, "其他")
+        
+        final_streaks.append({
+            "Symbol": sym,
+            "Name": row["Name"],
+            "Market": row["Market"],
+            "Industry": ind,
+            "Foreign_Streak": int(row["Foreign_Streak"]),
+            "Foreign_Latest": int(row["Foreign_Latest"]),
+            "Trust_Streak": int(row["Trust_Streak"]),
+            "Trust_Latest": int(row["Trust_Latest"]),
+            "Dealer_Streak": int(row["Dealer_Streak"]),
+            "Dealer_Latest": int(row["Dealer_Latest"]),
+            "Total_Streak": int(row["Total_Streak"]),
+            "Total_Latest": int(row["Total_Latest"]),
+            "Open": quote["Open"],
+            "High": quote["High"],
+            "Low": quote["Low"],
+            "Close": quote["Close"],
+            "Change": quote["Change"],
+            "Volume": quote["Volume"]
+        })
+        
+    # Write streaks.json
+    with open("data/streaks.json", "w", encoding="utf-8") as f:
+        json.dump({
+            "Date": latest_active_date,
+            "Data": final_streaks
+        }, f, ensure_ascii=False, indent=2)
+    print("Saved data/streaks.json")
+    
+    # 7. Load Market Summary
+    summary_data = load_market_summary(latest_active_date, cache_dir, (latest_active_date == today_str))
+    with open("data/market_summary.json", "w", encoding="utf-8") as f:
+        json.dump({
+            "Date": latest_active_date,
+            "Data": summary_data
+        }, f, ensure_ascii=False, indent=2)
+    print("Saved data/market_summary.json")
+    
+    # 8. Load Futures & Options
+    futures_history = []
+    for date_str, _ in reversed(day_dfs[:10]):  # From oldest to newest
+        oi_data = fetch_taifex_futures_oi(date_str, cache_dir)
+        if oi_data:
+            futures_history.append((date_str, oi_data))
+            
+    # Generate Chart & aligned prices
+    chart_path, aligned_prices = generate_trend_chart(futures_history, cache_dir)
+    
+    opt_data = fetch_taifex_options_max_oi(latest_active_date, cache_dir)
+    is_settlement, settlement_date = check_settlement_week(latest_active_date)
+    
+    futures_options_data = {
+        "Date": latest_active_date,
+        "Settlement": {
+            "IsSettlementWeek": is_settlement,
+            "SettlementDate": settlement_date
+        },
+        "Options": opt_data,
+        "FuturesHistory": [
+            {
+                "Date": d,
+                "Foreign_Net": oi["Foreign"]["Net"],
+                "Trust_Net": oi["Trust"]["Net"],
+                "Dealer_Net": oi["Dealers"]["Net"],
+                "Total_Net": oi["Foreign"]["Net"] + oi["Trust"]["Net"] + oi["Dealers"]["Net"]
+            }
+            for d, oi in reversed(futures_history)
+        ],
+        "AlignedPrices": aligned_prices
+    }
+    
+    with open("data/futures_options.json", "w", encoding="utf-8") as f:
+        json.dump(futures_options_data, f, ensure_ascii=False, indent=2)
+    print("Saved data/futures_options.json")
+    
+    # 9. Clean Cache
+    clean_old_cache(cache_dir, keep_days=45)
+    print("Data compilation completed successfully!")
+
+if __name__ == "__main__":
+    main()

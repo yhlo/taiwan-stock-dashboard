@@ -1,0 +1,6 @@
+.cache/
+colab_cache/
+__pycache__/
+*.log
+temp_mops.txt
+test_colab_profile_cache/

@@ -1,0 +1,99 @@
+{
+  "Date": "20260617",
+  "Settlement": {
+    "IsSettlementWeek": true,
+    "SettlementDate": "2026/06/17"
+  },
+  "Options": {
+    "Date": "20260617",
+    "ActiveMonth": "202606",
+    "MaxCallStrike": 49000,
+    "MaxCallOI": 7143,
+    "MaxPutStrike": 40000,
+    "MaxPutOI": 5685
+  },
+  "FuturesHistory": [
+    {
+      "Date": "20260617",
+      "Foreign_Net": -67394,
+      "Trust_Net": 57083,
+      "Dealer_Net": 72,
+      "Total_Net": -10239
+    },
+    {
+      "Date": "20260616",
+      "Foreign_Net": -69847,
+      "Trust_Net": 56894,
+      "Dealer_Net": 2219,
+      "Total_Net": -10734
+    },
+    {
+      "Date": "20260615",
+      "Foreign_Net": -66734,
+      "Trust_Net": 57702,
+      "Dealer_Net": 2618,
+      "Total_Net": -6414
+    },
+    {
+      "Date": "20260612",
+      "Foreign_Net": -65039,
+      "Trust_Net": 57111,
+      "Dealer_Net": 3568,
+      "Total_Net": -4360
+    },
+    {
+      "Date": "20260610",
+      "Foreign_Net": -61949,
+      "Trust_Net": 54186,
+      "Dealer_Net": 4853,
+      "Total_Net": -2910
+    },
+    {
+      "Date": "20260609",
+      "Foreign_Net": -61871,
+      "Trust_Net": 55253,
+      "Dealer_Net": 4077,
+      "Total_Net": -2541
+    },
+    {
+      "Date": "20260608",
+      "Foreign_Net": -65501,
+      "Trust_Net": 53874,
+      "Dealer_Net": 5446,
+      "Total_Net": -6181
+    },
+    {
+      "Date": "20260605",
+      "Foreign_Net": -69146,
+      "Trust_Net": 52160,
+      "Dealer_Net": 4807,
+      "Total_Net": -12179
+    },
+    {
+      "Date": "20260604",
+      "Foreign_Net": -69476,
+      "Trust_Net": 51858,
+      "Dealer_Net": 3219,
+      "Total_Net": -14399
+    },
+    {
+      "Date": "20260602",
+      "Foreign_Net": -67018,
+      "Trust_Net": 49765,
+      "Dealer_Net": 2564,
+      "Total_Net": -14689
+    }
+  ],
+  "AlignedPrices": [
+    45557.30859375,
+    45677.4609375,
+    45070.94140625,
+    43502.78125,
+    44704.44140625,
+    43225.5390625,
+    44169.0390625,
+    45396.98828125,
+    45809.19140625,
+    45877.390625
+  ]
+}

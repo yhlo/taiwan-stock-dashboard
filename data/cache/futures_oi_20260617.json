@@ -1,0 +1,18 @@
+{
+  "Date": "20260617",
+  "Dealers": {
+    "Long": 4121,
+    "Short": 4049,
+    "Net": 72
+  },
+  "Trust": {
+    "Long": 62358,
+    "Short": 5275,
+    "Net": 57083
+  },
+  "Foreign": {
+    "Long": 9996,
+    "Short": 77390,
+    "Net": -67394
+  }
+}

@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="zh-TW" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>台灣股市法人籌碼與連買連賣看板</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="main-header">
+        <div class="header-container">
+            <h1 class="app-title">📈 台灣股市法人籌碼與連買連賣看板</h1>
+            <div class="header-controls">
+                <div class="search-box">
+                    <input type="text" id="stock-search" placeholder="搜尋股票代號或名稱，如: 6187..." autocomplete="off">
+                    <span class="search-icon">🔍</span>
+                </div>
+                <button id="theme-toggle" class="theme-btn" aria-label="切換深淺模式">🌓</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <!-- Modal Backdrop -->
+        <div id="modal-backdrop" class="modal-backdrop"></div>
+
+        <!-- Stock Details Section (Floating Modal / Right Drawer) -->
+        <section id="stock-detail-section" class="card stock-detail-modal">
+            <div class="card-header">
+                <h2 id="stock-detail-title" class="card-title">🔍 個股數據查詢</h2>
+                <div class="card-header-actions">
+                    <button id="dock-toggle-btn" class="dock-btn" title="切換停靠右側">➡️ 停靠右側</button>
+                    <button id="close-search-btn" class="close-btn" title="關閉">&times;</button>
+                </div>
+            </div>
+            <div class="stock-info-grid">
+                <div class="stock-price-card">
+                    <div class="stock-price-main">
+                        <span id="stock-detail-close" class="stock-price-value">--</span>
+                        <span id="stock-detail-change" class="stock-price-change">--</span>
+                    </div>
+                    <div class="stock-meta-info">
+                        <span id="stock-detail-market" class="badge">--</span>
+                        <span id="stock-detail-industry" class="badge">--</span>
+                    </div>
+                </div>
+                <div class="stock-ohl-grid">
+                    <div class="ohl-item">
+                        <span class="ohl-label">開盤價</span>
+                        <span id="stock-detail-open" class="ohl-value">--</span>
+                    </div>
+                    <div class="ohl-item">
+                        <span class="ohl-label">最高價</span>
+                        <span id="stock-detail-high" class="ohl-value">--</span>
+                    </div>
+                    <div class="ohl-item">
+                        <span class="ohl-label">最低價</span>
+                        <span id="stock-detail-low" class="ohl-value">--</span>
+                    </div>
+                    <div class="ohl-item">
+                        <span class="ohl-label">成交張數</span>
+                        <span id="stock-detail-volume" class="ohl-value">--</span>
+                    </div>
+                </div>
+            </div>
+            <div class="stock-streaks-grid">
+                <div class="streak-box">
+                    <span class="streak-box-title">外資買賣超</span>
+                    <span id="stock-streak-foreign" class="streak-box-value">--</span>
+                </div>
+                <div class="streak-box">
+                    <span class="streak-box-title">投信買賣超</span>
+                    <span id="stock-streak-trust" class="streak-box-value">--</span>
+                </div>
+                <div class="streak-box">
+                    <span class="streak-box-title">自營商買賣超</span>
+                    <span id="stock-streak-dealer" class="streak-box-value">--</span>
+                </div>
+                <div class="streak-box">
+                    <span class="streak-box-title">三大法人合計</span>
+                    <span id="stock-streak-total" class="streak-box-value">--</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Card 1: 大盤三大法人進出統計 (上市櫃平行擺放，滿版寬度) -->
+        <section class="card" style="margin-bottom: 24px;">
+            <div class="card-header">
+                <h2 class="card-title">🏛️ 大盤三大法人進出統計</h2>
+                <span id="market-summary-date" class="date-badge">載入中...</span>
+            </div>
+            <div class="market-parallel-tables">
+                <div class="table-container">
+                    <h3 class="table-subtitle">🏛️ 上市市場 (TWSE)</h3>
+                    <table id="market-summary-twse-table">
+                        <thead>
+                            <tr>
+                                <th>法人機構</th>
+                                <th class="text-right">買進金額</th>
+                                <th class="text-right">賣出金額</th>
+                                <th class="text-right">買賣超</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="4" class="text-center">載入中...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="table-container">
+                    <h3 class="table-subtitle">🏛️ 上櫃市場 (TPEx)</h3>
+                    <table id="market-summary-tpex-table">
+                        <thead>
+                            <tr>
+                                <th>法人機構</th>
+                                <th class="text-right">買進金額</th>
+                                <th class="text-right">賣出金額</th>
+                                <th class="text-right">買賣超</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="4" class="text-center">載入中...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Market & Options Section -->
+        <div class="dashboard-two-column-layout">
+            <!-- Left Column: Tables -->
+            <div class="dashboard-col">
+                <!-- Card 4: 大盤指數與外資期貨淨未平倉口數走勢 -->
+                <section class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">📊 台股大盤指數與外資期貨淨未平倉口數走勢</h2>
+                    </div>
+                    <div class="chart-container">
+                        <img id="futures-trend-chart" src="" alt="大盤指數與外資期貨淨未平倉口數走勢疊圖" class="futures-chart">
+                        <div id="chart-fallback" class="chart-fallback-text hidden">無法加載走勢圖</div>
+                    </div>
+                </section>
+
+                <!-- Card 2: 期貨三大法人未平倉量 (OI) 歷史趨勢 -->
+                <section class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">⏳ 期貨三大法人未平倉量 (OI) 歷史趨勢 (單位: 口)</h2>
+                    </div>
+                    <div class="table-container">
+                        <table id="futures-oi-table">
+                            <thead>
+                                <tr>
+                                    <th>交易日期</th>
+                                    <th class="text-right">外資淨OI</th>
+                                    <th class="text-right">投信淨OI</th>
+                                    <th class="text-right">自營商淨OI</th>
+                                    <th class="text-right">三大法人合計</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="5" class="text-center">載入中...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Right Column: Analytics & Visualization -->
+            <div class="dashboard-col">
+                <!-- Card 3: 選擇權最大 OI 支撐壓力與結算週判定 -->
+                <section class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">🎯 選擇權最大 OI 支撐壓力與結算週判定</h2>
+                    </div>
+                    <div class="options-analysis-grid">
+                        <div class="settlement-alert-container">
+                            <div id="settlement-alert-banner" class="settlement-banner neutral">
+                                <span id="settlement-alert-icon" class="settlement-icon">ℹ️</span>
+                                <span id="settlement-alert-text">載入結算週資訊中...</span>
+                            </div>
+                        </div>
+                        <div class="options-oi-cards">
+                            <div class="options-card call">
+                                <span class="options-label">🔥 最大 Call (壓力區)</span>
+                                <span id="options-max-call-strike" class="options-strike">-- 點</span>
+                                <span id="options-max-call-oi" class="options-oi">未平倉: -- 口</span>
+                            </div>
+                            <div class="options-card put">
+                                <span class="options-label">🟢 最大 Put (支撐區)</span>
+                                <span id="options-max-put-strike" class="options-strike">-- 點</span>
+                                <span id="options-max-put-oi" class="options-oi">未平倉: -- 口</span>
+                            </div>
+                        </div>
+                        <div class="market-analysis-card">
+                            <h3 class="analysis-title">💡 大盤籌碼面智慧分析與總結</h3>
+                            <div id="market-analysis-text" class="analysis-content">
+                                正在分析籌碼面數據...
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <!-- Streaks Rankings Section -->
+        <section class="card">
+            <div class="card-header">
+                <h2 class="card-title">🏆 三大法人連買連賣天數排行榜</h2>
+                <div class="streak-filter-control" style="display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-secondary); font-weight: 500; flex-wrap: wrap;">
+                    <label>天數區間: </label>
+                    <input type="number" id="streak-min-input" min="1" value="1" placeholder="最少" style="width: 50px; padding: 4px 6px; border: 1px solid var(--border-color); border-radius: var(--radius-md); background: var(--bg-primary); color: var(--text-primary); outline: none; font-size: 13px; font-weight: 600; text-align: center;">
+                    <span>~</span>
+                    <input type="number" id="streak-max-input" min="1" placeholder="無限制" style="width: 65px; padding: 4px 6px; border: 1px solid var(--border-color); border-radius: var(--radius-md); background: var(--bg-primary); color: var(--text-primary); outline: none; font-size: 13px; font-weight: 600; text-align: center;">
+                    <span>天</span>
+                    <button id="apply-streak-btn" style="padding: 5px 12px; background-color: var(--accent-blue); color: #ffffff; border: none; border-radius: var(--radius-md); font-size: 12px; font-weight: 600; cursor: pointer; transition: background-color var(--transition-fast);">確認</button>
+                    
+                    <span style="margin-left: 4px; color: var(--border-color);">|</span>
+                    
+                    <label style="margin-left: 2px;">每頁筆數: </label>
+                    <select id="streak-page-size-select" style="padding: 4px 6px; border: 1px solid var(--border-color); border-radius: var(--radius-md); background: var(--bg-primary); color: var(--text-primary); outline: none; font-size: 12px; font-weight: 600; cursor: pointer;">
+                        <option value="50" selected>50 筆</option>
+                        <option value="100">100 筆</option>
+                        <option value="200">200 筆</option>
+                        <option value="all">全部顯示</option>
+                    </select>
+                </div>
+            </div>
+            <div class="tabs-container">
+                <div class="tabs-header">
+                    <button class="tab-btn active" data-tab="foreign-buy">外資連買</button>
+                    <button class="tab-btn" data-tab="foreign-sell">外資連賣</button>
+                    <button class="tab-btn" data-tab="trust-buy">投信連買</button>
+                    <button class="tab-btn" data-tab="trust-sell">投信連賣</button>
+                </div>
+                <div class="tab-content active" id="tab-foreign-buy">
+                    <div class="table-container">
+                        <table id="table-foreign-buy">
+                            <thead>
+                                <tr>
+                                    <th>股票代號</th>
+                                    <th>股票名稱</th>
+                                    <th>產業別</th>
+                                    <th>市場</th>
+                                    <th class="text-right">連續天數</th>
+                                    <th class="text-right">最新一日買賣超</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="6" class="text-center">載入中...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="pagination-controls" id="pagination-foreign-buy">
+                        <button class="page-btn prev-btn">&lt; 上一頁</button>
+                        <span class="page-info">載入中...</span>
+                        <button class="page-btn next-btn">下一頁 &gt;</button>
+                    </div>
+                </div>
+                <div class="tab-content" id="tab-foreign-sell">
+                    <div class="table-container">
+                        <table id="table-foreign-sell">
+                            <thead>
+                                <tr>
+                                    <th>股票代號</th>
+                                    <th>股票名稱</th>
+                                    <th>產業別</th>
+                                    <th>市場</th>
+                                    <th class="text-right">連續天數</th>
+                                    <th class="text-right">最新一日買賣超</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="6" class="text-center">載入中...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="pagination-controls" id="pagination-foreign-sell">
+                        <button class="page-btn prev-btn">&lt; 上一頁</button>
+                        <span class="page-info">載入中...</span>
+                        <button class="page-btn next-btn">下一頁 &gt;</button>
+                    </div>
+                </div>
+                <div class="tab-content" id="tab-trust-buy">
+                    <div class="table-container">
+                        <table id="table-trust-buy">
+                            <thead>
+                                <tr>
+                                    <th>股票代號</th>
+                                    <th>股票名稱</th>
+                                    <th>產業別</th>
+                                    <th>市場</th>
+                                    <th class="text-right">連續天數</th>
+                                    <th class="text-right">最新一日買賣超</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="6" class="text-center">載入中...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="pagination-controls" id="pagination-trust-buy">
+                        <button class="page-btn prev-btn">&lt; 上一頁</button>
+                        <span class="page-info">載入中...</span>
+                        <button class="page-btn next-btn">下一頁 &gt;</button>
+                    </div>
+                </div>
+                <div class="tab-content" id="tab-trust-sell">
+                    <div class="table-container">
+                        <table id="table-trust-sell">
+                            <thead>
+                                <tr>
+                                    <th>股票代號</th>
+                                    <th>股票名稱</th>
+                                    <th>產業別</th>
+                                    <th>市場</th>
+                                    <th class="text-right">連續天數</th>
+                                    <th class="text-right">最新一日買賣超</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="6" class="text-center">載入中...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="pagination-controls" id="pagination-trust-sell">
+                        <button class="page-btn prev-btn">&lt; 上一頁</button>
+                        <span class="page-info">載入中...</span>
+                        <button class="page-btn next-btn">下一頁 &gt;</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="app-footer">
+        <div class="footer-container">
+            <p>免責聲明：本網站內容僅供學術交流與程式設計研究參考，不構成任何投資建議。投資人應獨立判斷、審慎評估並自負投資風險。</p>
+            <p>資料更新頻率：每個交易日 15:45 台北時間自動爬取證交所、櫃買中心、期交所 OpenAPI。</p>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
