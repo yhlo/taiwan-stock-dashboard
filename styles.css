@@ -875,6 +875,15 @@ tbody tr:hover {
 }
 
 /* Futures Tab Buttons Styling */
+.futures-type-tabs {
+    display: flex;
+    gap: 4px;
+    background: var(--bg-primary);
+    padding: 3px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+}
+
 .futures-tab-btn {
     padding: 6px 12px;
     border: none;
@@ -957,15 +966,61 @@ tbody tr:hover {
         padding: 16px;
     }
     
+    /* Stack card headers vertically on mobile for dashboard cards to avoid squishing */
+    .card:not(.stock-detail-modal) .card-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+    
+    .card:not(.stock-detail-modal) .card-header .card-title {
+        text-align: center;
+    }
+    
+    /* Futures type tabs full-width stretch on mobile */
+    .futures-type-tabs {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .futures-type-tabs .futures-tab-btn {
+        flex: 1;
+        text-align: center;
+        padding: 6px 4px;
+        font-size: 11px;
+    }
+    
+    /* Reduce table cell padding to prevent overflow scroll on mobile */
+    table th {
+        padding: 8px 6px;
+        font-size: 11px;
+    }
+    
+    table td {
+        padding: 8px 6px;
+        font-size: 12px;
+    }
+    
     /* Main container padding */
     .main-content {
         padding: 16px 12px;
     }
-}
-
-@media (max-width: 480px) {
+    
     /* Stack options Call & Put cards vertically */
     .options-oi-cards {
         grid-template-columns: 1fr;
+    }
+    
+    /* Chart container aspect ratio scaling to fit phone screens without empty spaces */
+    .chart-container {
+        min-height: auto;
+        aspect-ratio: 5 / 3;
+        width: 100%;
+    }
+    
+    .futures-chart {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
     }
 }
