@@ -1001,6 +1001,26 @@ tbody tr:hover {
         font-size: 12px;
     }
     
+    /* Hide 'Industry' (3rd) and 'Market' (4th) columns in rankings tables on mobile to prevent scrolling entirely */
+    #table-foreign-buy th:nth-child(3),
+    #table-foreign-buy td:nth-child(3),
+    #table-foreign-buy th:nth-child(4),
+    #table-foreign-buy td:nth-child(4),
+    #table-foreign-sell th:nth-child(3),
+    #table-foreign-sell td:nth-child(3),
+    #table-foreign-sell th:nth-child(4),
+    #table-foreign-sell td:nth-child(4),
+    #table-trust-buy th:nth-child(3),
+    #table-trust-buy td:nth-child(3),
+    #table-trust-buy th:nth-child(4),
+    #table-trust-buy td:nth-child(4),
+    #table-trust-sell th:nth-child(3),
+    #table-trust-sell td:nth-child(3),
+    #table-trust-sell th:nth-child(4),
+    #table-trust-sell td:nth-child(4) {
+        display: none !important;
+    }
+    
     /* Main container padding */
     .main-content {
         padding: 16px 12px;
