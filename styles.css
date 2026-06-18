@@ -1001,6 +1001,15 @@ tbody tr:hover {
         font-size: 12px;
     }
     
+    /* Remove badge background/borders in futures table on mobile to save space */
+    #futures-oi-table .badge-up,
+    #futures-oi-table .badge-down {
+        background: none !important;
+        border: none !important;
+        padding: 0 !important;
+        font-weight: 600;
+    }
+    
     /* Hide 'Industry' (3rd) and 'Market' (4th) columns in rankings tables on mobile to prevent scrolling entirely */
     #table-foreign-buy th:nth-child(3),
     #table-foreign-buy td:nth-child(3),

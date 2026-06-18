@@ -488,11 +488,12 @@ function renderFuturesHistoryTable() {
         return;
     }
     
+    const isMobile = window.innerWidth <= 576;
     let html = '';
     const history = (futuresOptions.FuturesHistory || []).slice(0, 5);
     history.forEach(row => {
         const d = row.Date;
-        const formattedDate = `${d.slice(0,4)}/${d.slice(4,6)}/${d.slice(6)}`;
+        const formattedDate = isMobile ? `${d.slice(4,6)}/${d.slice(6)}` : `${d.slice(0,4)}/${d.slice(4,6)}/${d.slice(6)}`;
         
         let foreignNet = null, trustNet = null, dealerNet = null, totalNet = null;
         if (activeFuturesType === 'mtx') {
