@@ -9,6 +9,7 @@ let currentPage = {
     'trust-sell': 1
 };
 let isDockedRight = localStorage.getItem('detail-docked') === 'true';
+let activeFuturesType = 'tx';
 
 // DOM Elements
 const themeToggleBtn = document.getElementById('theme-toggle');
@@ -142,6 +143,17 @@ function setupEventListeners() {
             const contents = document.querySelectorAll('.tab-content');
             contents.forEach(c => c.classList.remove('active'));
             document.getElementById(`tab-${tabId}`).classList.add('active');
+        });
+    });
+
+    // Futures type tabs switching
+    const futuresTabBtns = document.querySelectorAll('.futures-tab-btn');
+    futuresTabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            futuresTabBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            activeFuturesType = btn.getAttribute('data-futures-type');
+            renderFuturesHistoryTable();
         });
     });
 
@@ -465,14 +477,67 @@ function renderMarketSummary() {
     if (tpexBody) tpexBody.innerHTML = tpexHtml || '<tr><td colspan="4" class="text-center">無上櫃資料</td></tr>';
 }
 
+// Render Futures History Table dynamically based on type (tx, mtx, tmf)
+function renderFuturesHistoryTable() {
+    const tableBody = document.querySelector('#futures-oi-table tbody');
+    if (!tableBody) return;
+    if (!futuresOptions || !futuresOptions.FuturesHistory) {
+        tableBody.innerHTML = '<tr><td colspan="5" class="text-center">無期貨歷史資料</td></tr>';
+        return;
+    }
+    
+    let html = '';
+    const history = (futuresOptions.FuturesHistory || []).slice(0, 5);
+    history.forEach(row => {
+        const d = row.Date;
+        const formattedDate = `${d.slice(0,4)}/${d.slice(4,6)}/${d.slice(6)}`;
+        
+        let foreignNet = null, trustNet = null, dealerNet = null, totalNet = null;
+        if (activeFuturesType === 'mtx') {
+            foreignNet = row.MTX_Foreign_Net;
+            trustNet = row.MTX_Trust_Net;
+            dealerNet = row.MTX_Dealer_Net;
+            totalNet = row.MTX_Total_Net;
+        } else if (activeFuturesType === 'tmf') {
+            foreignNet = row.TMF_Foreign_Net;
+            trustNet = row.TMF_Trust_Net;
+            dealerNet = row.TMF_Dealer_Net;
+            totalNet = row.TMF_Total_Net;
+        } else {
+            foreignNet = row.Foreign_Net;
+            trustNet = row.Trust_Net;
+            dealerNet = row.Dealer_Net;
+            totalNet = row.Total_Net;
+        }
+        
+        function formatOI(val) {
+            if (val === undefined || val === null) return '--';
+            if (val > 0) return `<span class="badge-up">+${val.toLocaleString()}</span>`;
+            if (val < 0) return `<span class="badge-down">${val.toLocaleString()}</span>`;
+            return '0';
+        }
+        
+        html += `
+            <tr>
+                <td>${formattedDate}</td>
+                <td class="text-right">${formatOI(foreignNet)}</td>
+                <td class="text-right">${formatOI(trustNet)}</td>
+                <td class="text-right">${formatOI(dealerNet)}</td>
+                <td class="text-right">${formatOI(totalNet)}</td>
+            </tr>
+        `;
+    });
+    tableBody.innerHTML = html || '<tr><td colspan="5" class="text-center">無期貨歷史資料</td></tr>';
+}
+
 // Render Futures & Options
 function renderFuturesOptions() {
-    const tableBody = document.querySelector('#futures-oi-table tbody');
     const chartImg = document.getElementById('futures-trend-chart');
     const fallbackTxt = document.getElementById('chart-fallback');
     
     if (!futuresOptions) {
-        tableBody.innerHTML = '<tr><td colspan="5" class="text-center">查無期貨未平倉資料</td></tr>';
+        const tableBody = document.querySelector('#futures-oi-table tbody');
+        if (tableBody) tableBody.innerHTML = '<tr><td colspan="5" class="text-center">查無期貨未平倉資料</td></tr>';
         return;
     }
     
@@ -483,30 +548,8 @@ function renderFuturesOptions() {
         fallbackTxt.classList.remove('hidden');
     };
     
-    // Render Futures History table (Slice to latest 5 trading days as requested)
-    let html = '';
-    const history = (futuresOptions.FuturesHistory || []).slice(0, 5);
-    history.forEach(row => {
-        const d = row.Date;
-        const formattedDate = `${d.slice(0,4)}/${d.slice(4,6)}/${d.slice(6)}`;
-        
-        function formatOI(val) {
-            if (val > 0) return `<span class="badge-up">+${val.toLocaleString()}</span>`;
-            if (val < 0) return `<span class="badge-down">${val.toLocaleString()}</span>`;
-            return '0';
-        }
-        
-        html += `
-            <tr>
-                <td>${formattedDate}</td>
-                <td class="text-right">${formatOI(row.Foreign_Net)}</td>
-                <td class="text-right">${formatOI(row.Trust_Net)}</td>
-                <td class="text-right">${formatOI(row.Dealer_Net)}</td>
-                <td class="text-right">${formatOI(row.Total_Net)}</td>
-            </tr>
-        `;
-    });
-    tableBody.innerHTML = html || '<tr><td colspan="5" class="text-center">無期貨歷史資料</td></tr>';
+    // Render Futures History table
+    renderFuturesHistoryTable();
     
     // Options
     const opt = futuresOptions.Options;
@@ -793,12 +836,20 @@ function populateRankingTable(tableId, list, streakCol, latestCol) {
     tbody.innerHTML = html;
 }
 
-// Link click helper to directly search for a stock
+// Link click helper to directly search for a stock and open details modal
 window.searchStockDirectly = function(symbol) {
-    stockSearchInput.value = symbol;
-    // Dispatch input event to trigger autocomplete search
-    const event = new Event('input', { bubbles: true });
-    stockSearchInput.dispatchEvent(event);
+    if (streaksData && streaksData.Data) {
+        const match = streaksData.Data.find(s => s.Symbol === symbol);
+        if (match) {
+            stockSearchInput.value = `${match.Symbol} ${match.Name}`;
+            showStockDetails(match);
+            const suggestionsContainer = document.getElementById('search-suggestions');
+            if (suggestionsContainer) {
+                suggestionsContainer.innerHTML = '';
+                suggestionsContainer.classList.add('hidden');
+            }
+        }
+    }
 };
 
 // Update CSS classes and layout based on docking state

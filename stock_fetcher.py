@@ -522,7 +522,9 @@ def fetch_taifex_futures_oi(date_str, cache_dir):
     if os.path.exists(cache_path):
         with open(cache_path, "r", encoding="utf-8") as f:
             try:
-                return json.load(f)
+                data = json.load(f)
+                if "TX" in data:
+                    return data
             except Exception:
                 pass
                 
@@ -540,42 +542,56 @@ def fetch_taifex_futures_oi(date_str, cache_dir):
         from bs4 import BeautifulSoup
         res = requests.post(url, data=payload, headers=headers, timeout=10)
         if res.status_code == 200:
+            res.encoding = 'utf-8'
             soup = BeautifulSoup(res.text, "html.parser")
             rows = soup.find_all("tr")
+            
+            contracts = {}
+            
+            def clean_int(val):
+                return int(val.replace(",", "").strip())
+                
             for i, r in enumerate(rows):
                 cells = [td.get_text().strip() for td in r.find_all(["td", "th"])]
-                if len(cells) > 1 and "臺股期貨" in cells[1]:
-                    def clean_int(val):
-                        return int(val.replace(",", "").strip())
-                    
-                    # 自營商
-                    dealers_long = clean_int(cells[9])
-                    dealers_short = clean_int(cells[11])
-                    dealers_net = clean_int(cells[13])
-                    
-                    # 投信
-                    cells_trust = [td.get_text().strip() for td in rows[i+1].find_all(["td", "th"])]
-                    trust_long = clean_int(cells_trust[7])
-                    trust_short = clean_int(cells_trust[9])
-                    trust_net = clean_int(cells_trust[11])
-                    
-                    # 外資及陸資
-                    cells_foreign = [td.get_text().strip() for td in rows[i+2].find_all(["td", "th"])]
-                    foreign_long = clean_int(cells_foreign[7])
-                    foreign_short = clean_int(cells_foreign[9])
-                    foreign_net = clean_int(cells_foreign[11])
-                    
-                    result = {
-                        "Date": date_str,
-                        "Dealers": {"Long": dealers_long, "Short": dealers_short, "Net": dealers_net},
-                        "Trust": {"Long": trust_long, "Short": trust_short, "Net": trust_net},
-                        "Foreign": {"Long": foreign_long, "Short": foreign_short, "Net": foreign_net}
-                    }
-                    
-                    os.makedirs(cache_dir, exist_ok=True)
-                    with open(cache_path, "w", encoding="utf-8") as f:
-                        json.dump(result, f, ensure_ascii=False, indent=2)
-                    return result
+                if len(cells) > 1:
+                    contract_name = cells[1]
+                    if contract_name in ["臺股期貨", "小型臺指期貨", "微型臺指期貨"]:
+                        dealers_long = clean_int(cells[9])
+                        dealers_short = clean_int(cells[11])
+                        dealers_net = clean_int(cells[13])
+                        
+                        cells_trust = [td.get_text().strip() for td in rows[i+1].find_all(["td", "th"])]
+                        trust_long = clean_int(cells_trust[7])
+                        trust_short = clean_int(cells_trust[9])
+                        trust_net = clean_int(cells_trust[11])
+                        
+                        cells_foreign = [td.get_text().strip() for td in rows[i+2].find_all(["td", "th"])]
+                        foreign_long = clean_int(cells_foreign[7])
+                        foreign_short = clean_int(cells_foreign[9])
+                        foreign_net = clean_int(cells_foreign[11])
+                        
+                        key = "TX" if contract_name == "臺股期貨" else ("MTX" if contract_name == "小型臺指期貨" else "TMF")
+                        contracts[key] = {
+                            "Dealers": {"Long": dealers_long, "Short": dealers_short, "Net": dealers_net},
+                            "Trust": {"Long": trust_long, "Short": trust_short, "Net": trust_net},
+                            "Foreign": {"Long": foreign_long, "Short": foreign_short, "Net": foreign_net}
+                        }
+            
+            if "TX" in contracts:
+                result = {
+                    "Date": date_str,
+                    "Dealers": contracts["TX"]["Dealers"],
+                    "Trust": contracts["TX"]["Trust"],
+                    "Foreign": contracts["TX"]["Foreign"],
+                    "TX": contracts["TX"],
+                    "MTX": contracts.get("MTX", None),
+                    "TMF": contracts.get("TMF", None)
+                }
+                
+                os.makedirs(cache_dir, exist_ok=True)
+                with open(cache_path, "w", encoding="utf-8") as f:
+                    json.dump(result, f, ensure_ascii=False, indent=2)
+                return result
     except Exception:
         pass
     return None
