@@ -943,6 +943,30 @@ tbody tr:hover {
     .stock-detail-modal.docked-right.active {
         transform: translate(-50%, -50%) scale(1) !important;
     }
+    
+    /* Stack card headers vertically on mobile/tablet for dashboard cards to avoid squishing */
+    .card:not(.stock-detail-modal) .card-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+    
+    .card:not(.stock-detail-modal) .card-header .card-title {
+        text-align: center;
+    }
+    
+    /* Futures type tabs full-width stretch on mobile/tablet */
+    .futures-type-tabs {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .futures-type-tabs .futures-tab-btn {
+        flex: 1;
+        text-align: center;
+        padding: 6px 4px;
+        font-size: 11px;
+    }
 }
 
 @media (max-width: 576px) {
@@ -974,29 +998,7 @@ tbody tr:hover {
         padding: 16px;
     }
     
-    /* Stack card headers vertically on mobile for dashboard cards to avoid squishing */
-    .card:not(.stock-detail-modal) .card-header {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 12px;
-    }
-    
-    .card:not(.stock-detail-modal) .card-header .card-title {
-        text-align: center;
-    }
-    
-    /* Futures type tabs full-width stretch on mobile */
-    .futures-type-tabs {
-        width: 100%;
-        justify-content: center;
-    }
-    
-    .futures-type-tabs .futures-tab-btn {
-        flex: 1;
-        text-align: center;
-        padding: 6px 4px;
-        font-size: 11px;
-    }
+
     
     /* Reduce table cell padding to prevent overflow scroll on mobile */
     table th {
