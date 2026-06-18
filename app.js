@@ -91,18 +91,20 @@ async function initApp() {
     
     try {
         console.log("Loading static dataset...");
+        const cacheBuster = `?t=${new Date().getTime()}`;
+        
         // 1. Fetch market summary
-        const summaryRes = await fetch('./data/market_summary.json');
+        const summaryRes = await fetch(`./data/market_summary.json${cacheBuster}`);
         marketSummary = await summaryRes.json();
         renderMarketSummary();
         
         // 2. Fetch futures & options
-        const futOptRes = await fetch('./data/futures_options.json');
+        const futOptRes = await fetch(`./data/futures_options.json${cacheBuster}`);
         futuresOptions = await futOptRes.json();
         renderFuturesOptions();
         
         // 3. Fetch streaks list
-        const streaksRes = await fetch('./data/streaks.json');
+        const streaksRes = await fetch(`./data/streaks.json${cacheBuster}`);
         streaksData = await streaksRes.json();
         renderRankings();
         
