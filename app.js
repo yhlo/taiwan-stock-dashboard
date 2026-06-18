@@ -145,32 +145,141 @@ function setupEventListeners() {
         });
     });
 
-    // Stock search input autocomplete
+    let activeSuggestionIndex = -1;
+
+    function selectStock(match) {
+        stockSearchInput.value = `${match.Symbol} ${match.Name}`;
+        showStockDetails(match);
+        const suggestionsContainer = document.getElementById('search-suggestions');
+        if (suggestionsContainer) {
+            suggestionsContainer.innerHTML = '';
+            suggestionsContainer.classList.add('hidden');
+        }
+        activeSuggestionIndex = -1;
+    }
+
+    // Stock search input suggestions autocomplete
     stockSearchInput.addEventListener('input', () => {
         const query = stockSearchInput.value.trim().toLowerCase();
+        const suggestionsContainer = document.getElementById('search-suggestions');
+        
         if (!query) {
-            hideStockDetails();
+            if (suggestionsContainer) {
+                suggestionsContainer.innerHTML = '';
+                suggestionsContainer.classList.add('hidden');
+            }
+            activeSuggestionIndex = -1;
             return;
         }
         
         if (streaksData && streaksData.Data) {
-            const match = streaksData.Data.find(item => 
-                item.Symbol.toLowerCase() === query || 
-                item.Name.toLowerCase() === query ||
+            // Match if symbol contains query or name contains query
+            const matches = streaksData.Data.filter(item => 
+                item.Symbol.toLowerCase().includes(query) || 
                 item.Name.toLowerCase().includes(query)
-            );
+            ).slice(0, 10);
             
-            if (match) {
-                showStockDetails(match);
-            } else {
-                hideStockDetails();
+            if (suggestionsContainer) {
+                if (matches.length > 0) {
+                    suggestionsContainer.innerHTML = matches.map((item, index) => `
+                        <div class="suggestion-item" data-symbol="${item.Symbol}">
+                            <span class="suggestion-symbol">${item.Symbol}</span>
+                            <span class="suggestion-name">${item.Name}</span>
+                            <span class="suggestion-market">${item.Market}</span>
+                        </div>
+                    `).join('');
+                    suggestionsContainer.classList.remove('hidden');
+                    
+                    // Click listener for suggestion items
+                    const items = suggestionsContainer.querySelectorAll('.suggestion-item');
+                    items.forEach(el => {
+                        el.addEventListener('click', () => {
+                            const symbol = el.getAttribute('data-symbol');
+                            const match = streaksData.Data.find(s => s.Symbol === symbol);
+                            if (match) {
+                                selectStock(match);
+                            }
+                        });
+                    });
+                } else {
+                    suggestionsContainer.innerHTML = '';
+                    suggestionsContainer.classList.add('hidden');
+                }
             }
+            activeSuggestionIndex = -1;
         }
     });
+
+    // Close suggestions dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+        const suggestionsContainer = document.getElementById('search-suggestions');
+        if (suggestionsContainer && !e.target.closest('.search-box')) {
+            suggestionsContainer.classList.add('hidden');
+        }
+    });
+
+    // Keyboard navigation in search suggestions
+    stockSearchInput.addEventListener('keydown', (e) => {
+        const suggestionsContainer = document.getElementById('search-suggestions');
+        if (!suggestionsContainer || suggestionsContainer.classList.contains('hidden')) {
+            return;
+        }
+        
+        const items = suggestionsContainer.querySelectorAll('.suggestion-item');
+        if (items.length === 0) return;
+        
+        if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            activeSuggestionIndex = (activeSuggestionIndex + 1) % items.length;
+            highlightSuggestion(items);
+        } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            activeSuggestionIndex = (activeSuggestionIndex - 1 + items.length) % items.length;
+            highlightSuggestion(items);
+        } else if (e.key === 'Enter') {
+            e.preventDefault();
+            if (activeSuggestionIndex >= 0 && activeSuggestionIndex < items.length) {
+                const symbol = items[activeSuggestionIndex].getAttribute('data-symbol');
+                const match = streaksData.Data.find(s => s.Symbol === symbol);
+                if (match) {
+                    selectStock(match);
+                }
+            } else {
+                // Try exact match on current input
+                const query = stockSearchInput.value.trim().toLowerCase();
+                const match = streaksData.Data.find(item => 
+                    item.Symbol.toLowerCase() === query || 
+                    item.Name.toLowerCase() === query
+                );
+                if (match) {
+                    selectStock(match);
+                }
+            }
+        } else if (e.key === 'Escape') {
+            suggestionsContainer.classList.add('hidden');
+            stockSearchInput.blur();
+        }
+    });
+
+    function highlightSuggestion(items) {
+        items.forEach((item, index) => {
+            if (index === activeSuggestionIndex) {
+                item.classList.add('active-suggestion');
+                item.scrollIntoView({ block: 'nearest' });
+            } else {
+                item.classList.remove('active-suggestion');
+            }
+        });
+    }
 
     closeSearchBtn.addEventListener('click', () => {
         stockSearchInput.value = '';
         hideStockDetails();
+        const suggestionsContainer = document.getElementById('search-suggestions');
+        if (suggestionsContainer) {
+            suggestionsContainer.innerHTML = '';
+            suggestionsContainer.classList.add('hidden');
+        }
     });
 
     // Streak days filter range inputs with confirmation button
