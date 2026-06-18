@@ -33,6 +33,7 @@
             <div class="card-header">
                 <h2 id="stock-detail-title" class="card-title">🔍 個股數據查詢</h2>
                 <div class="card-header-actions">
+                    <button id="favorite-toggle-btn" class="favorite-btn" title="加入/取消關注">☆ 關注</button>
                     <button id="dock-toggle-btn" class="dock-btn" title="切換停靠右側">➡️ 停靠右側</button>
                     <button id="close-search-btn" class="close-btn" title="關閉">&times;</button>
                 </div>
@@ -84,6 +85,16 @@
                     <span class="streak-box-title">三大法人合計</span>
                     <span id="stock-streak-total" class="streak-box-value">--</span>
                 </div>
+            </div>
+        </section>
+
+        <!-- Watchlist Section (My Favorites) -->
+        <section id="watchlist-section" class="card" style="margin-bottom: 24px;">
+            <div class="card-header" style="margin-bottom: 12px;">
+                <h2 class="card-title">⭐ 我的關注名單</h2>
+            </div>
+            <div id="watchlist-container" class="watchlist-container">
+                <!-- Will be rendered dynamically -->
             </div>
         </section>
 

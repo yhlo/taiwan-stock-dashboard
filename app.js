@@ -10,6 +10,8 @@ let currentPage = {
 };
 let isDockedRight = localStorage.getItem('detail-docked') === 'true';
 let activeFuturesType = 'tx';
+let watchlist = [];
+let currentDetailStock = null;
 
 // DOM Elements
 const themeToggleBtn = document.getElementById('theme-toggle');
@@ -88,6 +90,8 @@ function formatBillionValue(valStr) {
 async function initApp() {
     setupTheme();
     setupEventListeners();
+    loadWatchlist();
+    renderWatchlist();
     
     try {
         console.log("Loading static dataset...");
@@ -107,6 +111,7 @@ async function initApp() {
         const streaksRes = await fetch(`./data/streaks.json${cacheBuster}`);
         streaksData = await streaksRes.json();
         renderRankings();
+        renderWatchlist();
         
     } catch (error) {
         console.error("Error initializing dashboard data:", error);
@@ -423,6 +428,109 @@ function setupEventListeners() {
             updateDetailLayout();
         });
     }
+
+    // Favorite star toggle button event listener
+    const favoriteToggleBtn = document.getElementById('favorite-toggle-btn');
+    if (favoriteToggleBtn) {
+        favoriteToggleBtn.addEventListener('click', () => {
+            if (currentDetailStock) {
+                toggleWatchlist(currentDetailStock.Symbol);
+            }
+        });
+    }
+}
+
+// Watchlist state and functions
+function loadWatchlist() {
+    try {
+        watchlist = JSON.parse(localStorage.getItem('watchlist')) || [];
+    } catch (e) {
+        watchlist = [];
+    }
+}
+
+// Global scope check so that it can be deleted in child buttons safely
+function saveWatchlist() {
+    localStorage.setItem('watchlist', JSON.stringify(watchlist));
+}
+
+function toggleWatchlist(symbol) {
+    const idx = watchlist.indexOf(symbol);
+    const favoriteToggleBtn = document.getElementById('favorite-toggle-btn');
+    
+    if (idx > -1) {
+        watchlist.splice(idx, 1);
+        if (favoriteToggleBtn) {
+            favoriteToggleBtn.classList.remove('active');
+            favoriteToggleBtn.innerHTML = '☆ 關注';
+        }
+    } else {
+        watchlist.push(symbol);
+        if (favoriteToggleBtn) {
+            favoriteToggleBtn.classList.add('active');
+            favoriteToggleBtn.innerHTML = '⭐ 已關注';
+        }
+    }
+    saveWatchlist();
+    renderWatchlist();
+}
+
+function renderWatchlist() {
+    const watchlistContainer = document.getElementById('watchlist-container');
+    if (!watchlistContainer) return;
+    
+    if (watchlist.length === 0) {
+        watchlistContainer.innerHTML = `
+            <div class="watchlist-placeholder">
+                <span>💡 您目前尚未加入任何關注股票。請在右上方搜尋框查詢個股後，點選「☆ 關注」按鈕加入。</span>
+            </div>
+        `;
+        return;
+    }
+    
+    let html = '';
+    watchlist.forEach(symbol => {
+        let stock = null;
+        if (streaksData && streaksData.Data) {
+            stock = streaksData.Data.find(s => s.Symbol === symbol);
+        }
+        
+        if (stock) {
+            const changePercent = ((stock.Change / (stock.Close - stock.Change)) * 100).toFixed(2);
+            const changeColor = stock.Change > 0 ? 'var(--color-up)' : (stock.Change < 0 ? 'var(--color-down)' : 'var(--text-secondary)');
+            const changeSign = stock.Change > 0 ? '+' : '';
+            
+            html += `
+                <div class="watchlist-chip" onclick="window.searchStockDirectly('${stock.Symbol}')">
+                    <span class="watchlist-chip-title">${stock.Symbol} ${stock.Name}</span>
+                    <span class="watchlist-chip-price">${stock.Close.toFixed(2)} 元</span>
+                    <span class="watchlist-chip-change" style="color: ${changeColor}">
+                        ${changeSign}${stock.Change.toFixed(2)} (${changeSign}${changePercent}%)
+                    </span>
+                    <button class="watchlist-chip-remove" data-symbol="${stock.Symbol}" title="移出關注名單">&times;</button>
+                </div>
+            `;
+        } else {
+            html += `
+                <div class="watchlist-chip" onclick="window.searchStockDirectly('${symbol}')">
+                    <span class="watchlist-chip-title">${symbol}</span>
+                    <button class="watchlist-chip-remove" data-symbol="${symbol}" title="移出關注名單">&times;</button>
+                </div>
+            `;
+        }
+    });
+    
+    watchlistContainer.innerHTML = html;
+    
+    // Bind click listener for removal buttons (prevent propagation to chip click)
+    const removeBtns = watchlistContainer.querySelectorAll('.watchlist-chip-remove');
+    removeBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const symbol = btn.getAttribute('data-symbol');
+            toggleWatchlist(symbol);
+        });
+    });
 }
 
 // Render TWSE / TPEx summary tables side-by-side
@@ -879,6 +987,20 @@ function updateDetailLayout() {
 
 // Show stock detail section
 function showStockDetails(stock) {
+    currentDetailStock = stock;
+    
+    // Update favorite button state
+    const favoriteToggleBtn = document.getElementById('favorite-toggle-btn');
+    if (favoriteToggleBtn) {
+        if (watchlist.includes(stock.Symbol)) {
+            favoriteToggleBtn.classList.add('active');
+            favoriteToggleBtn.innerHTML = '⭐ 已關注';
+        } else {
+            favoriteToggleBtn.classList.remove('active');
+            favoriteToggleBtn.innerHTML = '☆ 關注';
+        }
+    }
+
     document.getElementById('stock-detail-title').textContent = `🔍 個股數據查詢: ${stock.Symbol} ${stock.Name}`;
     document.getElementById('stock-detail-market').textContent = stock.Market;
     document.getElementById('stock-detail-industry').textContent = stock.Industry;

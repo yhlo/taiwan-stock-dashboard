@@ -1063,3 +1063,113 @@ tbody tr:hover {
         object-fit: contain;
     }
 }
+
+/* Watchlist Styles */
+.watchlist-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+}
+
+.watchlist-placeholder {
+    font-size: 13px;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 0;
+}
+
+.watchlist-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background-color: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    box-shadow: var(--shadow-sm);
+    user-select: none;
+}
+
+.watchlist-chip:hover {
+    transform: translateY(-2px);
+    background-color: var(--bg-hover);
+    border-color: var(--accent-blue);
+    box-shadow: var(--shadow-md);
+}
+
+.watchlist-chip-title {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.watchlist-chip-price {
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-left: 2px;
+}
+
+.watchlist-chip-change {
+    font-size: 11px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+}
+
+.watchlist-chip-remove {
+    background: none;
+    border: none;
+    font-size: 14px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    transition: all var(--transition-fast);
+    margin-left: 2px;
+}
+
+.watchlist-chip-remove:hover {
+    background-color: var(--bg-hover);
+    color: var(--color-up);
+}
+
+/* Favorite Star Button Styles in Modal */
+.favorite-btn {
+    background: none;
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    padding: 6px 10px;
+    border-radius: var(--radius-md);
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+}
+
+.favorite-btn:hover {
+    background-color: var(--bg-hover);
+    border-color: #eab308;
+    color: #eab308;
+}
+
+.favorite-btn.active {
+    color: #eab308;
+    background-color: rgba(234, 179, 8, 0.08);
+    border-color: #eab308;
+}
