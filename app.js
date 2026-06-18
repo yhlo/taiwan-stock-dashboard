@@ -171,17 +171,41 @@ function setupEventListeners() {
             activeSuggestionIndex = -1;
             return;
         }
-        
         if (streaksData && streaksData.Data) {
             // Match if symbol contains query or name contains query
             const matches = streaksData.Data.filter(item => 
                 item.Symbol.toLowerCase().includes(query) || 
                 item.Name.toLowerCase().includes(query)
-            ).slice(0, 10);
+            );
+            
+            // Prioritize:
+            // 1. Symbol starts with query
+            // 2. Name starts with query
+            // 3. Keep original sorting order (by streak days)
+            matches.sort((a, b) => {
+                const aSym = a.Symbol.toLowerCase();
+                const bSym = b.Symbol.toLowerCase();
+                const aName = a.Name.toLowerCase();
+                const bName = b.Name.toLowerCase();
+                
+                const aSymStart = aSym.startsWith(query);
+                const bSymStart = bSym.startsWith(query);
+                if (aSymStart && !bSymStart) return -1;
+                if (!aSymStart && bSymStart) return 1;
+                
+                const aNameStart = aName.startsWith(query);
+                const bNameStart = bName.startsWith(query);
+                if (aNameStart && !bNameStart) return -1;
+                if (!aNameStart && bNameStart) return 1;
+                
+                return 0;
+            });
+
+            const slicedMatches = matches.slice(0, 10);
             
             if (suggestionsContainer) {
-                if (matches.length > 0) {
-                    suggestionsContainer.innerHTML = matches.map((item, index) => `
+                if (slicedMatches.length > 0) {
+                    suggestionsContainer.innerHTML = slicedMatches.map((item, index) => `
                         <div class="suggestion-item" data-symbol="${item.Symbol}">
                             <span class="suggestion-symbol">${item.Symbol}</span>
                             <span class="suggestion-name">${item.Name}</span>
