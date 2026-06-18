@@ -267,11 +267,13 @@ th {
     letter-spacing: 0.05em;
     color: var(--text-secondary);
     border-bottom: 2px solid var(--border-color);
+    white-space: nowrap;
 }
 
 td {
     padding: 12px 14px;
     border-bottom: 1px solid var(--border-color);
+    white-space: nowrap;
 }
 
 tr {
@@ -340,6 +342,15 @@ tbody tr:hover {
     border-bottom: 1px solid var(--border-color);
     margin-bottom: 16px;
     gap: 8px;
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+.tabs-header::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
 }
 
 .tab-btn {
@@ -352,6 +363,7 @@ tbody tr:hover {
     font-weight: 500;
     cursor: pointer;
     transition: all var(--transition-fast);
+    flex-shrink: 0;
 }
 
 .tab-btn:hover {
@@ -505,6 +517,7 @@ tbody tr:hover {
     display: flex;
     align-items: baseline;
     gap: 12px;
+    flex-wrap: wrap;
 }
 
 .stock-price-value {
@@ -883,4 +896,76 @@ tbody tr:hover {
     color: var(--accent-blue);
     font-weight: 700;
     box-shadow: var(--shadow-sm);
+}
+
+/* Mobile Responsive Adjustments */
+@media (max-width: 768px) {
+    /* Hide the dock to right button on mobile because split drawer screen is too narrow */
+    .dock-btn {
+        display: none !important;
+    }
+    
+    /* Override docked mode on mobile to force it to render as a centered floating modal */
+    .stock-detail-modal.docked-right {
+        position: fixed !important;
+        top: 50% !important;
+        left: 50% !important;
+        right: auto !important;
+        bottom: auto !important;
+        transform: translate(-50%, -50%) scale(0.95) !important;
+        width: 90% !important;
+        max-width: 550px !important;
+        height: auto !important;
+        max-height: 90vh !important;
+        border-radius: var(--radius-lg) !important;
+        border: 1px solid var(--border-color) !important;
+        border-left: 4px solid var(--accent-blue) !important;
+        box-shadow: var(--shadow-md) !important;
+    }
+    
+    .stock-detail-modal.docked-right.active {
+        transform: translate(-50%, -50%) scale(1) !important;
+    }
+}
+
+@media (max-width: 576px) {
+    /* Adjust header layout to stack nicely on mobile */
+    .header-container {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 12px 16px;
+        gap: 12px;
+    }
+    
+    .app-title {
+        font-size: 18px;
+        text-align: center;
+    }
+    
+    .header-controls {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .search-box {
+        flex-grow: 1;
+        width: auto;
+    }
+    
+    /* Reduce card padding slightly to maximize content space */
+    .card {
+        padding: 16px;
+    }
+    
+    /* Main container padding */
+    .main-content {
+        padding: 16px 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    /* Stack options Call & Put cards vertically */
+    .options-oi-cards {
+        grid-template-columns: 1fr;
+    }
 }
