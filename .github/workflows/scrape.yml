@@ -2,8 +2,12 @@ name: Scrape Daily Taiwan Stock Data
 
 on:
   schedule:
-    # 07:45 UTC is 15:45 Taipei Time (Monday to Friday)
+    # 07:45 UTC is 15:45 Taipei Time (Monday to Friday) - Primary Run
     - cron: '45 7 * * 1-5'
+    # 08:30 UTC is 16:30 Taipei Time (Monday to Friday) - Fallback Run
+    - cron: '30 8 * * 1-5'
+    # 09:30 UTC is 17:30 Taipei Time (Monday to Friday) - Safety Run
+    - cron: '30 9 * * 1-5'
   workflow_dispatch:
 
 permissions:
