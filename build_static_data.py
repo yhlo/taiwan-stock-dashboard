@@ -38,35 +38,39 @@ def fetch_data_with_cache(url, cache_path, is_today=False, delay=0.8):
     }
     
     url_name = url.split("?")[0].split("/")[-1]
-    print(f"Fetching {url_name}...")
-    time.sleep(delay)
     
-    try:
-        response = requests.get(url, headers=headers, timeout=15)
-        if response.status_code == 200:
-            data = response.json()
-            
-            has_data = False
-            if "stat" in data and data["stat"] == "OK" and "data" in data and len(data["data"]) > 0:
-                has_data = True
-            elif "aaData" in data and len(data["aaData"]) > 0:
-                has_data = True
-            elif "tables" in data and len(data["tables"]) > 0 and len(data["tables"][0].get("data", [])) > 0:
-                has_data = True
+    for attempt in range(3):
+        print(f"Fetching {url_name} (Attempt {attempt+1})...")
+        time.sleep(delay if attempt == 0 else 2.0)
+        try:
+            response = requests.get(url, headers=headers, timeout=25)
+            if response.status_code == 200:
+                data = response.json()
                 
-            if has_data:
-                with open(cache_path, "w", encoding="utf-8") as f:
-                    json.dump(data, f, ensure_ascii=False, indent=2)
-                return data
-            else:
-                if not is_today:
-                    no_data_content = {"stat": "NO_DATA"}
+                has_data = False
+                if "stat" in data and data["stat"] == "OK" and "data" in data and len(data["data"]) > 0:
+                    has_data = True
+                elif "aaData" in data and len(data["aaData"]) > 0:
+                    has_data = True
+                elif "tables" in data and len(data["tables"]) > 0 and len(data["tables"][0].get("data", [])) > 0:
+                    has_data = True
+                    
+                if has_data:
                     with open(cache_path, "w", encoding="utf-8") as f:
-                        json.dump(no_data_content, f, ensure_ascii=False, indent=2)
-                    return no_data_content
-                return data
-    except Exception as e:
-        print(f"Error fetching {url_name}: {e}", file=sys.stderr)
+                        json.dump(data, f, ensure_ascii=False, indent=2)
+                    return data
+                else:
+                    if not is_today:
+                        no_data_content = {"stat": "NO_DATA"}
+                        with open(cache_path, "w", encoding="utf-8") as f:
+                            json.dump(no_data_content, f, ensure_ascii=False, indent=2)
+                        return no_data_content
+                    return data
+            else:
+                print(f"Server returned status code {response.status_code} for {url_name} on attempt {attempt+1}")
+        except Exception as e:
+            print(f"Error fetching {url_name} on attempt {attempt+1}: {e}", file=sys.stderr)
+            
     return None
 
 def parse_twse_t86(api_response):
@@ -642,6 +646,9 @@ def scrape_daily_sbl_data(date_str, cache_dir):
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36"
     }
     
+    taipei_now = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=8)
+    is_today = (date_str == taipei_now.strftime("%Y%m%d"))
+    
     def clean_int(val):
         if val is None:
             return 0
@@ -693,8 +700,13 @@ def scrape_daily_sbl_data(date_str, cache_dir):
                                 }
                         twse_success = True
                         break
-                    elif data.get("stat") == "NO_DATA":
-                        print(f"TWSE SBL returned NO_DATA on attempt {attempt+1}")
+                    elif data.get("stat") == "NO_DATA" or ("data" in data and len(data["data"]) == 0):
+                        print(f"TWSE SBL returned empty or NO_DATA on attempt {attempt+1}")
+                        if not is_today:
+                            with open(twse_cache, "w", encoding="utf-8") as f:
+                                json.dump(data, f, ensure_ascii=False, indent=2)
+                        twse_success = True
+                        break
                 else:
                     print(f"TWSE SBL returned status code {res.status_code} on attempt {attempt+1}")
             except Exception as e:
@@ -703,7 +715,7 @@ def scrape_daily_sbl_data(date_str, cache_dir):
                 time.sleep(2)
                 
         if not twse_success:
-            raise RuntimeError("Failed to fetch TWSE SBL data after 3 attempts.")
+            print("Warning: Failed to fetch TWSE SBL data after 3 attempts. SBL data will default to 0.", file=sys.stderr)
 
     # 2. TPEx (margin_sbl)
     tpex_success = False
@@ -752,6 +764,11 @@ def scrape_daily_sbl_data(date_str, cache_dir):
                         break
                     else:
                         print(f"TPEx SBL returned empty or invalid data on attempt {attempt+1}")
+                        if not is_today:
+                            with open(tpex_cache, "w", encoding="utf-8") as f:
+                                json.dump(data, f, ensure_ascii=False, indent=2)
+                        tpex_success = True
+                        break
                 else:
                     print(f"TPEx SBL returned status code {res.status_code} on attempt {attempt+1}")
             except Exception as e:
@@ -760,7 +777,7 @@ def scrape_daily_sbl_data(date_str, cache_dir):
                 time.sleep(2)
                 
         if not tpex_success:
-            raise RuntimeError("Failed to fetch TPEx SBL data after 3 attempts.")
+            print("Warning: Failed to fetch TPEx SBL data after 3 attempts. SBL data will default to 0.", file=sys.stderr)
             
     return sbl_map
 
