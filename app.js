@@ -1034,6 +1034,38 @@ function showStockDetails(stock) {
     document.getElementById('stock-streak-dealer').innerHTML = formatStreakText(stock.Dealer_Streak, stock.Dealer_Latest);
     document.getElementById('stock-streak-total').innerHTML = formatStreakText(stock.Total_Streak, stock.Total_Latest);
 
+    // SBL details
+    const sblSoldEl = document.getElementById('stock-sbl-sold');
+    const sblReturnedEl = document.getElementById('stock-sbl-returned');
+    const sblBalanceEl = document.getElementById('stock-sbl-balance');
+    const sblSummaryEl = document.getElementById('stock-sbl-summary');
+    
+    if (sblSoldEl && sblReturnedEl && sblBalanceEl && sblSummaryEl) {
+        const sblSoldLots = Math.round((stock.SBL_Sold || 0) / 1000);
+        const sblReturnedLots = Math.round((stock.SBL_Returned || 0) / 1000);
+        const sblBalanceLots = Math.round((stock.SBL_Balance || 0) / 1000);
+        
+        sblSoldEl.textContent = `${formatNumber(sblSoldLots)} 張`;
+        sblReturnedEl.textContent = `${formatNumber(sblReturnedLots)} 張`;
+        sblBalanceEl.textContent = `${formatNumber(sblBalanceLots)} 張`;
+        
+        const sblNet = sblSoldLots - sblReturnedLots;
+        
+        if (sblBalanceLots === 0 && sblSoldLots === 0 && sblReturnedLots === 0) {
+            sblSummaryEl.className = "sbl-summary-banner";
+            sblSummaryEl.textContent = "此股無借券放空餘額，或不適用借券賣出。";
+        } else if (sblNet > 0) {
+            sblSummaryEl.className = "sbl-summary-banner bearish";
+            sblSummaryEl.innerHTML = `📉 今日 SBL 淨增加 <strong>${formatNumber(sblNet)} 張</strong> (外資/法人偏空放空力道增強)`;
+        } else if (sblNet < 0) {
+            sblSummaryEl.className = "sbl-summary-banner bullish";
+            sblSummaryEl.innerHTML = `📈 今日 SBL 淨減少 <strong>${formatNumber(Math.abs(sblNet))} 張</strong> (空單回補 / 法人放空力道減弱)`;
+        } else {
+            sblSummaryEl.className = "sbl-summary-banner";
+            sblSummaryEl.textContent = "今日 SBL 無增減淨變動 (放空與回補力道持平)。";
+        }
+    }
+
     // Open the modal by adding active class
     stockDetailSection.classList.add('active');
     

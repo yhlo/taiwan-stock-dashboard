@@ -636,6 +636,134 @@ def generate_trend_chart(futures_history, cache_dir):
         print(f"Error generating chart: {e}", file=sys.stderr)
     return None, []
 
+def scrape_daily_sbl_data(date_str, cache_dir):
+    sbl_map = {}
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36"
+    }
+    
+    def clean_int(val):
+        if val is None:
+            return 0
+        val_str = str(val).replace(",", "").strip()
+        try:
+            return int(val_str)
+        except ValueError:
+            return 0
+
+    # 1. TWSE (TWT93U)
+    twse_success = False
+    twse_cache = os.path.join(cache_dir, f"SBL_TWSE_{date_str}.json")
+    
+    if os.path.exists(twse_cache):
+        with open(twse_cache, "r", encoding="utf-8") as f:
+            try:
+                cached_data = json.load(f)
+                if "data" in cached_data and len(cached_data["data"]) > 0:
+                    for row in cached_data["data"]:
+                        if len(row) >= 13:
+                            sym = str(row[0]).strip()
+                            sbl_map[sym] = {
+                                "SBL_Sold": clean_int(row[9]),
+                                "SBL_Returned": clean_int(row[10]),
+                                "SBL_Balance": clean_int(row[12])
+                            }
+                    twse_success = True
+            except Exception:
+                pass
+                
+    if not twse_success:
+        for attempt in range(3):
+            try:
+                url_twse = f"https://www.twse.com.tw/exchangeReport/TWT93U?response=json&date={date_str}"
+                print(f"Fetching TWSE SBL for {date_str} (Attempt {attempt+1})...")
+                res = requests.get(url_twse, headers=headers, timeout=20)
+                if res.status_code == 200:
+                    data = res.json()
+                    if "data" in data and len(data["data"]) > 0:
+                        with open(twse_cache, "w", encoding="utf-8") as f:
+                            json.dump(data, f, ensure_ascii=False, indent=2)
+                        for row in data["data"]:
+                            if len(row) >= 13:
+                                sym = str(row[0]).strip()
+                                sbl_map[sym] = {
+                                    "SBL_Sold": clean_int(row[9]),
+                                    "SBL_Returned": clean_int(row[10]),
+                                    "SBL_Balance": clean_int(row[12])
+                                }
+                        twse_success = True
+                        break
+                    elif data.get("stat") == "NO_DATA":
+                        print(f"TWSE SBL returned NO_DATA on attempt {attempt+1}")
+                else:
+                    print(f"TWSE SBL returned status code {res.status_code} on attempt {attempt+1}")
+            except Exception as e:
+                print(f"Error fetching TWSE SBL on attempt {attempt+1}: {e}", file=sys.stderr)
+            if not twse_success and attempt < 2:
+                time.sleep(2)
+                
+        if not twse_success:
+            raise RuntimeError("Failed to fetch TWSE SBL data after 3 attempts.")
+
+    # 2. TPEx (margin_sbl)
+    tpex_success = False
+    tpex_cache = os.path.join(cache_dir, f"SBL_TPEX_{date_str}.json")
+    
+    if os.path.exists(tpex_cache):
+        with open(tpex_cache, "r", encoding="utf-8") as f:
+            try:
+                cached_data = json.load(f)
+                if "tables" in cached_data and len(cached_data["tables"]) > 0:
+                    table_data = cached_data["tables"][0].get("data", [])
+                    for row in table_data:
+                        if len(row) >= 13:
+                            sym = str(row[0]).strip()
+                            sbl_map[sym] = {
+                                "SBL_Sold": clean_int(row[9]),
+                                "SBL_Returned": clean_int(row[10]),
+                                "SBL_Balance": clean_int(row[12])
+                            }
+                    tpex_success = True
+            except Exception:
+                pass
+                
+    if not tpex_success:
+        roc_date = western_to_roc_date(date_str)
+        for attempt in range(3):
+            try:
+                url_tpex = f"https://www.tpex.org.tw/web/stock/margin_trading/margin_sbl/margin_sbl_result.php?l=zh-tw&d={roc_date}&s=0,asc,0&o=json"
+                print(f"Fetching TPEx SBL for {roc_date} (Attempt {attempt+1})...")
+                res = requests.get(url_tpex, headers=headers, timeout=25)
+                if res.status_code == 200:
+                    data = res.json()
+                    if "tables" in data and len(data["tables"]) > 0 and len(data["tables"][0].get("data", [])) > 0:
+                        with open(tpex_cache, "w", encoding="utf-8") as f:
+                            json.dump(data, f, ensure_ascii=False, indent=2)
+                        table_data = data["tables"][0].get("data", [])
+                        for row in table_data:
+                            if len(row) >= 13:
+                                sym = str(row[0]).strip()
+                                sbl_map[sym] = {
+                                    "SBL_Sold": clean_int(row[9]),
+                                    "SBL_Returned": clean_int(row[10]),
+                                    "SBL_Balance": clean_int(row[12])
+                                }
+                        tpex_success = True
+                        break
+                    else:
+                        print(f"TPEx SBL returned empty or invalid data on attempt {attempt+1}")
+                else:
+                    print(f"TPEx SBL returned status code {res.status_code} on attempt {attempt+1}")
+            except Exception as e:
+                print(f"Error fetching TPEx SBL on attempt {attempt+1}: {e}", file=sys.stderr)
+            if not tpex_success and attempt < 2:
+                time.sleep(2)
+                
+        if not tpex_success:
+            raise RuntimeError("Failed to fetch TPEx SBL data after 3 attempts.")
+            
+    return sbl_map
+
 def scrape_daily_stock_quotes(date_str):
     quotes_map = {}
     headers = {
@@ -924,15 +1052,19 @@ def main():
     # 4. Fetch Daily closing quotes for OHL and Price data
     quotes_map = scrape_daily_stock_quotes(latest_active_date)
     
-    # 5. Load industry mapping
+    # 5. Fetch Daily SBL (Securities Borrowing & Lending) data
+    sbl_map = scrape_daily_sbl_data(latest_active_date, cache_dir)
+    
+    # 6. Load industry mapping
     industry_mapping = load_industry_mapping(cache_dir)
     
-    # 6. Merge quotes and industry mapping into streaks
+    # 7. Merge quotes, SBL, and industry mapping into streaks
     final_streaks = []
     for _, row in df_streaks.iterrows():
         sym = row["Symbol"]
         quote = quotes_map.get(sym, {"Open": 0.0, "High": 0.0, "Low": 0.0, "Close": 0.0, "Change": 0.0, "Volume": 0})
         ind = industry_mapping.get(sym, "其他")
+        sbl = sbl_map.get(sym, {"SBL_Sold": 0, "SBL_Returned": 0, "SBL_Balance": 0})
         
         final_streaks.append({
             "Symbol": sym,
@@ -952,7 +1084,10 @@ def main():
             "Low": quote["Low"],
             "Close": quote["Close"],
             "Change": quote["Change"],
-            "Volume": quote["Volume"]
+            "Volume": quote["Volume"],
+            "SBL_Sold": int(sbl["SBL_Sold"]),
+            "SBL_Returned": int(sbl["SBL_Returned"]),
+            "SBL_Balance": int(sbl["SBL_Balance"])
         })
         
     # Write streaks.json
