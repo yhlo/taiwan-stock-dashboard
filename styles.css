@@ -1220,3 +1220,27 @@ tbody tr:hover {
     background-color: rgba(234, 179, 8, 0.08);
     border-color: #eab308;
 }
+
+/* Yahoo Link Button Styles in Modal */
+.yahoo-btn {
+    background: none;
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    padding: 6px 10px;
+    border-radius: var(--radius-md);
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all var(--transition-fast);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+}
+
+.yahoo-btn:hover {
+    background-color: var(--bg-hover);
+    border-color: #7b00d3;
+    color: #7b00d3;
+}

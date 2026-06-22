@@ -1001,6 +1001,13 @@ function showStockDetails(stock) {
         }
     }
 
+    // Update Yahoo Stock link
+    const yahooLink = document.getElementById('yahoo-stock-link');
+    if (yahooLink) {
+        const suffix = stock.Market.includes('上櫃') || stock.Market.includes('TPEx') ? 'TWO' : 'TW';
+        yahooLink.href = `https://tw.stock.yahoo.com/quote/${stock.Symbol}.${suffix}`;
+    }
+
     document.getElementById('stock-detail-title').textContent = `🔍 個股數據查詢: ${stock.Symbol} ${stock.Name}`;
     document.getElementById('stock-detail-market').textContent = stock.Market;
     document.getElementById('stock-detail-industry').textContent = stock.Industry;
