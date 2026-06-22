@@ -643,93 +643,117 @@ def scrape_daily_stock_quotes(date_str):
     }
     
     # 1. TWSE
-    try:
-        url_twse = f"https://www.twse.com.tw/rwd/zh/afterTrading/MI_INDEX?response=json&date={date_str}&type=ALLBUT0999"
-        print(f"Fetching TWSE MI_INDEX for {date_str}...")
-        res = requests.get(url_twse, headers=headers, timeout=20)
-        if res.status_code == 200:
-            data = res.json()
-            if "tables" in data and len(data["tables"]) > 8:
-                table = data["tables"][8]
-                fields = table.get("fields", [])
-                rows = table.get("data", [])
-                
-                if "證券代號" in fields:
-                    print(f"Parsing TWSE quotes ({len(rows)} stocks)...")
-                    for r in rows:
-                        if len(r) >= 11:
-                            sym = str(r[0]).strip()
-                            vol = str(r[2]).replace(",", "").strip()
-                            open_p = str(r[5]).replace(",", "").strip()
-                            high_p = str(r[6]).replace(",", "").strip()
-                            low_p = str(r[7]).replace(",", "").strip()
-                            close_p = str(r[8]).replace(",", "").strip()
-                            
-                            def clean_float(val):
-                                try:
-                                    return float(val)
-                                except ValueError:
-                                    return 0.0
-                                    
-                            vol_val = clean_float(vol) // 1000
-                            open_val = clean_float(open_p)
-                            high_val = clean_float(high_p)
-                            low_val = clean_float(low_p)
-                            close_val = clean_float(close_p)
-                            
-                            change_sign = str(r[9]).strip()
-                            change_val = clean_float(str(r[10]).replace(",", "").strip())
-                            if "-" in change_sign or "綠" in change_sign:
-                                change_val = -change_val
+    twse_success = False
+    for attempt in range(3):
+        try:
+            url_twse = f"https://www.twse.com.tw/rwd/zh/afterTrading/MI_INDEX?response=json&date={date_str}&type=ALLBUT0999"
+            print(f"Fetching TWSE MI_INDEX for {date_str} (Attempt {attempt+1})...")
+            res = requests.get(url_twse, headers=headers, timeout=20)
+            if res.status_code == 200:
+                data = res.json()
+                if "tables" in data and len(data["tables"]) > 8:
+                    table = data["tables"][8]
+                    fields = table.get("fields", [])
+                    rows = table.get("data", [])
+                    
+                    if "證券代號" in fields:
+                        print(f"Parsing TWSE quotes ({len(rows)} stocks)...")
+                        for r in rows:
+                            if len(r) >= 11:
+                                sym = str(r[0]).strip()
+                                vol = str(r[2]).replace(",", "").strip()
+                                open_p = str(r[5]).replace(",", "").strip()
+                                high_p = str(r[6]).replace(",", "").strip()
+                                low_p = str(r[7]).replace(",", "").strip()
+                                close_p = str(r[8]).replace(",", "").strip()
                                 
-                            quotes_map[sym] = {
-                                "Open": open_val,
-                                "High": high_val,
-                                "Low": low_val,
-                                "Close": close_val,
-                                "Change": change_val,
-                                "Volume": int(vol_val)
-                            }
-    except Exception as e:
-        print(f"Error fetching TWSE daily quotes: {e}", file=sys.stderr)
+                                def clean_float(val):
+                                    try:
+                                        return float(val)
+                                    except ValueError:
+                                        return 0.0
+                                        
+                                vol_val = clean_float(vol) // 1000
+                                open_val = clean_float(open_p)
+                                high_val = clean_float(high_p)
+                                low_val = clean_float(low_p)
+                                close_val = clean_float(close_p)
+                                
+                                change_sign = str(r[9]).strip()
+                                change_val = clean_float(str(r[10]).replace(",", "").strip())
+                                if "-" in change_sign or "綠" in change_sign:
+                                    change_val = -change_val
+                                    
+                                quotes_map[sym] = {
+                                    "Open": open_val,
+                                    "High": high_val,
+                                    "Low": low_val,
+                                    "Close": close_val,
+                                    "Change": change_val,
+                                    "Volume": int(vol_val)
+                                }
+                        twse_success = True
+                        break
+                elif data.get("stat") == "NO_DATA":
+                    print(f"TWSE returned NO_DATA on attempt {attempt+1}")
+            else:
+                print(f"TWSE returned status code {res.status_code} on attempt {attempt+1}")
+        except Exception as e:
+            print(f"Error fetching TWSE daily quotes on attempt {attempt+1}: {e}", file=sys.stderr)
+        if not twse_success and attempt < 2:
+            time.sleep(2)
+
+    if not twse_success:
+        raise RuntimeError("Failed to fetch TWSE daily quotes after 3 attempts.")
         
     # 2. TPEx
-    try:
-        url_tpex = "https://www.tpex.org.tw/openapi/v1/tpex_mainboard_daily_close_quotes"
-        print("Fetching TPEx OpenAPI quotes...")
-        res = requests.get(url_tpex, headers=headers, timeout=25)
-        if res.status_code == 200:
-            data = res.json()
-            print(f"Parsing TPEx quotes ({len(data)} stocks)...")
-            for r in data:
-                sym = str(r.get("SecuritiesCompanyCode", "")).strip()
-                
-                def clean_float(val):
-                    if val is None:
-                        return 0.0
-                    val_str = str(val).replace(",", "").strip()
-                    try:
-                        return float(val_str)
-                    except ValueError:
-                        return 0.0
-                        
-                vol = clean_float(r.get("TradingShares", 0)) // 1000
-                open_p = clean_float(r.get("Open", 0))
-                high_p = clean_float(r.get("High", 0))
-                low_p = clean_float(r.get("Low", 0))
-                close_p = clean_float(r.get("Close", 0))
-                change_val = clean_float(r.get("Change", 0))
-                
-                quotes_map[sym] = {
-                    "Open": open_p,
-                    "High": high_p,
-                    "Low": low_p,
-                    "Close": close_p,
-                    "Change": change_val,
-                    "Volume": int(vol)
-                }
-    except Exception as e:
-        print(f"Error fetching TPEx daily quotes: {e}", file=sys.stderr)
+    tpex_success = False
+    for attempt in range(3):
+        try:
+            url_tpex = "https://www.tpex.org.tw/openapi/v1/tpex_mainboard_daily_close_quotes"
+            print(f"Fetching TPEx OpenAPI quotes (Attempt {attempt+1})...")
+            res = requests.get(url_tpex, headers=headers, timeout=25)
+            if res.status_code == 200:
+                data = res.json()
+                print(f"Parsing TPEx quotes ({len(data)} stocks)...")
+                for r in data:
+                    sym = str(r.get("SecuritiesCompanyCode", "")).strip()
+                    
+                    def clean_float(val):
+                        if val is None:
+                            return 0.0
+                        val_str = str(val).replace(",", "").strip()
+                        try:
+                            return float(val_str)
+                        except ValueError:
+                            return 0.0
+                            
+                    vol = clean_float(r.get("TradingShares", 0)) // 1000
+                    open_p = clean_float(r.get("Open", 0))
+                    high_p = clean_float(r.get("High", 0))
+                    low_p = clean_float(r.get("Low", 0))
+                    close_p = clean_float(r.get("Close", 0))
+                    change_val = clean_float(r.get("Change", 0))
+                    
+                    quotes_map[sym] = {
+                        "Open": open_p,
+                        "High": high_p,
+                        "Low": low_p,
+                        "Close": close_p,
+                        "Change": change_val,
+                        "Volume": int(vol)
+                    }
+                tpex_success = True
+                break
+            else:
+                print(f"TPEx returned status code {res.status_code} on attempt {attempt+1}")
+        except Exception as e:
+            print(f"Error fetching TPEx daily quotes on attempt {attempt+1}: {e}", file=sys.stderr)
+        if not tpex_success and attempt < 2:
+            time.sleep(2)
+
+    if not tpex_success:
+        raise RuntimeError("Failed to fetch TPEx daily quotes after 3 attempts.")
         
     return quotes_map
 
