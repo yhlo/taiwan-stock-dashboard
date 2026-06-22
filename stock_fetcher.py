@@ -150,8 +150,8 @@ def fetch_data_with_cache(url, cache_path, is_today=False, delay=1.0):
         date_match = re.search(r'\d{8}', os.path.basename(cache_path))
         if date_match:
             try:
-                file_date = datetime.datetime.strptime(date_match.group(0), "%Y%m%d").date()
-                if (datetime.date.today() - file_date).days <= 3:
+                taipei_today = (datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=8)).date()
+                if (taipei_today - file_date).days <= 3:
                     is_recent_no_data = True
             except Exception:
                 pass
@@ -407,7 +407,8 @@ def load_t86_both_markets(date_str, cache_dir, is_today=False):
 def find_latest_trading_days(n=20, cache_dir=".cache"):
     """回推找出最近的 N 個交易日法人資料"""
     trading_days = []
-    current_date = datetime.date.today()
+    taipei_now = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=8)
+    current_date = taipei_now.date()
     
     # 週末自動調整，節省網路請求
     if current_date.weekday() == 5:    # 週六
@@ -417,7 +418,7 @@ def find_latest_trading_days(n=20, cache_dir=".cache"):
         
     checked_days = 0
     max_days_to_check = n * 3
-    today_str = datetime.date.today().strftime("%Y%m%d")
+    today_str = taipei_now.strftime("%Y%m%d")
     
     while len(trading_days) < n and checked_days < max_days_to_check:
         # 排除週末，節省大量無用 API 請求與等待時間
@@ -430,7 +431,7 @@ def find_latest_trading_days(n=20, cache_dir=".cache"):
         is_today = (date_str == today_str)
         
         # 若是今天，且時間尚未到下午 3:00 (通常法人資料尚未出爐)，直接跳過今天
-        if is_today and datetime.datetime.now().time() < datetime.time(15, 0):
+        if is_today and taipei_now.time() < datetime.time(15, 0):
             current_date -= datetime.timedelta(days=1)
             checked_days += 1
             continue
@@ -1377,7 +1378,8 @@ def main():
             show_individual_stock(symbol, df_streaks, industry_mapping)
     else:
         # 沒有傳入代碼，顯示大盤統計與排行榜 (可搭配連續天數篩選)
-        is_today = (latest_date == datetime.date.today().strftime("%Y%m%d"))
+        taipei_today_str = (datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=8)).strftime("%Y%m%d")
+        is_today = (latest_date == taipei_today_str)
         show_market_summary(latest_date, cache_dir, is_today)
         
         # --- 新增期權籌碼分析 ---

@@ -264,7 +264,8 @@ def find_latest_trading_days(n=20):
         print(f"Error fetching from yfinance: {e}, falling back to manual date generation", file=sys.stderr)
         
     trading_days = []
-    current_date = datetime.date.today()
+    taipei_now = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=8)
+    current_date = taipei_now.date()
     if current_date.weekday() == 5:
         current_date -= datetime.timedelta(days=1)
     elif current_date.weekday() == 6:
@@ -326,7 +327,7 @@ def calculate_streaks(df_list):
         return streak
 
     streak_results = []
-    for sym in all_symbols:
+    for sym in sorted(all_symbols):
         data = symbol_data[sym]
         foreign_streak = get_streak_days(data["Foreign"])
         trust_streak = get_streak_days(data["Trust"])
@@ -872,14 +873,14 @@ def main():
     latest_date = trading_days[0]
     print(f"Latest Trading Day: {latest_date[:4]}/{latest_date[4:6]}/{latest_date[6:]}")
     
-    # 2. Download and cache T86 data
     day_dfs = []
-    today_str = datetime.date.today().strftime("%Y%m%d")
+    taipei_now = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=8)
+    today_str = taipei_now.strftime("%Y%m%d")
     
     for d in trading_days:
         is_today = (d == today_str)
-        # Skip today if it is before 3 PM
-        if is_today and datetime.datetime.now().time() < datetime.time(15, 0):
+        # Skip today if it is before 3 PM Taipei Time
+        if is_today and taipei_now.time() < datetime.time(15, 0):
             continue
         df = load_t86_both_markets(d, cache_dir, is_today)
         if df is not None:
