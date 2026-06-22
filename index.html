@@ -35,7 +35,7 @@
                 <div class="card-header-actions">
                     <a id="yahoo-stock-link" class="yahoo-btn" target="_blank" title="在新分頁開啟 Yahoo 奇摩股市報價">📈 Yahoo 股市</a>
                     <button id="favorite-toggle-btn" class="favorite-btn" title="加入/取消關注">☆ 關注</button>
-                    <button id="dock-toggle-btn" class="dock-btn" title="切換停靠右側">➡️ 停靠右側</button>
+                    <button id="dock-toggle-btn" class="dock-btn" title="切換側邊欄面版模式">➡️ 側邊面板</button>
                     <button id="close-search-btn" class="close-btn" title="關閉">&times;</button>
                 </div>
             </div>
@@ -49,6 +49,10 @@
                         <span id="stock-detail-market" class="badge">--</span>
                         <span id="stock-detail-industry" class="badge">--</span>
                     </div>
+                </div>
+                <!-- Intraday Live warning -->
+                <div id="stock-live-indicator" class="live-indicator-banner hidden">
+                    ⚠️ 目前為台北盤中交易時間（09:00 - 13:30），此處價格為前一交易日收盤價。請點擊上方「📈 Yahoo 股市」查看今日即時行情與委買委賣。
                 </div>
                 <div class="stock-ohl-grid">
                     <div class="ohl-item">

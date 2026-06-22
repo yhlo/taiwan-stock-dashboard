@@ -1244,3 +1244,17 @@ tbody tr:hover {
     border-color: #7b00d3;
     color: #7b00d3;
 }
+
+/* Intraday Live Indicator Banner */
+.live-indicator-banner {
+    margin-top: 12px;
+    padding: 10px 12px;
+    border-radius: var(--radius-md);
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.5;
+    border: 1px solid rgba(217, 119, 6, 0.2);
+    background-color: rgba(217, 119, 6, 0.05);
+    color: #b45309; /* warm amber text */
+    text-align: left;
+}

@@ -970,13 +970,13 @@ function updateDetailLayout() {
     
     if (isDockedRight) {
         stockDetailSection.classList.add('docked-right');
-        if (dockToggleBtn) dockToggleBtn.textContent = '⬅️ 浮動視窗';
+        if (dockToggleBtn) dockToggleBtn.textContent = '⬅️ 置中彈窗';
         
         // Hide backdrop overlay in docked mode so the user can interact with the main page
         if (backdrop) backdrop.classList.remove('active');
     } else {
         stockDetailSection.classList.remove('docked-right');
-        if (dockToggleBtn) dockToggleBtn.textContent = '➡️ 停靠右側';
+        if (dockToggleBtn) dockToggleBtn.textContent = '➡️ 側邊面板';
         
         // Show backdrop in centered floating modal mode
         if (stockDetailSection.classList.contains('active')) {
@@ -1006,6 +1006,31 @@ function showStockDetails(stock) {
     if (yahooLink) {
         const suffix = stock.Market.includes('上櫃') || stock.Market.includes('TPEx') ? 'TWO' : 'TW';
         yahooLink.href = `https://tw.stock.yahoo.com/quote/${stock.Symbol}.${suffix}`;
+    }
+
+    // Update Intraday Live warning banner
+    const liveIndicator = document.getElementById('stock-live-indicator');
+    if (liveIndicator) {
+        try {
+            // Get current time in Taipei timezone (UTC+8)
+            const taipeiDate = new Date(new Date().toLocaleString("en-US", {timeZone: "Asia/Taipei"}));
+            const day = taipeiDate.getDay(); // 0: Sunday, 1-5: Mon-Fri, 6: Sat
+            const hours = taipeiDate.getHours();
+            const minutes = taipeiDate.getMinutes();
+            const timeValue = hours * 60 + minutes;
+            
+            // Monday to Friday (1-5) and 09:00 (540 mins) to 13:30 (810 mins)
+            const isTradingHours = (day >= 1 && day <= 5) && (timeValue >= 540 && timeValue <= 810);
+            
+            if (isTradingHours) {
+                liveIndicator.classList.remove('hidden');
+            } else {
+                liveIndicator.classList.add('hidden');
+            }
+        } catch (e) {
+            console.error("Error calculating Taipei trading hours:", e);
+            liveIndicator.classList.add('hidden');
+        }
     }
 
     document.getElementById('stock-detail-title').textContent = `🔍 個股數據查詢: ${stock.Symbol} ${stock.Name}`;
