@@ -1451,5 +1451,14 @@ tbody tr:hover {
         width: 100%;
         text-align: center;
     }
+} 
+
+/* Paragraph spacing for footer */
+.footer-container p {
+    margin: 0;
+    margin-bottom: 8px;
+    line-height: 1.6;
+    color: var(--text-secondary);
 }
+
 
