@@ -130,24 +130,6 @@ function displayLastUpdated() {
         console.error('Failed to load last update time:', err);
     });
 }
-    // Taiwan time (Asia/Taipei) with custom dash‑separated format
-    const now = new Date();
-    const formatted = new Intl.DateTimeFormat('zh-TW', {
-        timeZone: 'Asia/Taipei',
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false,
-    })
-        .format(now)
-        .replace(/\//g, '-')      // replace '/' with '-'
-        .replace(',', '');        // remove stray comma if present
-    const el = document.getElementById('last-updated');
-    if (el) el.textContent = formatted;
-}
-// Removed duplicated page-load timestamp code – now uses data/last_update.json
 
 // Setup theme switcher
 function setupTheme() {
