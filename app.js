@@ -112,12 +112,29 @@ async function initApp() {
         streaksData = await streaksRes.json();
         renderRankings();
         renderWatchlist();
+        displayLastUpdated();
         
     } catch (error) {
         console.error("Error initializing dashboard data:", error);
     }
 }
 
+function displayLastUpdated() {
+    const now = new Date();
+    // Taiwan time (UTC+8)
+    const tzOffset = now.getTimezoneOffset() * 60000; // minutes to ms
+    const taipei = new Date(now.getTime() - tzOffset + 8 * 3600000);
+    const formatted = taipei.toLocaleString('zh-TW', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false,
+    });
+    const el = document.getElementById('last-updated');
+    if (el) el.textContent = formatted;
+}
 // Setup theme switcher
 function setupTheme() {
     const savedTheme = localStorage.getItem('theme');

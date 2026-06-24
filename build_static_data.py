@@ -22,15 +22,17 @@ def western_to_roc_date(date_str):
     return f"{roc_year}/{month}/{day}"
 
 def fetch_data_with_cache(url, cache_path, is_today=False, delay=0.8):
-    if os.path.exists(cache_path):
+    # For today's date we prefer fresh data; ignore cached file if present
+    if os.path.exists(cache_path) and not is_today:
         with open(cache_path, "r", encoding="utf-8") as f:
             try:
                 data = json.load(f)
                 if data.get("stat") == "NO_DATA":
-                    pass
-                else:
+                    # Cached no-data; still return to avoid repeated fetches
                     return data
+                return data
             except Exception:
+                # If cache is corrupted, fall back to fetching
                 pass
                 
     headers = {
