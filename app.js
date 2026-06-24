@@ -124,7 +124,13 @@ function displayLastUpdated() {
     fetch(`./data/last_update.json`).then(res => res.json()).then(data => {
         const el = document.getElementById('last-updated');
         if (el && data.last_updated) {
-            el.textContent = data.last_updated;
+            // Parse ISO string and format as "YYYY-MM-DD HH:MM:SS (UTC+8)"
+            const d = new Date(data.last_updated);
+            const pad = n => String(n).padStart(2, '0');
+            // Convert to UTC+8
+            const utc8 = new Date(d.getTime() + (8 * 60 * 60 * 1000 - d.getTimezoneOffset() * 60 * 1000));
+            const formatted = `${utc8.getFullYear()}-${pad(utc8.getMonth()+1)}-${pad(utc8.getDate())} ${pad(utc8.getHours())}:${pad(utc8.getMinutes())}:${pad(utc8.getSeconds())} (UTC+8)`;
+            el.textContent = formatted;
         }
     }).catch(err => {
         console.error('Failed to load last update time:', err);
