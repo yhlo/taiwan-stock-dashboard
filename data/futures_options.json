@@ -149,21 +149,6 @@
       "TMF_Total_Net": -28846
     },
     {
-      "Date": "20260611",
-      "Foreign_Net": -63168,
-      "Trust_Net": 55312,
-      "Dealer_Net": 4155,
-      "Total_Net": -3701,
-      "MTX_Foreign_Net": 4930,
-      "MTX_Trust_Net": 0,
-      "MTX_Dealer_Net": -15220,
-      "MTX_Total_Net": -10290,
-      "TMF_Foreign_Net": 12330,
-      "TMF_Trust_Net": 0,
-      "TMF_Dealer_Net": -47336,
-      "TMF_Total_Net": -35006
-    },
-    {
       "Date": "20260610",
       "Foreign_Net": -61949,
       "Trust_Net": 54186,
@@ -325,7 +310,6 @@
     43502.78125,
     44704.44140625,
     43225.5390625,
-    43149.4609375,
     44169.0390625,
     45396.98828125,
     45809.19140625,
