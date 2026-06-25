@@ -1128,7 +1128,7 @@ def main():
     
     # 8. Load Futures & Options
     futures_history = []
-    for date_str, _ in reversed(day_dfs[:10]):  # From oldest to newest
+    for date_str, _ in reversed(day_dfs[:20]):  # From oldest to newest
         oi_data = fetch_taifex_futures_oi(date_str, cache_dir)
         if oi_data:
             futures_history.append((date_str, oi_data))
