@@ -8,6 +8,8 @@ on:
     - cron: '30 8 * * 1-5'
     # 09:30 UTC is 17:30 Taipei Time (Monday to Friday) - Safety Run
     - cron: '30 9 * * 1-5'
+    # 09:30 UTC is 17:30 Taipei Time (Monday to Friday)
+    - cron: '30 13 * * 1-5'
   workflow_dispatch:
 
 permissions:
