@@ -1469,6 +1469,16 @@ tbody tr:hover {
     transition: background-color var(--transition-fast), border-color var(--transition-fast);
 }
 
+.instruction-section {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    margin-bottom: 24px;
+    padding: 24px;
+    transition: background-color var(--transition-fast), border-color var(--transition-fast);
+}
+
 .instruction-title {
     font-size: 16px;
     font-weight: 700;
@@ -1535,7 +1545,7 @@ tbody tr:hover {
     border-radius: var(--radius-md);
     font-size: 13px;
     font-weight: 500;
-    border-left: 4px solid #f59e0b; 
+    border-left: 4px solid #f59e0b;
     margin-top: 18px;
     line-height: 1.6;
     color: var(--text-primary);
