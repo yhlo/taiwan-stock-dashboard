@@ -1179,11 +1179,16 @@ def main():
     # 9. Clean Cache
     clean_old_cache(cache_dir, keep_days=45)
     print("Data compilation completed successfully!")
-# Write the actual data generation timestamp (Asia/Taipei)
-now = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=8)))
-last_update = now.strftime("%Y-%m-%d %H:%M")
-with open("data/last_update.json", "w", encoding="utf-8") as f:
-    json.dump({"last_updated": last_update}, f, ensure_ascii=False, indent=2)
+
+
+    utc_now = datetime.datetime.now(datetime.timezone.utc)
+
+    data = {
+        "last_updated": utc_now.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+    }
+
+    with open("data/last_update.json", "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=2)
 
 if __name__ == "__main__":
     main()
