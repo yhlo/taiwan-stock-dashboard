@@ -60,112 +60,6 @@
 
         <div id="modal-backdrop" class="modal-backdrop"></div>
 
-        <section id="stock-detail-section" class="card stock-detail-modal">
-            </section>
-
-
-        <div id="modal-backdrop" class="modal-backdrop"></div>
-
-        <!-- Stock Details Section (Floating Modal / Right Drawer) -->
-        <section id="stock-detail-section" class="card stock-detail-modal">
-            <div class="card-header">
-                <h2 id="stock-detail-title" class="card-title">🔍 個股數據查詢</h2>
-                <div class="card-header-actions">
-                    <a id="yahoo-stock-link" class="yahoo-btn" target="_blank" title="在新分頁開啟 Yahoo 奇摩股市報價">📈 Yahoo 股市</a>
-                    <button id="favorite-toggle-btn" class="favorite-btn" title="加入/取消關注">☆ 關注</button>
-                    <button id="dock-toggle-btn" class="dock-btn" title="切換側邊欄面版模式">➡️ 側邊面板</button>
-                    <button id="close-search-btn" class="close-btn" title="關閉">&times;</button>
-                </div>
-            </div>
-            <div class="stock-info-grid">
-                <div class="stock-price-card">
-                    <div class="stock-price-main">
-                        <span id="stock-detail-close" class="stock-price-value">--</span>
-                        <span id="stock-detail-change" class="stock-price-change">--</span>
-                    </div>
-                    <div class="stock-meta-info">
-                        <span id="stock-detail-market" class="badge">--</span>
-                        <span id="stock-detail-industry" class="badge">--</span>
-                    </div>
-                </div>
-                <!-- Intraday Live warning -->
-                <div id="stock-live-indicator" class="live-indicator-banner hidden">
-                    ⚠️ 目前為台北盤中交易時間（09:00 - 13:30），此處價格為前一交易日收盤價。請點擊上方「📈 Yahoo 股市」查看今日即時行情與委買委賣。
-                </div>
-                <div class="stock-ohl-grid">
-                    <div class="ohl-item">
-                        <span class="ohl-label">開盤價</span>
-                        <span id="stock-detail-open" class="ohl-value">--</span>
-                    </div>
-                    <div class="ohl-item">
-                        <span class="ohl-label">最高價</span>
-                        <span id="stock-detail-high" class="ohl-value">--</span>
-                    </div>
-                    <div class="ohl-item">
-                        <span class="ohl-label">最低價</span>
-                        <span id="stock-detail-low" class="ohl-value">--</span>
-                    </div>
-                    <div class="ohl-item">
-                        <span class="ohl-label">成交張數</span>
-                        <span id="stock-detail-volume" class="ohl-value">--</span>
-                    </div>
-                </div>
-            </div>
-            <div class="stock-streaks-grid">
-                <div class="streak-box">
-                    <span class="streak-box-title">外資買賣超</span>
-                    <span id="stock-streak-foreign" class="streak-box-value">--</span>
-                </div>
-                <div class="streak-box">
-                    <span class="streak-box-title">投信買賣超</span>
-                    <span id="stock-streak-trust" class="streak-box-value">--</span>
-                </div>
-                <div class="streak-box">
-                    <span class="streak-box-title">自營商買賣超</span>
-                    <span id="stock-streak-dealer" class="streak-box-value">--</span>
-                </div>
-                <div class="streak-box">
-                    <span class="streak-box-title">三大法人合計</span>
-                    <span id="stock-streak-total" class="streak-box-value">--</span>
-                </div>
-            </div>
-            
-            <!-- SBL Section -->
-            <div class="sbl-section-title">
-                ⚖️ 借券放空與空單回補 (SBL)
-            </div>
-            <div class="stock-sbl-grid">
-                <div class="streak-box">
-                    <span class="streak-box-title">今日借券賣出</span>
-                    <span id="stock-sbl-sold" class="streak-box-value">--</span>
-                </div>
-                <div class="streak-box">
-                    <span class="streak-box-title">今日還券</span>
-                    <span id="stock-sbl-returned" class="streak-box-value">--</span>
-                </div>
-                <div class="streak-box">
-                    <span class="streak-box-title">借券賣出餘額</span>
-                    <span id="stock-sbl-balance" class="streak-box-value">--</span>
-                </div>
-            </div>
-            <div id="stock-sbl-summary" class="sbl-summary-banner">
-                無借券放空數據
-            </div>
-            
-            <!-- Modal Ad Placeholder -->
-            <div class="ad-container ad-modal-rect">
-                <div class="ad-label">【廣告預覽 / Ad Preview】</div>
-                <div class="ad-mockup ad-rect-mockup">
-                    <div class="ad-badge">Ad by Google</div>
-                    <div class="ad-content-rect">
-                        <span class="ad-title">美股複委託手續費優惠</span>
-                        <span class="ad-desc">定期定額小額投資美股，手續費每筆最低 $0.1 美元起，開創全球投資路！</span>
-                        <a href="#" onclick="return false;" class="ad-cta-btn">了解更多</a>
-                    </div>
-                </div>
-            </div>
-        </section>
-
         <!-- Top Leaderboard Ad Placeholder -->
         <div class="ad-container ad-top-leaderboard">
             <div class="ad-label">【廣告預覽 / Ad Preview】</div>
@@ -455,7 +349,7 @@
             </div>
         </section>
 
-        <!-- Bottom Banner Ad Placeholder -->
+
         <div class="ad-container ad-bottom-banner">
             <div class="ad-label">【廣告預覽 / Ad Preview】</div>
             <div class="ad-mockup">
@@ -469,19 +363,124 @@
                 </div>
             </div>
         </div>
-    </div>
-    </main>
 
-    <footer class="app-footer">
-        <div class="footer-container">
-            <p>免責聲明：本網站內容僅供學術交流與程式設計研究參考，不構成任何投資建議。投資人應獨立判斷、審慎評估並自負投資風險。</p>
-            <p>個資聲明：本網站僅提供內容瀏覽，不涉及個人資料的蒐集與利用。本網站僅可能因伺服器運作紀錄必要的技術資訊（如 IP 位址、瀏覽時間），僅用於網站安全與維護，不涉及個人身分識別</p>
-            <p>資料更新頻率：每個交易日 17:00 台北時間自動爬取證交所、櫃買中心、期交所 OpenAPI。</p>
-            <p><strong>最後更新時間：</strong> <strong id="last-updated"></strong></p>
-            
+    </div> </main> <div id="modal-backdrop" class="modal-backdrop"></div>
+
+<section id="stock-detail-section" class="card stock-detail-modal">
+    <div class="card-header">
+        <h2 id="stock-detail-title" class="card-title">🔍 個股數據查詢</h2>
+        <div class="card-header-actions">
+            <a id="yahoo-stock-link" class="yahoo-btn" target="_blank" title="在新分頁開啟 Yahoo 奇摩股市報價">📈 Yahoo 股市</a>
+            <button id="favorite-toggle-btn" class="favorite-btn" title="加入/取消關注">☆ 關注</button>
+            <button id="dock-toggle-btn" class="dock-btn" title="切換側邊欄面版模式">➡️ 側邊面板</button>
+            <button id="close-search-btn" class="close-btn" title="關閉">&times;</button>
         </div>
-    </footer>
+    </div>
+    
+    <div class="stock-info-grid">
+        <div class="stock-price-card">
+            <div class="stock-price-main">
+                <span id="stock-detail-close" class="stock-price-value">--</span>
+                <span id="stock-detail-change" class="stock-price-change">--</span>
+            </div>
+            <div class="stock-meta-info">
+                <span id="stock-detail-market" class="badge">--</span>
+                <span id="stock-detail-industry" class="badge">--</span>
+            </div>
+        </div>
+        
+        <div class="streak-container-grid">
+            <div class="streak-box streak-fi">
+                <span class="streak-box-label">外資連買/賣</span>
+                <span id="stock-fi-streak" class="streak-box-value">--</span>
+            </div>
+            <div class="streak-box streak-it">
+                <span class="streak-box-label">投信連買/賣</span>
+                <span id="stock-it-streak" class="streak-box-value">--</span>
+            </div>
+            <div class="streak-box streak-prop">
+                <span class="streak-box-label">自營商連買/賣</span>
+                <span id="stock-prop-streak" class="streak-box-value">--</span>
+            </div>
+        </div>
+        
+        <div class="detail-table-wrapper">
+            <table class="detail-table">
+                <thead>
+                    <tr>
+                        <th>法人項目</th>
+                        <th>今日買賣超 (張)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>外資及陸資</strong></td>
+                        <td id="stock-detail-fi">--</td>
+                    </tr>
+                    <tr>
+                        <td><strong>投信</strong></td>
+                        <td id="stock-detail-it">--</td>
+                    </tr>
+                    <tr>
+                        <td><strong>自營商 (自行買賣)</strong></td>
+                        <td id="stock-detail-prop-self">--</td>
+                    </tr>
+                    <tr>
+                        <td><strong>自營商 (避險)</strong></td>
+                        <td id="stock-detail-prop-hedge">--</td>
+                    </tr>
+                    <tr class="table-total-row">
+                        <td><strong>三大法人合計</strong></td>
+                        <td id="stock-detail-total">--</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="margin-info-grid">
+            <div class="margin-box">
+                <span class="streak-box-label">融資餘額變動</span>
+                <span id="stock-margin-balance" class="streak-box-value">--</span>
+            </div>
+            <div class="margin-box">
+                <span class="streak-box-label">融券餘額變動</span>
+                <span id="stock-short-balance" class="streak-box-value">--</span>
+            </div>
+            <div class="margin-box">
+                <span class="streak-box-label">券資比</span>
+                <span id="stock-margin-ratio" class="streak-box-value">--</span>
+            </div>
+        </div>
+        
+        <div class="sbl-info-grid">
+            <div class="sbl-box">
+                <span class="streak-box-label">借券賣出餘額</span>
+                <span id="stock-sbl-balance" class="streak-box-value">--</span>
+            </div>
+        </div>
+        <div id="stock-sbl-summary" class="sbl-summary-banner">無借券放空數據</div>
+        
+        <div class="ad-container ad-modal-rect">
+            <div class="ad-label">【廣告預覽 / Ad Preview】</div>
+            <div class="ad-mockup ad-rect-mockup">
+                <div class="ad-badge">Ad by Google</div>
+                <div class="ad-content-rect">
+                    <span class="ad-title">美股複委託手續費優惠</span>
+                    <span class="ad-desc">定期定額小額投資美股，手續費每筆最低 $0.1 美元起，開創全球投資路！</span>
+                    <a href="#" onclick="return false;" class="ad-cta-btn">了解更多</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
-    <script src="app.js"></script>
+<footer class="app-footer">
+    <div class="footer-container">
+        <p>免責聲明：本網站內容僅供學術交流與程式設計研究參考，不構成任何投資建議。投資人應獨立判斷、審慎評估並自負投資風險。</p>
+        <p>個資聲明：本網站僅提供內容瀏覽，不涉及個人資料的蒐集、處理或利用。本網站僅可能因伺服器運作紀錄必要的技術資訊（如 IP 位址、瀏覽器類型），該資訊僅供維護運作與系統優化使用，不涉及任何個人身分識別。</p>
+        <p>&copy; 2026 台股法人籌碼看板 (twstockwatch.com). All rights reserved.</p>
+    </div>
+</footer>
+
 </body>
 </html>
