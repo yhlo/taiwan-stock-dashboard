@@ -1568,3 +1568,8 @@ tbody tr:hover {
         font-size: 13px;
     }
 }
+
+.market-summary-grid, 
+section.card {
+    margin-bottom: 24px;
+}
