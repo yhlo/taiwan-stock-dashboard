@@ -1429,7 +1429,6 @@ tbody tr:hover {
     left: 12px;
 }
 
-/* Mobile Responsiveness for Ads */
 @media (max-width: 768px) {
     .ad-content {
         flex-direction: column;
@@ -1453,7 +1452,6 @@ tbody tr:hover {
     }
 } 
 
-/* Paragraph spacing for footer */
 .footer-container p {
     margin: 0;
     margin-bottom: 8px;
@@ -1461,4 +1459,98 @@ tbody tr:hover {
     color: var(--text-secondary);
 }
 
+.instruction-section {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    margin-bottom: 24px;
+    padding: 24px;
+    transition: background-color var(--transition-fast), border-color var(--transition-fast);
+}
 
+.instruction-title {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 18px;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 10px;
+    position: relative;
+}
+
+.instruction-title::after {
+    content: "";
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 60px;
+    height: 2px;
+    background-color: var(--accent-blue);
+}
+
+.instruction-body {
+    line-height: 1.7;
+    color: var(--text-primary);
+}
+
+.instruction-subtitle {
+    font-size: 14px;
+    font-weight: 600;
+    margin-top: 18px;
+    margin-bottom: 6px;
+    color: var(--accent-blue);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.instruction-body p {
+    margin-bottom: 12px;
+    font-size: 13.5px;
+    color: var(--text-primary);
+}
+
+.instruction-list {
+    padding-left: 20px;
+    font-size: 13.5px;
+    margin-bottom: 16px;
+}
+
+.instruction-list li {
+    margin-bottom: 8px;
+    color: var(--text-primary);
+}
+
+.instruction-list strong {
+    color: var(--text-primary);
+}
+
+.instruction-summary-box {
+    background-color: var(--bg-primary);
+    padding: 14px 16px;
+    border-radius: var(--radius-md);
+    font-size: 13px;
+    font-weight: 500;
+    border-left: 4px solid #f59e0b; 
+    margin-top: 18px;
+    line-height: 1.6;
+    color: var(--text-primary);
+    box-shadow: var(--shadow-sm);
+}
+
+@media (max-width: 576px) {
+    .instruction-section {
+        padding: 18px 16px;
+    }
+    .instruction-title {
+        font-size: 15px;
+    }
+    .instruction-body p,
+    .instruction-list {
+        font-size: 13px;
+    }
+}
