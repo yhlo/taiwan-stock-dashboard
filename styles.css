@@ -1476,9 +1476,9 @@ tbody tr:hover {
     box-shadow: var(--shadow-md);
     margin-bottom: 24px;
     padding: 24px;
-    grid-column: 1 / -1;  
-    width: 100%;          
-    flex: 0 0 100%; 
+    box-sizing: border-box;
+    grid-column: 1 / -1; 
+    width: 100%;
     max-width: 100%;
     transition: background-color var(--transition-fast), border-color var(--transition-fast);
 }
