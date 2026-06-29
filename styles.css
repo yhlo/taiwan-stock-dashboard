@@ -1628,4 +1628,30 @@ section.card {
 
 .scroll-btn:hover svg {
     transform: scale(1.1);
-}
+}
+
+@media (max-width: 576px) {
+    #tab-dual-buy .table-container,
+    #tab-dual-sell .table-container {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    #table-dual-buy, #table-dual-sell {
+        min-width: 460px;
+    }
+
+    #table-dual-buy th, #table-dual-buy td,
+    #table-dual-sell th, #table-dual-sell td {
+        padding: 10px 6px !important;
+        font-size: 12px !important;
+    }
+
+    #table-dual-buy th:nth-child(3),
+    #table-dual-buy td:nth-child(3),
+    #table-dual-sell th:nth-child(3),
+    #table-dual-sell td:nth-child(3) {
+        display: none !important;
+    }
+}
