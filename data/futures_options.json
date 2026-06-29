@@ -1,32 +1,32 @@
 {
-  "Date": "20260629",
+  "Date": "20260626",
   "Settlement": {
     "IsSettlementWeek": false,
     "SettlementDate": null
   },
   "Options": {
-    "Date": "20260629",
-    "ActiveMonth": "202607W1",
-    "MaxCallStrike": 47000,
-    "MaxCallOI": 1786,
-    "MaxPutStrike": 41200,
-    "MaxPutOI": 3565
+    "Date": "20260626",
+    "ActiveMonth": "202606F4",
+    "MaxCallStrike": 49000,
+    "MaxCallOI": 6074,
+    "MaxPutStrike": 44500,
+    "MaxPutOI": 2714
   },
   "FuturesHistory": [
     {
-      "Date": "20260629",
-      "Foreign_Net": -76627,
-      "Trust_Net": 62962,
-      "Dealer_Net": 2415,
-      "Total_Net": -11250,
-      "MTX_Foreign_Net": 4532,
-      "MTX_Trust_Net": 15,
-      "MTX_Dealer_Net": -5813,
-      "MTX_Total_Net": -1266,
-      "TMF_Foreign_Net": 8528,
+      "Date": "20260626",
+      "Foreign_Net": -76391,
+      "Trust_Net": 61247,
+      "Dealer_Net": 4641,
+      "Total_Net": -10503,
+      "MTX_Foreign_Net": -268,
+      "MTX_Trust_Net": 13,
+      "MTX_Dealer_Net": -6807,
+      "MTX_Total_Net": -7062,
+      "TMF_Foreign_Net": 2709,
       "TMF_Trust_Net": 0,
-      "TMF_Dealer_Net": -48972,
-      "TMF_Total_Net": -40444
+      "TMF_Dealer_Net": -64948,
+      "TMF_Total_Net": -62239
     },
     {
       "Date": "20260625",
@@ -297,9 +297,25 @@
       "TMF_Trust_Net": 0,
       "TMF_Dealer_Net": -21833,
       "TMF_Total_Net": -11025
+    },
+    {
+      "Date": "20260529",
+      "Foreign_Net": -60650,
+      "Trust_Net": 46926,
+      "Dealer_Net": 2074,
+      "Total_Net": -11650,
+      "MTX_Foreign_Net": 322,
+      "MTX_Trust_Net": 12,
+      "MTX_Dealer_Net": -9334,
+      "MTX_Total_Net": -9000,
+      "TMF_Foreign_Net": 9222,
+      "TMF_Trust_Net": 0,
+      "TMF_Dealer_Net": -17625,
+      "TMF_Total_Net": -8403
     }
   ],
   "AlignedPrices": [
+    44732.94140625,
     45337.91015625,
     45557.30859375,
     46459.16015625,
@@ -318,6 +334,6 @@
     47100.6484375,
     46043.6015625,
     46255.26171875,
-    44999.8984375
+    44571.76171875
   ]
 }
