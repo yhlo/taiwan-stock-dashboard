@@ -90,6 +90,7 @@ function formatBillionValue(valStr) {
 async function initApp() {
     setupTheme();
     setupEventListeners();
+    setupScrollButtons();
     loadWatchlist();
     renderWatchlist();
     
@@ -1129,6 +1130,61 @@ function hideStockDetails() {
     
     const backdrop = document.getElementById('modal-backdrop');
     if (backdrop) backdrop.classList.remove('active');
+}
+
+function setupScrollButtons() {
+    const toTopBtn = document.getElementById('scroll-to-top');
+    const toBottomBtn = document.getElementById('scroll-to-bottom');
+    
+    if (!toTopBtn || !toBottomBtn) return;
+    
+    // Toggle visibility based on scroll position
+    window.addEventListener('scroll', () => {
+        const scrollY = window.scrollY;
+        const totalHeight = document.documentElement.scrollHeight;
+        const viewportHeight = window.innerHeight;
+        
+        // Show scroll-to-top if we scrolled down a bit (more than 300px)
+        if (scrollY > 300) {
+            toTopBtn.classList.add('visible');
+        } else {
+            toTopBtn.classList.remove('visible');
+        }
+        
+        // Show scroll-to-bottom if we are not near the bottom (more than 300px away)
+        if (scrollY < totalHeight - viewportHeight - 300) {
+            toBottomBtn.classList.add('visible');
+        } else {
+            toBottomBtn.classList.remove('visible');
+        }
+    });
+    
+    // Scroll click handlers
+    toTopBtn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+    
+    toBottomBtn.addEventListener('click', () => {
+        window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
+    });
+    
+    // Keyboard shortcuts (T: Top, B: Bottom)
+    window.addEventListener('keydown', (e) => {
+        // Ignore if user is typing in input fields
+        const activeEl = document.activeElement;
+        if (activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'TEXTAREA' || activeEl.isContentEditable)) {
+            return;
+        }
+        
+        const key = e.key.toLowerCase();
+        if (key === 't') {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        } else if (key === 'b') {
+            e.preventDefault();
+            window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
+        }
+    });
 }
 
 // Bootstrap

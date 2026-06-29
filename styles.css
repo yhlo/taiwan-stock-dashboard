@@ -1573,3 +1573,59 @@ tbody tr:hover {
 section.card {
     margin-bottom: 24px;
 }
+
+/* 捲動至最上面/最下面浮動按鈕 */
+.scroll-buttons {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    z-index: 999;
+}
+
+.scroll-btn {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    box-shadow: var(--shadow-md);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 0;
+    transform: translateY(20px) scale(0.8);
+    pointer-events: none;
+    outline: none;
+}
+
+.scroll-btn.visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+}
+
+.scroll-btn:hover {
+    background-color: var(--bg-hover);
+    color: var(--accent-blue);
+    border-color: var(--accent-blue);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.08);
+    transform: translateY(-3px);
+}
+
+.scroll-btn:active {
+    transform: translateY(1px);
+}
+
+.scroll-btn svg {
+    transition: transform var(--transition-fast);
+}
+
+.scroll-btn:hover svg {
+    transform: scale(1.1);
+}
