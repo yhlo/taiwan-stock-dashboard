@@ -952,22 +952,6 @@ function renderTableWithPagination(tabId, tableId, sortedList, streakCol, latest
     }
 }
 
-function updateTabCounts(fBuyCount, fSellCount, tBuyCount, tSellCount) {
-    const fBuyBtn = document.querySelector('.tab-btn[data-tab="foreign-buy"]');
-    const fSellBtn = document.querySelector('.tab-btn[data-tab="foreign-sell"]');
-    const tBuyBtn = document.querySelector('.tab-btn[data-tab="trust-buy"]');
-    const tSellBtn = document.querySelector('.tab-btn[data-tab="trust-sell"]');
-    const dBuyBtn = document.querySelector('.tab-btn[data-tab="dual-buy"]');
-    const dSellBtn = document.querySelector('.tab-btn[data-tab="dual-sell"]');
-    
-    if (fBuyBtn) fBuyBtn.textContent = `外資連買 (${fBuyCount})`;
-    if (fSellBtn) fSellBtn.textContent = `外資連賣 (${fSellCount})`;
-    if (tBuyBtn) tBuyBtn.textContent = `投信連買 (${tBuyCount})`;
-    if (tSellBtn) tSellBtn.textContent = `投信連賣 (${tSellCount})`;
-    if (dBuyBtn) dBuyBtn.textContent = `🔥雙買 (${dBuyCount})`;
-    if (dSellBtn) dSellBtn.textContent = `❄️雙賣 (${dSellCount})`;
-}
-
 function populateRankingTable(tableId, list, streakCol, latestCol) {
     const tbody = document.querySelector(`#${tableId} tbody`);
     if (list.length === 0) {
@@ -980,7 +964,7 @@ function populateRankingTable(tableId, list, streakCol, latestCol) {
         let streakLabel = '';
         let amountLabel = '';
 
-        // 🟢 特殊處理雙買與雙賣的表格內欄位內容
+     
         if (tableId === 'table-dual-buy') {
             streakLabel = `<div style="line-height:1.4;"><span style="color:var(--color-up); font-weight:600;">外資連買 ${row.Foreign_Streak}天</span><br><span style="color:var(--color-up); font-weight:600;">投信連買 ${row.Trust_Streak}天</span></div>`;
             amountLabel = `<div style="font-size:13px; line-height:1.4;">外: ${formatAmount(row.Foreign_Latest)}<br>投: ${formatAmount(row.Trust_Latest)}</div>`;
@@ -988,7 +972,7 @@ function populateRankingTable(tableId, list, streakCol, latestCol) {
             streakLabel = `<div style="line-height:1.4;"><span style="color:var(--color-down); font-weight:600;">外資連賣 ${Math.abs(row.Foreign_Streak)}天</span><br><span style="color:var(--color-down); font-weight:600;">投信連賣 ${Math.abs(row.Trust_Streak)}天</span></div>`;
             amountLabel = `<div style="font-size:13px; line-height:1.4;">外: ${formatAmount(row.Foreign_Latest)}<br>投: ${formatAmount(row.Trust_Latest)}</div>`;
         } else {
-            // 原本其他頁籤的一般邏輯保留不變
+
             const streak = Math.abs(row[streakCol]);
             streakLabel = row[streakCol] > 0 ? 
                 `<span style="color: var(--color-up); font-weight: 600;">連買 ${streak} 天</span>` :
