@@ -1648,10 +1648,12 @@ section.card {
         font-size: 12px !important;
     }
 
-    #table-dual-buy th:nth-child(3),
-    #table-dual-buy td:nth-child(3),
-    #table-dual-sell th:nth-child(3),
-    #table-dual-sell td:nth-child(3) {
+    #table-foreign-buy th:nth-child(3), #table-foreign-buy td:nth-child(3),
+    #table-foreign-sell th:nth-child(3), #table-foreign-sell td:nth-child(3),
+    #table-trust-buy th:nth-child(3), #table-trust-buy td:nth-child(3),
+    #table-trust-sell th:nth-child(3), #table-trust-sell td:nth-child(3),
+    #table-dual-buy th:nth-child(3), #table-dual-buy td:nth-child(3),
+    #table-dual-sell th:nth-child(3), #table-dual-sell td:nth-child(3) {
         display: none !important;
     }
 }
