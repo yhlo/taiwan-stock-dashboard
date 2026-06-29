@@ -127,10 +127,24 @@ function displayLastUpdated() {
         if (el && data.last_updated) {
             // Parse ISO string and format as "YYYY-MM-DD HH:MM:SS (UTC+8)"
             const d = new Date(data.last_updated);
-            const pad = n => String(n).padStart(2, '0');
-            // Convert to UTC+8
-            const utc8 = new Date(d.getTime() + (8 * 60 * 60 * 1000 - d.getTimezoneOffset() * 60 * 1000));
-            const formatted = `${utc8.getFullYear()}-${pad(utc8.getMonth()+1)}-${pad(utc8.getDate())} ${pad(utc8.getHours())}:${pad(utc8.getMinutes())}:${pad(utc8.getSeconds())} (UTC+8)`;
+            
+            // Format directly to Asia/Taipei timezone
+            const formatter = new Intl.DateTimeFormat('zh-TW', {
+                timeZone: 'Asia/Taipei',
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+            });
+            
+            const parts = formatter.formatToParts(d);
+            const partObj = {};
+            parts.forEach(p => partObj[p.type] = p.value);
+            
+            const formatted = `${partObj.year}-${partObj.month}-${partObj.day} ${partObj.hour}:${partObj.minute}:${partObj.second} (UTC+8)`;
             el.textContent = formatted;
         }
     }).catch(err => {

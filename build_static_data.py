@@ -1108,7 +1108,21 @@ def main():
             "SBL_Returned": int(sbl["SBL_Returned"]),
             "SBL_Balance": int(sbl["SBL_Balance"])
         })
-        
+
+    # Read existing files to detect changes later
+    def read_file_safe(path):
+        if os.path.exists(path):
+            try:
+                with open(path, "r", encoding="utf-8") as f:
+                    return f.read()
+            except Exception:
+                pass
+        return None
+
+    old_streaks = read_file_safe("data/streaks.json")
+    old_summary = read_file_safe("data/market_summary.json")
+    old_futures = read_file_safe("data/futures_options.json")
+
     # Write streaks.json
     with open("data/streaks.json", "w", encoding="utf-8") as f:
         json.dump({
@@ -1181,14 +1195,36 @@ def main():
     print("Data compilation completed successfully!")
 
 
-    utc_now = datetime.datetime.now(datetime.timezone.utc)
+    # Read new files to check for changes
+    new_streaks = read_file_safe("data/streaks.json")
+    new_summary = read_file_safe("data/market_summary.json")
+    new_futures = read_file_safe("data/futures_options.json")
 
-    data = {
-        "last_updated": utc_now.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
-    }
+    def json_changed(old_str, new_str):
+        if not old_str or not new_str:
+            return True
+        try:
+            return json.loads(old_str) != json.loads(new_str)
+        except Exception:
+            return True
 
-    with open("data/last_update.json", "w", encoding="utf-8") as f:
-        json.dump(data, f, indent=2)
+    data_changed = (
+        json_changed(old_streaks, new_streaks) or
+        json_changed(old_summary, new_summary) or
+        json_changed(old_futures, new_futures)
+    )
+
+    last_update_path = "data/last_update.json"
+    if data_changed or not os.path.exists(last_update_path):
+        utc_now = datetime.datetime.now(datetime.timezone.utc)
+        update_data = {
+            "last_updated": utc_now.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+        }
+        with open(last_update_path, "w", encoding="utf-8") as f:
+            json.dump(update_data, f, indent=2)
+        print(f"Updated last_update.json: {utc_now.isoformat()}")
+    else:
+        print("Data is identical. Skipping last_update.json update.")
 
 if __name__ == "__main__":
     main()
