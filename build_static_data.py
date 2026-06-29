@@ -1085,19 +1085,36 @@ def main():
         ind = industry_mapping.get(sym, "其他")
         sbl = sbl_map.get(sym, {"SBL_Sold": 0, "SBL_Returned": 0, "SBL_Balance": 0})
         
+        f_streak = int(row["Foreign_Streak"])
+        t_streak = int(row["Trust_Streak"])
+        
+        dual_buy_streak = 0
+        dual_sell_streak = 0
+        
+        if f_streak > 0 and t_streak > 0:
+            dual_buy_streak = f_streak if f_streak < t_streak else t_streak
+            
+        elif f_streak < 0 and t_streak < 0:
+            dual_sell_streak = f_streak if abs(f_streak) < abs(t_streak) else t_streak
+        # ----------------------------------------------------
+        
         final_streaks.append({
             "Symbol": sym,
             "Name": row["Name"],
             "Market": row["Market"],
             "Industry": ind,
-            "Foreign_Streak": int(row["Foreign_Streak"]),
+            "Foreign_Streak": f_streak,
             "Foreign_Latest": int(row["Foreign_Latest"]),
-            "Trust_Streak": int(row["Trust_Streak"]),
+            "Trust_Streak": t_streak,
             "Trust_Latest": int(row["Trust_Latest"]),
             "Dealer_Streak": int(row["Dealer_Streak"]),
             "Dealer_Latest": int(row["Dealer_Latest"]),
             "Total_Streak": int(row["Total_Streak"]),
             "Total_Latest": int(row["Total_Latest"]),
+            
+            "Dual_Buy_Streak": dual_buy_streak,
+            "Dual_Sell_Streak": dual_sell_streak,
+            
             "Open": quote["Open"],
             "High": quote["High"],
             "Low": quote["Low"],
@@ -1227,4 +1244,6 @@ def main():
         print("Data is identical. Skipping last_update.json update.")
 
 if __name__ == "__main__":
+    if len(sys.argv) == 1:
+        sys.argv.append("20260626")
     main()

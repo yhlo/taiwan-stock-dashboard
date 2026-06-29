@@ -6,7 +6,9 @@ let currentPage = {
     'foreign-buy': 1,
     'foreign-sell': 1,
     'trust-buy': 1,
-    'trust-sell': 1
+    'trust-sell': 1,
+    'dual-buy': 1,
+    'dual-sell': 1
 };
 let isDockedRight = localStorage.getItem('detail-docked') === 'true';
 let activeFuturesType = 'tx';
@@ -413,7 +415,7 @@ function setupEventListeners() {
     }
 
     // Pagination buttons click events
-    const tabIds = ['foreign-buy', 'foreign-sell', 'trust-buy', 'trust-sell'];
+    const tabIds = ['foreign-buy', 'foreign-sell', 'trust-buy', 'trust-sell', 'dual-buy', 'dual-sell'];
     tabIds.forEach(tabId => {
         const container = document.getElementById(`pagination-${tabId}`);
         if (container) {
@@ -874,15 +876,24 @@ function renderRankings() {
     // 4. Trust Sell
     const tSellAll = data.filter(r => r.Trust_Streak <= -minDays && (isNaN(maxDays) || r.Trust_Streak >= -maxDays))
                          .sort((a, b) => a.Trust_Streak - b.Trust_Streak || a.Trust_Latest - b.Trust_Latest);
-                         
+    // 5. Dual Buy                     
+    const dBuyAll = data.filter(r => r.Dual_Buy_Streak >= minDays && (isNaN(maxDays) || r.Dual_Buy_Streak <= maxDays))
+                        .sort((a, b) => b.Dual_Buy_Streak - a.Dual_Buy_Streak || (b.Foreign_Latest + b.Trust_Latest) - (a.Foreign_Latest + a.Trust_Latest));
+
+    // 6. Dual Sell
+    const dSellAll = data.filter(r => r.Dual_Sell_Streak <= -minDays && (isNaN(maxDays) || r.Dual_Sell_Streak >= -maxDays))
+                         .sort((a, b) => a.Dual_Sell_Streak - b.Dual_Sell_Streak || (a.Foreign_Latest + a.Trust_Latest) - (b.Foreign_Latest + b.Trust_Latest));
+    
     // Render each table with pagination
     renderTableWithPagination('foreign-buy', 'table-foreign-buy', fBuyAll, 'Foreign_Streak', 'Foreign_Latest', rowsPerPage);
     renderTableWithPagination('foreign-sell', 'table-foreign-sell', fSellAll, 'Foreign_Streak', 'Foreign_Latest', rowsPerPage);
     renderTableWithPagination('trust-buy', 'table-trust-buy', tBuyAll, 'Trust_Streak', 'Trust_Latest', rowsPerPage);
     renderTableWithPagination('trust-sell', 'table-trust-sell', tSellAll, 'Trust_Streak', 'Trust_Latest', rowsPerPage);
+    renderTableWithPagination('dual-buy', 'table-dual-buy', dBuyAll, 'Dual_Buy_Streak', 'Foreign_Latest', rowsPerPage);
+    renderTableWithPagination('dual-sell', 'table-dual-sell', dSellAll, 'Dual_Sell_Streak', 'Foreign_Latest', rowsPerPage);
     
     // Update tab headers to display total matching count dynamically
-    updateTabCounts(fBuyAll.length, fSellAll.length, tBuyAll.length, tSellAll.length);
+    updateTabCounts(fBuyAll.length, fSellAll.length, tBuyAll.length, tSellAll.length, dBuyAll.length, dSellAll.length);
 }
 
 function renderTableWithPagination(tabId, tableId, sortedList, streakCol, latestCol, rowsPerPage) {
@@ -946,11 +957,15 @@ function updateTabCounts(fBuyCount, fSellCount, tBuyCount, tSellCount) {
     const fSellBtn = document.querySelector('.tab-btn[data-tab="foreign-sell"]');
     const tBuyBtn = document.querySelector('.tab-btn[data-tab="trust-buy"]');
     const tSellBtn = document.querySelector('.tab-btn[data-tab="trust-sell"]');
+    const dBuyBtn = document.querySelector('.tab-btn[data-tab="dual-buy"]');
+    const dSellBtn = document.querySelector('.tab-btn[data-tab="dual-sell"]');
     
     if (fBuyBtn) fBuyBtn.textContent = `外資連買 (${fBuyCount})`;
     if (fSellBtn) fSellBtn.textContent = `外資連賣 (${fSellCount})`;
     if (tBuyBtn) tBuyBtn.textContent = `投信連買 (${tBuyCount})`;
     if (tSellBtn) tSellBtn.textContent = `投信連賣 (${tSellCount})`;
+    if (dBuyBtn) dBuyBtn.textContent = `🔥雙買 (${dBuyCount})`;
+    if (dSellBtn) dSellBtn.textContent = `❄️雙賣 (${dSellCount})`;
 }
 
 function populateRankingTable(tableId, list, streakCol, latestCol) {
@@ -962,10 +977,24 @@ function populateRankingTable(tableId, list, streakCol, latestCol) {
     
     let html = '';
     list.forEach(row => {
-        const streak = Math.abs(row[streakCol]);
-        const streakLabel = row[streakCol] > 0 ? 
-            `<span style="color: var(--color-up); font-weight: 600;">連買 ${streak} 天</span>` :
-            `<span style="color: var(--color-down); font-weight: 600;">連賣 ${streak} 天</span>`;
+        let streakLabel = '';
+        let amountLabel = '';
+
+        // 🟢 特殊處理雙買與雙賣的表格內欄位內容
+        if (tableId === 'table-dual-buy') {
+            streakLabel = `<div style="line-height:1.4;"><span style="color:var(--color-up); font-weight:600;">外資連買 ${row.Foreign_Streak}天</span><br><span style="color:var(--color-up); font-weight:600;">投信連買 ${row.Trust_Streak}天</span></div>`;
+            amountLabel = `<div style="font-size:13px; line-height:1.4;">外: ${formatAmount(row.Foreign_Latest)}<br>投: ${formatAmount(row.Trust_Latest)}</div>`;
+        } else if (tableId === 'table-dual-sell') {
+            streakLabel = `<div style="line-height:1.4;"><span style="color:var(--color-down); font-weight:600;">外資連賣 ${Math.abs(row.Foreign_Streak)}天</span><br><span style="color:var(--color-down); font-weight:600;">投信連賣 ${Math.abs(row.Trust_Streak)}天</span></div>`;
+            amountLabel = `<div style="font-size:13px; line-height:1.4;">外: ${formatAmount(row.Foreign_Latest)}<br>投: ${formatAmount(row.Trust_Latest)}</div>`;
+        } else {
+            // 原本其他頁籤的一般邏輯保留不變
+            const streak = Math.abs(row[streakCol]);
+            streakLabel = row[streakCol] > 0 ? 
+                `<span style="color: var(--color-up); font-weight: 600;">連買 ${streak} 天</span>` :
+                `<span style="color: var(--color-down); font-weight: 600;">連賣 ${streak} 天</span>`;
+            amountLabel = formatAmount(row[latestCol]);
+        }
             
         html += `
             <tr style="cursor: pointer;" onclick="searchStockDirectly('${row.Symbol}')">
@@ -974,7 +1003,7 @@ function populateRankingTable(tableId, list, streakCol, latestCol) {
                 <td>${row.Industry}</td>
                 <td>${row.Market}</td>
                 <td class="text-right">${streakLabel}</td>
-                <td class="text-right">${formatAmount(row[latestCol])}</td>
+                <td class="text-right">${amountLabel}</td>
             </tr>
         `;
     });
@@ -1199,6 +1228,22 @@ function setupScrollButtons() {
             window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
         }
     });
+}
+
+function updateTabCounts(fBuyCount, fSellCount, tBuyCount, tSellCount, dBuyCount, dSellCount) {
+    const fBuyBtn = document.querySelector('.tab-btn[data-tab="foreign-buy"]');
+    const fSellBtn = document.querySelector('.tab-btn[data-tab="foreign-sell"]');
+    const tBuyBtn = document.querySelector('.tab-btn[data-tab="trust-buy"]');
+    const tSellBtn = document.querySelector('.tab-btn[data-tab="trust-sell"]');
+    const dBuyBtn = document.querySelector('.tab-btn[data-tab="dual-buy"]');
+    const dSellBtn = document.querySelector('.tab-btn[data-tab="dual-sell"]');
+    
+    if (fBuyBtn) fBuyBtn.textContent = `外資連買 (${fBuyCount})`;
+    if (fSellBtn) fSellBtn.textContent = `外資連賣 (${fSellCount})`;
+    if (tBuyBtn) tBuyBtn.textContent = `投信連買 (${tBuyCount})`;
+    if (tSellBtn) tSellBtn.textContent = `投信連賣 (${tSellCount})`;
+    if (dBuyBtn) dBuyBtn.textContent = `🔥雙買 (${dBuyCount})`;
+    if (dSellBtn) dSellBtn.textContent = `❄️雙賣 (${dSellCount})`;
 }
 
 // Bootstrap

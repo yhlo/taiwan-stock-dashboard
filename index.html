@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:,">
     <title>台灣股市法人籌碼與連買連賣看板</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -44,7 +45,7 @@
                 <div class="instruction-subtitle">🎯 散戶投資人該怎麼看？</div>
                 <ol class="instruction-list">
                     <li><strong>觀察連續趨勢：</strong> 籌碼面應關注法人的「連續買賣天數」與「買超擴大趨勢」，不只看單一交易日的買賣金額。</li>
-                    <li><strong>留意法人共識股：</strong> 若發現外資與投信同時連續買超某檔個股（俗稱土洋同買），通常代表該個股短期內有較強的資金支撐。</li>
+                    <li><strong>留意法人共識股：</strong> 若發現外資與投信同時連續買超某檔個股（「雙買」），通常代表該個股短期內有較強的資金支撐；若外資與投信同時連續賣超（「雙賣」），則代表法人一致看空，股價可能面臨壓力。</li>
                     <li><strong>結合基本面分析：</strong> 籌碼面能指引資金流向，但仍須搭配營收、獲利等基本面指標，才能避免在法人短線調節、高檔倒貨時盲目跟單。</li>
                 </ol>
 
@@ -52,8 +53,14 @@
                 <p>外資資金量極為龐大，操作上偏好中大型權值股。當外資對某檔股票展開<strong>連續買超</strong>時，通常代表中長期波段資金正在進駐，容易推升股價並帶動市場多頭氣勢；</p>
                 <p>相對地，若外資出現<strong>連續賣超</strong>，則可能對該個股或大盤帶來沉重的回檔壓力。</p>
 
+                <div class="instruction-subtitle">🔔 雙買、雙賣的意義</div>
+                <p><strong>雙買</strong>（外資＋投信同時連買）：代表法人共識看好，資金支撐力道強，股價短期內更容易形成波段行情。</p>
+                <p><strong>雙賣</strong>（外資＋投信同時連賣）：代表法人一致看空，股價可能面臨較大壓力，散戶應謹慎操作。</p>
+                <p>自營商輔助：雖然不直接納入雙買/雙賣判斷，但若自營商同步買超，訊號更強；若背離，則可能代表短線有干擾。</p>
+
+
                 <div class="instruction-summary-box">
-                    📌 <strong>總結：</strong>外資連買股通常是市場偏多的訊號，而三大法人籌碼能清晰顯示市場資金的流向。散戶若能透過本看板結合連續天數趨勢與個股基本面，便能有效掌握資金風向並降低投資風險。
+                    📌 <strong>總結：</strong>外資連買股通常是市場偏多的訊號，而三大法人籌碼能清晰顯示市場資金的流向。若再加入「雙買、雙賣」的判斷，散戶便能更快辨識法人共識股或一致看空股。透過本看板結合連續天數趨勢、雙買/雙賣訊號與個股基本面，便能有效掌握資金風向並降低投資風險。
                 </div>
             </div>
         </div>
@@ -318,7 +325,7 @@
             <div class="card-header">
                 <h2 class="card-title">🏆 三大法人連買連賣天數排行榜</h2>
                 <div class="streak-filter-control" style="display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-secondary); font-weight: 500; flex-wrap: wrap;">
-                    <label>天數區間: </label>
+                    <label>最低連續天數: </label>
                     <input type="number" id="streak-min-input" min="1" value="1" placeholder="最少" style="width: 50px; padding: 4px 6px; border: 1px solid var(--border-color); border-radius: var(--radius-md); background: var(--bg-primary); color: var(--text-primary); outline: none; font-size: 13px; font-weight: 600; text-align: center;">
                     <span>~</span>
                     <input type="number" id="streak-max-input" min="1" placeholder="無限制" style="width: 65px; padding: 4px 6px; border: 1px solid var(--border-color); border-radius: var(--radius-md); background: var(--bg-primary); color: var(--text-primary); outline: none; font-size: 13px; font-weight: 600; text-align: center;">
@@ -342,6 +349,8 @@
                     <button class="tab-btn" data-tab="foreign-sell">外資連賣</button>
                     <button class="tab-btn" data-tab="trust-buy">投信連買</button>
                     <button class="tab-btn" data-tab="trust-sell">投信連賣</button>
+                    <button class="tab-btn" data-tab="dual-buy">🔥雙買</button>
+                    <button class="tab-btn" data-tab="dual-sell">❄️雙賣</button>
                 </div>
                 <div class="tab-content active" id="tab-foreign-buy">
                     <div class="table-container">
@@ -447,6 +456,62 @@
                         <button class="page-btn next-btn">下一頁 &gt;</button>
                     </div>
                 </div>
+            </div>
+                    <div id="tab-trust-sell" class="tab-content">
+                <div class="table-responsive">
+                    <table id="table-trust-sell" class="ranking-table">
+                        <thead>
+                            <tr>
+                                <th>代號</th>
+                                <th>名稱</th>
+                                <th>產業</th>
+                                <th>市場</th>
+                                <th class="text-right">連續天數</th>
+                                <th class="text-right">今日進出</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <div id="pagination-trust-sell" class="pagination-container"></div>
+            </div>
+
+            <div id="tab-dual-buy" class="tab-content">
+                <div class="table-responsive">
+                    <table id="table-dual-buy" class="ranking-table">
+                        <thead>
+                            <tr>
+                                <th>代號</th>
+                                <th>名稱</th>
+                                <th>產業</th>
+                                <th>市場</th>
+                                <th class="text-right">連續天數</th>
+                                <th class="text-right">今日進出</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <div id="pagination-dual-buy" class="pagination-container"></div>
+            </div>
+
+            <div id="tab-dual-sell" class="tab-content">
+                <div class="table-responsive">
+                    <table id="table-dual-sell" class="ranking-table">
+                        <thead>
+                            <tr>
+                                <th>代號</th>
+                                <th>名稱</th>
+                                <th>產業</th>
+                                <th>市場</th>
+                                <th class="text-right">連續天數</th>
+                                <th class="text-right">今日進出</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <div id="pagination-dual-sell" class="pagination-container"></div>
             </div>
         </section>
 
