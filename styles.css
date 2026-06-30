@@ -27,6 +27,21 @@
     --radius-md: 6px;
     --transition-fast: 0.15s ease;
 }
+.app-title {
+    position: relative;
+    z-index: 10; /* 讓標題浮上來，防止被 header-controls 擋住點擊 */
+}
+
+.app-title a {
+    color: var(--text-primary); /* 完美融入原本的深淺色主題 */
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.app-title a:hover {
+    color: #2563eb; /* 滑鼠移過去變藍色，不加底線維持現代感 */
+}
 
 [data-theme="dark"] {
     /* Dark Mode (Sleek Dark Card) */
@@ -88,11 +103,6 @@ body {
     align-items: center;
     flex-wrap: wrap;
     gap: 16px;
-}
-
-.app-title {
-    font-size: 20px;
-    font-weight: 700;
 }
 
 .header-controls {
@@ -1024,12 +1034,6 @@ tbody tr:hover {
         padding: 12px 16px;
         gap: 12px;
     }
-    
-    .app-title {
-        font-size: 18px;
-        text-align: center;
-    }
-    
     .header-controls {
         width: 100%;
         justify-content: space-between;
