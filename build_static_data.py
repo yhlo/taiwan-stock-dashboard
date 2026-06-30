@@ -1244,6 +1244,4 @@ def main():
         print("Data is identical. Skipping last_update.json update.")
 
 if __name__ == "__main__":
-    if len(sys.argv) == 1:
-        sys.argv.append("20260626")
     main()
