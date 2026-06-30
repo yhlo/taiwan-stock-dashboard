@@ -1,18 +1,33 @@
 {
-  "Date": "20260629",
+  "Date": "20260630",
   "Settlement": {
     "IsSettlementWeek": false,
     "SettlementDate": null
   },
   "Options": {
-    "Date": "20260629",
+    "Date": "20260630",
     "ActiveMonth": "202607W1",
-    "MaxCallStrike": 47000,
-    "MaxCallOI": 1786,
+    "MaxCallStrike": 48500,
+    "MaxCallOI": 4545,
     "MaxPutStrike": 41200,
-    "MaxPutOI": 3565
+    "MaxPutOI": 2972
   },
   "FuturesHistory": [
+    {
+      "Date": "20260630",
+      "Foreign_Net": -83063,
+      "Trust_Net": 66623,
+      "Dealer_Net": 1571,
+      "Total_Net": -14869,
+      "MTX_Foreign_Net": 2785,
+      "MTX_Trust_Net": 27,
+      "MTX_Dealer_Net": -5661,
+      "MTX_Total_Net": -2849,
+      "TMF_Foreign_Net": 10258,
+      "TMF_Trust_Net": 0,
+      "TMF_Dealer_Net": -39479,
+      "TMF_Total_Net": -29221
+    },
     {
       "Date": "20260629",
       "Foreign_Net": -76627,
@@ -27,6 +42,21 @@
       "TMF_Trust_Net": 0,
       "TMF_Dealer_Net": -48972,
       "TMF_Total_Net": -40444
+    },
+    {
+      "Date": "20260626",
+      "Foreign_Net": -76391,
+      "Trust_Net": 61247,
+      "Dealer_Net": 4641,
+      "Total_Net": -10503,
+      "MTX_Foreign_Net": -268,
+      "MTX_Trust_Net": 13,
+      "MTX_Dealer_Net": -6807,
+      "MTX_Total_Net": -7062,
+      "TMF_Foreign_Net": 2709,
+      "TMF_Trust_Net": 0,
+      "TMF_Dealer_Net": -64948,
+      "TMF_Total_Net": -62239
     },
     {
       "Date": "20260625",
@@ -147,6 +177,21 @@
       "TMF_Trust_Net": 0,
       "TMF_Dealer_Net": -41732,
       "TMF_Total_Net": -23487
+    },
+    {
+      "Date": "20260612",
+      "Foreign_Net": -65039,
+      "Trust_Net": 57111,
+      "Dealer_Net": 3568,
+      "Total_Net": -4360,
+      "MTX_Foreign_Net": 5734,
+      "MTX_Trust_Net": 7,
+      "MTX_Dealer_Net": -15542,
+      "MTX_Total_Net": -9801,
+      "TMF_Foreign_Net": 15432,
+      "TMF_Trust_Net": 0,
+      "TMF_Dealer_Net": -44278,
+      "TMF_Total_Net": -28846
     },
     {
       "Date": "20260611",
@@ -278,6 +323,7 @@
     44704.44140625,
     43225.5390625,
     43149.4609375,
+    44169.0390625,
     45396.98828125,
     45809.19140625,
     45877.390625,
@@ -286,6 +332,8 @@
     47100.6484375,
     46043.6015625,
     46255.26171875,
-    44999.8984375
+    44571.76171875,
+    44999.8984375,
+    46125.91015625
   ]
 }
