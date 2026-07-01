@@ -22,6 +22,22 @@ const closeSearchBtn = document.getElementById('close-search-btn');
 const stockDetailSection = document.getElementById('stock-detail-section');
 
 // Format helpers
+
+// Shared "positive/negative value -> colored badge" formatter. Replaces the
+// 4 near-identical if/else-if/else blocks that used to be duplicated across
+// formatAmount(), formatStreakText(), formatBillion() and the inline
+// formatOI() inside renderFuturesHistoryTable().
+// sign: pass true to prefix positive values with "+" (most callers want this).
+function badgeSpan(value, formattedText, { sign = true, zeroText = null } = {}) {
+    if (value > 0) {
+        return `<span class="badge-up">${sign ? '+' : ''}${formattedText}</span>`;
+    } else if (value < 0) {
+        return `<span class="badge-down">${formattedText}</span>`;
+    } else {
+        return zeroText !== null ? zeroText : formattedText;
+    }
+}
+
 function formatNumber(num) {
     if (num === undefined || num === null) return '--';
     return Number(num).toLocaleString('zh-TW');
@@ -30,31 +46,18 @@ function formatNumber(num) {
 function formatAmount(lots) {
     if (lots === undefined || lots === null) return '--';
     const numLots = Math.round(lots / 1000);
-    if (numLots > 0) {
-        return `<span class="badge-up">+${numLots.toLocaleString('zh-TW')} 張</span>`;
-    } else if (numLots < 0) {
-        return `<span class="badge-down">${numLots.toLocaleString('zh-TW')} 張</span>`;
-    } else {
-        return '0 張';
-    }
+    return badgeSpan(numLots, `${numLots.toLocaleString('zh-TW')} 張`, { zeroText: '0 張' });
 }
 
 function formatStreakText(streakVal, latestVal) {
     if (streakVal === undefined || streakVal === null) return '--';
     const lots = Math.round(latestVal / 1000);
-    let lotsHtml = '';
-    if (lots > 0) {
-        lotsHtml = `<span class="badge-up">+${lots.toLocaleString('zh-TW')} 張</span>`;
-    } else if (lots < 0) {
-        lotsHtml = `<span class="badge-down">${lots.toLocaleString('zh-TW')} 張</span>`;
-    } else {
-        lotsHtml = '0 張';
-    }
+    const lotsHtml = badgeSpan(lots, `${lots.toLocaleString('zh-TW')} 張`, { zeroText: '0 張' });
 
     if (streakVal > 0) {
-        return `<span style="color: var(--color-up); font-weight: 600;">連買 ${streakVal} 天</span> (今日: ${lotsHtml})`;
+        return `<span class="text-up">連買 ${streakVal} 天</span> (今日: ${lotsHtml})`;
     } else if (streakVal < 0) {
-        return `<span style="color: var(--color-down); font-weight: 600;">連賣 ${Math.abs(streakVal)} 天</span> (今日: ${lotsHtml})`;
+        return `<span class="text-down">連賣 ${Math.abs(streakVal)} 天</span> (今日: ${lotsHtml})`;
     } else {
         return `無連續趨勢 (今日: ${lotsHtml})`;
     }
@@ -65,13 +68,7 @@ function formatBillion(valStr) {
     try {
         const val = parseInt(String(valStr).replace(/,/g, '').trim());
         const billion = val / 100000000.0;
-        if (billion > 0) {
-            return `<span class="badge-up">+${billion.toFixed(2)} 億</span>`;
-        } else if (billion < 0) {
-            return `<span class="badge-down">${billion.toFixed(2)} 億</span>`;
-        } else {
-            return '0.00 億';
-        }
+        return badgeSpan(billion, `${billion.toFixed(2)} 億`, { zeroText: '0.00 億' });
     } catch (e) {
         return '--';
     }
@@ -98,60 +95,69 @@ async function initApp() {
     
     try {
         console.log("Loading static dataset...");
-        const cacheBuster = `?t=${new Date().getTime()}`;
-        
+
+        // Fetch the build's own timestamp first. We use it as a *stable*
+        // version string for every other request below, instead of the old
+        // `?t=${Date.now()}` approach. Date.now() changes on every single
+        // page load, which defeats the browser's HTTP cache entirely and
+        // forces a full re-download of every JSON file (and the chart PNG)
+        // on every visit, even when the data hasn't changed since the last
+        // 17:00 build. Using the build timestamp means repeat visits within
+        // the same day hit the cache, and a fresh fetch only happens once
+        // the data actually changes.
+        const lastUpdateRes = await fetch(`./data/last_update.json?t=${new Date().getTime()}`);
+        const lastUpdateInfo = await lastUpdateRes.json();
+        const dataVersion = lastUpdateInfo.last_updated
+            ? `?v=${encodeURIComponent(lastUpdateInfo.last_updated)}`
+            : `?t=${new Date().getTime()}`; // fallback if last_update.json is ever missing the field
+        displayLastUpdated(lastUpdateInfo);
+
         // 1. Fetch market summary
-        const summaryRes = await fetch(`./data/market_summary.json${cacheBuster}`);
+        const summaryRes = await fetch(`./data/market_summary.json${dataVersion}`);
         marketSummary = await summaryRes.json();
         renderMarketSummary();
         
         // 2. Fetch futures & options
-        const futOptRes = await fetch(`./data/futures_options.json${cacheBuster}`);
+        const futOptRes = await fetch(`./data/futures_options.json${dataVersion}`);
         futuresOptions = await futOptRes.json();
-        renderFuturesOptions();
+        renderFuturesOptions(dataVersion);
         
         // 3. Fetch streaks list
-        const streaksRes = await fetch(`./data/streaks.json${cacheBuster}`);
+        const streaksRes = await fetch(`./data/streaks.json${dataVersion}`);
         streaksData = await streaksRes.json();
         renderRankings();
         renderWatchlist();
-        displayLastUpdated();
         
     } catch (error) {
         console.error("Error initializing dashboard data:", error);
     }
 }
 
-function displayLastUpdated() {
-    // Fetch the timestamp generated by the data build script
-    fetch(`./data/last_update.json`).then(res => res.json()).then(data => {
-        const el = document.getElementById('last-updated');
-        if (el && data.last_updated) {
-            // Parse ISO string and format as "YYYY-MM-DD HH:MM:SS (UTC+8)"
-            const d = new Date(data.last_updated);
-            
-            // Format directly to Asia/Taipei timezone
-            const formatter = new Intl.DateTimeFormat('zh-TW', {
-                timeZone: 'Asia/Taipei',
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit',
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit',
-                hour12: false
-            });
-            
-            const parts = formatter.formatToParts(d);
-            const partObj = {};
-            parts.forEach(p => partObj[p.type] = p.value);
-            
-            const formatted = `${partObj.year}-${partObj.month}-${partObj.day} ${partObj.hour}:${partObj.minute}:${partObj.second} (UTC+8)`;
-            el.textContent = formatted;
-        }
-    }).catch(err => {
-        console.error('Failed to load last update time:', err);
-    });
+function displayLastUpdated(lastUpdateInfo) {
+    const el = document.getElementById('last-updated');
+    if (el && lastUpdateInfo && lastUpdateInfo.last_updated) {
+        // Parse ISO string and format as "YYYY-MM-DD HH:MM:SS (UTC+8)"
+        const d = new Date(lastUpdateInfo.last_updated);
+
+        // Format directly to Asia/Taipei timezone
+        const formatter = new Intl.DateTimeFormat('zh-TW', {
+            timeZone: 'Asia/Taipei',
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: false
+        });
+
+        const parts = formatter.formatToParts(d);
+        const partObj = {};
+        parts.forEach(p => partObj[p.type] = p.value);
+
+        const formatted = `${partObj.year}-${partObj.month}-${partObj.day} ${partObj.hour}:${partObj.minute}:${partObj.second} (UTC+8)`;
+        el.textContent = formatted;
+    }
 }
 
 // Setup theme switcher
@@ -659,9 +665,7 @@ function renderFuturesHistoryTable() {
         
         function formatOI(val) {
             if (val === undefined || val === null) return '--';
-            if (val > 0) return `<span class="badge-up">+${val.toLocaleString()}</span>`;
-            if (val < 0) return `<span class="badge-down">${val.toLocaleString()}</span>`;
-            return '0';
+            return badgeSpan(val, val.toLocaleString(), { zeroText: '0' });
         }
         
         html += `
@@ -678,7 +682,7 @@ function renderFuturesHistoryTable() {
 }
 
 // Render Futures & Options
-function renderFuturesOptions() {
+function renderFuturesOptions(dataVersion) {
     const chartImg = document.getElementById('futures-trend-chart');
     const fallbackTxt = document.getElementById('chart-fallback');
     
@@ -688,8 +692,10 @@ function renderFuturesOptions() {
         return;
     }
     
-    // Set Chart Image src
-    chartImg.src = `./data/futures_trend.png?t=${new Date().getTime()}`; // Prevent browser cache
+    // Set Chart Image src, versioned by the data build timestamp so it's
+    // cached across repeat visits on the same day instead of re-downloaded
+    // on every page load.
+    chartImg.src = `./data/futures_trend.png${dataVersion || ''}`;
     chartImg.onerror = () => {
         chartImg.classList.add('hidden');
         fallbackTxt.classList.remove('hidden');
@@ -735,12 +741,10 @@ function generateSentimentAnalysis() {
         return;
     }
     
+    // build_static_data.py writes FuturesHistory in reverse chronological
+    // order (newest first), so index 0 is always the latest trading day.
     const history = futuresOptions.FuturesHistory;
-    const latest = history[0]; // Newest is at index 0 (or last, let's check order. In JSON we reversed it, so newest is at the end? Or we wrote reversed?
-    // Let's verify: In JSON output: FuturesHistory is written as reversed(futures_history).
-    // Reversed futures_history means newest first! Let's double check.
-    // In build_static_data.py: for d, oi in reversed(futures_history) -> newest is indeed at the end in futures_history, so reversed makes newest first!
-    // Yes! latest = history[0] is correct.
+    const latest = history[0];
     const prev = history[1];
     
     const latestOI = latest.Foreign_Net;
@@ -752,18 +756,18 @@ function generateSentimentAnalysis() {
     let oiTrend = "";
     if (latestOI < 0) {
         if (oiDiff < 0) {
-            step1 = `<span style="color: var(--color-up); font-weight: bold;">空單增加（更負） => 外資偏空，壓力大。</span>`;
+            step1 = `<span class="text-up">空單增加（更負） => 外資偏空，壓力大。</span>`;
             oiTrend = "increase";
         } else {
-            step1 = `<span style="color: var(--color-down); font-weight: bold;">空單減少（負值縮小） => 外資回補，行情有機會反彈。</span>`;
+            step1 = `<span class="text-down">空單減少（負值縮小） => 外資回補，行情有機會反彈。</span>`;
             oiTrend = "decrease";
         }
     } else {
         if (oiDiff > 0) {
-            step1 = `<span style="color: var(--color-up); font-weight: bold;">多單增加 => 外資偏多，行情支撐強。</span>`;
+            step1 = `<span class="text-up">多單增加 => 外資偏多，行情支撐強。</span>`;
             oiTrend = "increase";
         } else {
-            step1 = `<span style="color: var(--color-down); font-weight: bold;">多單減少 => 外資退場，多方力道減弱。</span>`;
+            step1 = `<span class="text-down">多單減少 => 外資退場，多方力道減弱。</span>`;
             oiTrend = "decrease";
         }
     }
@@ -779,16 +783,16 @@ function generateSentimentAnalysis() {
         const priceTrend = priceDiff > 0 ? "up" : "down";
         
         if (oiTrend === "increase" && priceTrend === "down") {
-            step2 = `<span style="color: var(--color-up); font-weight: bold;">OI 增加 + 指數下跌 => 空方力量強，趨勢偏空。</span>`;
+            step2 = `<span class="text-up">OI 增加 + 指數下跌 => 空方力量強，趨勢偏空。</span>`;
             summarySentiment = "大盤目前呈現「外資期貨空單增加且指數下跌」的空頭格局。空方力量強勁，趨勢偏空，短期建議保守看待。";
         } else if (oiTrend === "decrease" && priceTrend === "up") {
-            step2 = `<span style="color: var(--color-down); font-weight: bold;">OI 減少 + 指數上漲 => 外資回補，行情偏多。</span>`;
+            step2 = `<span class="text-down">OI 減少 + 指數上漲 => 外資回補，行情偏多。</span>`;
             summarySentiment = "大盤目前呈現「外資期貨空單減少且指數上漲」的偏多格局。外資空單回補，行情有反彈或持續上攻的機會。";
         } else if (oiTrend === "increase" && priceTrend === "up") {
-            step2 = `<span style="color: var(--color-up); font-weight: bold;">OI 增加 + 指數上漲 => 可能是避險，需觀察是否反轉。</span>`;
+            step2 = `<span class="text-up">OI 增加 + 指數上漲 => 可能是避險，需觀察是否反轉。</span>`;
             summarySentiment = "大盤目前呈現「外資期貨空單增加但指數上漲」的避險格局。外資在指數走高時增持空單避險，需提防行情可能隨時出現反轉。";
         } else if (oiTrend === "decrease" && priceTrend === "down") {
-            step2 = `<span style="color: var(--color-down); font-weight: bold;">OI 減少 + 指數下跌 => 外資退場，行情可能整理。</span>`;
+            step2 = `<span class="text-down">OI 減少 + 指數下跌 => 外資退場，行情可能整理。</span>`;
             summarySentiment = "大盤目前呈現「外資期貨空單減少但指數下跌」的整理格局。外資多空部位同步退場，市場觀望氣氛較濃，行情可能陷入區間震盪整理。";
         }
     } else {
@@ -966,17 +970,17 @@ function populateRankingTable(tableId, list, streakCol, latestCol) {
 
      
         if (tableId === 'table-dual-buy') {
-            streakLabel = `<div style="line-height:1.4;"><span style="color:var(--color-up); font-weight:600;">外資連買 ${row.Foreign_Streak}天</span><br><span style="color:var(--color-up); font-weight:600;">投信連買 ${row.Trust_Streak}天</span></div>`;
+            streakLabel = `<div style="line-height:1.4;"><span class="text-up">外資連買 ${row.Foreign_Streak}天</span><br><span class="text-up">投信連買 ${row.Trust_Streak}天</span></div>`;
             amountLabel = `<div style="font-size:13px; line-height:1.4;">外: ${formatAmount(row.Foreign_Latest)}<br>投: ${formatAmount(row.Trust_Latest)}</div>`;
         } else if (tableId === 'table-dual-sell') {
-            streakLabel = `<div style="line-height:1.4;"><span style="color:var(--color-down); font-weight:600;">外資連賣 ${Math.abs(row.Foreign_Streak)}天</span><br><span style="color:var(--color-down); font-weight:600;">投信連賣 ${Math.abs(row.Trust_Streak)}天</span></div>`;
+            streakLabel = `<div style="line-height:1.4;"><span class="text-down">外資連賣 ${Math.abs(row.Foreign_Streak)}天</span><br><span class="text-down">投信連賣 ${Math.abs(row.Trust_Streak)}天</span></div>`;
             amountLabel = `<div style="font-size:13px; line-height:1.4;">外: ${formatAmount(row.Foreign_Latest)}<br>投: ${formatAmount(row.Trust_Latest)}</div>`;
         } else {
 
             const streak = Math.abs(row[streakCol]);
             streakLabel = row[streakCol] > 0 ? 
-                `<span style="color: var(--color-up); font-weight: 600;">連買 ${streak} 天</span>` :
-                `<span style="color: var(--color-down); font-weight: 600;">連賣 ${streak} 天</span>`;
+                `<span class="text-up">連買 ${streak} 天</span>` :
+                `<span class="text-down">連賣 ${streak} 天</span>`;
             amountLabel = formatAmount(row[latestCol]);
         }
             

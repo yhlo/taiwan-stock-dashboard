@@ -207,18 +207,6 @@ body {
     border-radius: var(--radius-md);
 }
 
-.dashboard-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 24px;
-}
-
-@media (min-width: 1024px) {
-    .dashboard-grid {
-        grid-template-columns: 1fr 1fr;
-    }
-}
-
 /* Two-column layout for dashboard */
 .dashboard-two-column-layout {
     display: grid;
@@ -330,6 +318,17 @@ tbody tr:hover {
     background-color: var(--bg-down);
     color: var(--color-down);
     border: 1px solid var(--border-down);
+}
+
+/* Plain colored text (no badge background) - replaces repeated inline styles in app.js */
+.text-up {
+    color: var(--color-up);
+    font-weight: 600;
+}
+
+.text-down {
+    color: var(--color-down);
+    font-weight: 600;
 }
 
 /* Chart Styles */
@@ -1470,18 +1469,8 @@ tbody tr:hover {
     box-shadow: var(--shadow-md);
     margin-bottom: 24px;
     padding: 24px;
-    transition: background-color var(--transition-fast), border-color var(--transition-fast);
-}
-
-.instruction-section {
-    background-color: var(--bg-card);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-md);
-    margin-bottom: 24px;
-    padding: 24px;
     box-sizing: border-box;
-    grid-column: 1 / -1; 
+    grid-column: 1 / -1;
     width: 100%;
     max-width: 100%;
     transition: background-color var(--transition-fast), border-color var(--transition-fast);
@@ -1573,7 +1562,6 @@ tbody tr:hover {
     }
 }
 
-.market-summary-grid, 
 section.card {
     margin-bottom: 24px;
 }
