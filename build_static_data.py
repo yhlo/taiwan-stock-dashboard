@@ -2,10 +2,36 @@ import os
 import sys
 import json
 import time
+import argparse
 import datetime
 import requests
 import pandas as pd
 import io
+
+# Shared HTTP headers - was previously copy-pasted identically in 6 places.
+HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36"
+}
+
+def _clean_int(val):
+    """Strip thousands separators and parse an int. None-safe, never raises."""
+    if val is None:
+        return 0
+    val_str = str(val).replace(",", "").strip()
+    try:
+        return int(val_str)
+    except ValueError:
+        return 0
+
+def _clean_float(val):
+    """Strip thousands separators and parse a float. None-safe, never raises."""
+    if val is None:
+        return 0.0
+    val_str = str(val).replace(",", "").strip()
+    try:
+        return float(val_str)
+    except ValueError:
+        return 0.0
 
 # Ensure directories exist
 os.makedirs("data", exist_ok=True)
@@ -27,17 +53,12 @@ def fetch_data_with_cache(url, cache_path, is_today=False, delay=0.8):
         with open(cache_path, "r", encoding="utf-8") as f:
             try:
                 data = json.load(f)
-                if data.get("stat") == "NO_DATA":
-                    # Cached no-data; still return to avoid repeated fetches
-                    return data
                 return data
             except Exception:
                 # If cache is corrupted, fall back to fetching
                 pass
                 
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36"
-    }
+    headers = HEADERS
     
     url_name = url.split("?")[0].split("/")[-1]
     
@@ -114,22 +135,13 @@ def parse_twse_t86(api_response):
     else:
         idx_total = 18
         
+    def get_val_safe(row, idx):
+        if idx >= 0 and idx < len(row):
+            return _clean_int(row[idx])
+        return 0
+
     rows = []
     for r in data:
-        def clean(val):
-            if val is None:
-                return 0
-            val_str = str(val).replace(",", "").strip()
-            try:
-                return int(val_str)
-            except ValueError:
-                return 0
-                
-        def get_val_safe(row, idx):
-            if idx >= 0 and idx < len(row):
-                return clean(row[idx])
-            return 0
-            
         symbol = str(r[idx_symbol]).strip() if idx_symbol < len(r) else ""
         name = str(r[idx_name]).strip() if idx_name < len(r) else ""
         
@@ -161,19 +173,10 @@ def parse_tpex_t86(api_response):
             symbol = str(r[0]).strip()
             name = str(r[1]).strip()
             
-            def clean(val):
-                if val is None:
-                    return 0
-                val_str = str(val).replace(",", "").strip()
-                try:
-                    return int(val_str)
-                except ValueError:
-                    return 0
-                    
-            foreign = clean(r[10])
-            trust = clean(r[13])
-            dealer = clean(r[22])
-            total = clean(r[23])
+            foreign = _clean_int(r[10])
+            trust = _clean_int(r[13])
+            dealer = _clean_int(r[22])
+            total = _clean_int(r[23])
             
             rows.append({
                 "Symbol": symbol,
@@ -187,19 +190,10 @@ def parse_tpex_t86(api_response):
             symbol = str(r[0]).strip()
             name = str(r[1]).strip()
             
-            def clean(val):
-                if val is None:
-                    return 0
-                val_str = str(val).replace(",", "").strip()
-                try:
-                    return int(val_str)
-                except ValueError:
-                    return 0
-                    
-            foreign = clean(r[4])
-            trust = clean(r[10])
-            dealer = clean(r[17])
-            total = clean(r[18])
+            foreign = _clean_int(r[4])
+            trust = _clean_int(r[10])
+            dealer = _clean_int(r[17])
+            total = _clean_int(r[18])
             
             rows.append({
                 "Symbol": symbol,
@@ -256,12 +250,23 @@ def load_t86_both_markets(date_str, cache_dir, is_today=False):
     df_combined = pd.concat([df_twse, df_tpex], ignore_index=True)
     return df_combined
 
-def find_latest_trading_days(n=20):
+def find_latest_trading_days(n=20, as_of_date=None):
+    """
+    Returns the latest `n` trading days, in YYYYMMDD strings, newest first.
+    If as_of_date (YYYYMMDD string) is given, returns trading days up to and
+    including that date instead of up to the actual current date.
+    """
     import yfinance as yf
     print("Pre-checking trading days using Yahoo Finance...")
     try:
         ticker = yf.Ticker("^TWII")
-        hist = ticker.history(period="60d")
+        if as_of_date:
+            # yfinance's `end` is exclusive, so add a day to include as_of_date itself.
+            end_dt = datetime.datetime.strptime(as_of_date, "%Y%m%d") + datetime.timedelta(days=1)
+            start_dt = end_dt - datetime.timedelta(days=90)
+            hist = ticker.history(start=start_dt.strftime("%Y-%m-%d"), end=end_dt.strftime("%Y-%m-%d"))
+        else:
+            hist = ticker.history(period="60d")
         if not hist.empty:
             dates = hist.index.strftime("%Y%m%d").tolist()
             dates.sort(reverse=True)
@@ -270,8 +275,11 @@ def find_latest_trading_days(n=20):
         print(f"Error fetching from yfinance: {e}, falling back to manual date generation", file=sys.stderr)
         
     trading_days = []
-    taipei_now = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=8)
-    current_date = taipei_now.date()
+    if as_of_date:
+        current_date = datetime.datetime.strptime(as_of_date, "%Y%m%d").date()
+    else:
+        taipei_now = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=8)
+        current_date = taipei_now.date()
     if current_date.weekday() == 5:
         current_date -= datetime.timedelta(days=1)
     elif current_date.weekday() == 6:
@@ -370,9 +378,7 @@ def fetch_taifex_futures_oi(date_str, cache_dir):
     formatted_date = f"{date_str[:4]}/{date_str[4:6]}/{date_str[6:]}"
     url = "https://www.taifex.com.tw/cht/3/futContractsDate"
     payload = {"queryDate": formatted_date}
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36"
-    }
+    headers = HEADERS
     
     print(f"Fetching Futures OI from TAIFEX for {formatted_date}...")
     time.sleep(1.0)
@@ -387,27 +393,24 @@ def fetch_taifex_futures_oi(date_str, cache_dir):
             
             contracts = {}
             
-            def clean_int(val):
-                return int(val.replace(",", "").strip())
-                
             for i, r in enumerate(rows):
                 cells = [td.get_text().strip() for td in r.find_all(["td", "th"])]
                 if len(cells) > 1:
                     contract_name = cells[1]
                     if contract_name in ["臺股期貨", "小型臺指期貨", "微型臺指期貨"]:
-                        dealers_long = clean_int(cells[9])
-                        dealers_short = clean_int(cells[11])
-                        dealers_net = clean_int(cells[13])
+                        dealers_long = _clean_int(cells[9])
+                        dealers_short = _clean_int(cells[11])
+                        dealers_net = _clean_int(cells[13])
                         
                         cells_trust = [td.get_text().strip() for td in rows[i+1].find_all(["td", "th"])]
-                        trust_long = clean_int(cells_trust[7])
-                        trust_short = clean_int(cells_trust[9])
-                        trust_net = clean_int(cells_trust[11])
+                        trust_long = _clean_int(cells_trust[7])
+                        trust_short = _clean_int(cells_trust[9])
+                        trust_net = _clean_int(cells_trust[11])
                         
                         cells_foreign = [td.get_text().strip() for td in rows[i+2].find_all(["td", "th"])]
-                        foreign_long = clean_int(cells_foreign[7])
-                        foreign_short = clean_int(cells_foreign[9])
-                        foreign_net = clean_int(cells_foreign[11])
+                        foreign_long = _clean_int(cells_foreign[7])
+                        foreign_short = _clean_int(cells_foreign[9])
+                        foreign_net = _clean_int(cells_foreign[11])
                         
                         key = "TX" if contract_name == "臺股期貨" else ("MTX" if contract_name == "小型臺指期貨" else "TMF")
                         contracts[key] = {
@@ -451,9 +454,7 @@ def fetch_taifex_options_max_oi(date_str, cache_dir):
         "commodity_id": "TXO",
         "MarketCode": "0"
     }
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36"
-    }
+    headers = HEADERS
     
     print(f"Fetching Options OI from TAIFEX for {formatted_date}...")
     time.sleep(1.0)
@@ -644,21 +645,10 @@ def generate_trend_chart(futures_history, cache_dir):
 
 def scrape_daily_sbl_data(date_str, cache_dir):
     sbl_map = {}
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36"
-    }
+    headers = HEADERS
     
     taipei_now = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=8)
     is_today = (date_str == taipei_now.strftime("%Y%m%d"))
-    
-    def clean_int(val):
-        if val is None:
-            return 0
-        val_str = str(val).replace(",", "").strip()
-        try:
-            return int(val_str)
-        except ValueError:
-            return 0
 
     # 1. TWSE (TWT93U)
     twse_success = False
@@ -673,9 +663,9 @@ def scrape_daily_sbl_data(date_str, cache_dir):
                         if len(row) >= 13:
                             sym = str(row[0]).strip()
                             sbl_map[sym] = {
-                                "SBL_Sold": clean_int(row[9]),
-                                "SBL_Returned": clean_int(row[10]),
-                                "SBL_Balance": clean_int(row[12])
+                                "SBL_Sold": _clean_int(row[9]),
+                                "SBL_Returned": _clean_int(row[10]),
+                                "SBL_Balance": _clean_int(row[12])
                             }
                     twse_success = True
             except Exception:
@@ -696,9 +686,9 @@ def scrape_daily_sbl_data(date_str, cache_dir):
                             if len(row) >= 13:
                                 sym = str(row[0]).strip()
                                 sbl_map[sym] = {
-                                    "SBL_Sold": clean_int(row[9]),
-                                    "SBL_Returned": clean_int(row[10]),
-                                    "SBL_Balance": clean_int(row[12])
+                                    "SBL_Sold": _clean_int(row[9]),
+                                    "SBL_Returned": _clean_int(row[10]),
+                                    "SBL_Balance": _clean_int(row[12])
                                 }
                         twse_success = True
                         break
@@ -733,9 +723,9 @@ def scrape_daily_sbl_data(date_str, cache_dir):
                         if len(row) >= 13:
                             sym = str(row[0]).strip()
                             sbl_map[sym] = {
-                                "SBL_Sold": clean_int(row[9]),
-                                "SBL_Returned": clean_int(row[10]),
-                                "SBL_Balance": clean_int(row[12])
+                                "SBL_Sold": _clean_int(row[9]),
+                                "SBL_Returned": _clean_int(row[10]),
+                                "SBL_Balance": _clean_int(row[12])
                             }
                     tpex_success = True
             except Exception:
@@ -758,9 +748,9 @@ def scrape_daily_sbl_data(date_str, cache_dir):
                             if len(row) >= 13:
                                 sym = str(row[0]).strip()
                                 sbl_map[sym] = {
-                                    "SBL_Sold": clean_int(row[9]),
-                                    "SBL_Returned": clean_int(row[10]),
-                                    "SBL_Balance": clean_int(row[12])
+                                    "SBL_Sold": _clean_int(row[9]),
+                                    "SBL_Returned": _clean_int(row[10]),
+                                    "SBL_Balance": _clean_int(row[12])
                                 }
                         tpex_success = True
                         break
@@ -785,9 +775,7 @@ def scrape_daily_sbl_data(date_str, cache_dir):
 
 def scrape_daily_stock_quotes(date_str):
     quotes_map = {}
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36"
-    }
+    headers = HEADERS
     
     # 1. TWSE
     twse_success = False
@@ -814,20 +802,14 @@ def scrape_daily_stock_quotes(date_str):
                                 low_p = str(r[7]).replace(",", "").strip()
                                 close_p = str(r[8]).replace(",", "").strip()
                                 
-                                def clean_float(val):
-                                    try:
-                                        return float(val)
-                                    except ValueError:
-                                        return 0.0
-                                        
-                                vol_val = clean_float(vol) // 1000
-                                open_val = clean_float(open_p)
-                                high_val = clean_float(high_p)
-                                low_val = clean_float(low_p)
-                                close_val = clean_float(close_p)
+                                vol_val = _clean_float(vol) // 1000
+                                open_val = _clean_float(open_p)
+                                high_val = _clean_float(high_p)
+                                low_val = _clean_float(low_p)
+                                close_val = _clean_float(close_p)
                                 
                                 change_sign = str(r[9]).strip()
-                                change_val = clean_float(str(r[10]).replace(",", "").strip())
+                                change_val = _clean_float(str(r[10]).replace(",", "").strip())
                                 if "-" in change_sign or "綠" in change_sign:
                                     change_val = -change_val
                                     
@@ -866,21 +848,12 @@ def scrape_daily_stock_quotes(date_str):
                 for r in data:
                     sym = str(r.get("SecuritiesCompanyCode", "")).strip()
                     
-                    def clean_float(val):
-                        if val is None:
-                            return 0.0
-                        val_str = str(val).replace(",", "").strip()
-                        try:
-                            return float(val_str)
-                        except ValueError:
-                            return 0.0
-                            
-                    vol = clean_float(r.get("TradingShares", 0)) // 1000
-                    open_p = clean_float(r.get("Open", 0))
-                    high_p = clean_float(r.get("High", 0))
-                    low_p = clean_float(r.get("Low", 0))
-                    close_p = clean_float(r.get("Close", 0))
-                    change_val = clean_float(r.get("Change", 0))
+                    vol = _clean_float(r.get("TradingShares", 0)) // 1000
+                    open_p = _clean_float(r.get("Open", 0))
+                    high_p = _clean_float(r.get("High", 0))
+                    low_p = _clean_float(r.get("Low", 0))
+                    close_p = _clean_float(r.get("Close", 0))
+                    change_val = _clean_float(r.get("Change", 0))
                     
                     quotes_map[sym] = {
                         "Open": open_p,
@@ -971,9 +944,7 @@ def load_industry_mapping(cache_dir):
         "35": "綠能環保", "36": "數位雲端", "37": "運動休閒", "38": "居家生活"
     }
     
-    headers_req = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36"
-    }
+    headers_req = HEADERS
     
     try:
         res_l = requests.get("https://mopsfin.twse.com.tw/opendata/t187ap03_L.csv", headers=headers_req, timeout=15)
@@ -1033,10 +1004,44 @@ def clean_old_cache(cache_dir, keep_days=45):
         pass
 
 def main():
+    parser = argparse.ArgumentParser(description="Build TWStockWatch static data.")
+    parser.add_argument(
+        "--date", type=str, default=None,
+        help="Target date in YYYYMMDD format (e.g. 20260630). "
+             "If omitted, uses the actual time when the script starts, same as before."
+    )
+    args = parser.parse_args()
+
     cache_dir = "data/cache"
-    
-    # 1. Find the latest 20 trading days
-    trading_days = find_latest_trading_days(n=20)
+
+    real_taipei_now = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=8)
+
+    if args.date:
+        try:
+            datetime.datetime.strptime(args.date, "%Y%m%d")
+        except ValueError:
+            print(f"Invalid --date value '{args.date}', expected YYYYMMDD format.", file=sys.stderr)
+            sys.exit(1)
+
+        if args.date == real_taipei_now.strftime("%Y%m%d"):
+            # Caller explicitly asked for today - still respect the 15:00
+            # cutoff below, since today's data may not exist yet.
+            taipei_now = real_taipei_now
+        else:
+            # A specific past date was requested - treat it as end-of-day
+            # (market already closed), so the 15:00 cutoff doesn't apply.
+            tz_taipei = datetime.timezone(datetime.timedelta(hours=8))
+            taipei_now = datetime.datetime.strptime(args.date, "%Y%m%d").replace(
+                hour=23, minute=59, second=0, tzinfo=tz_taipei
+            )
+        print(f"Running with manually specified date: {args.date}")
+    else:
+        taipei_now = real_taipei_now
+
+    today_str = taipei_now.strftime("%Y%m%d")
+
+    # 1. Find the latest 20 trading days up to and including today_str
+    trading_days = find_latest_trading_days(n=20, as_of_date=today_str)
     if not trading_days:
         print("Failed to identify trading days.", file=sys.stderr)
         sys.exit(1)
@@ -1045,8 +1050,6 @@ def main():
     print(f"Latest Trading Day: {latest_date[:4]}/{latest_date[4:6]}/{latest_date[6:]}")
     
     day_dfs = []
-    taipei_now = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=8)
-    today_str = taipei_now.strftime("%Y%m%d")
     
     for d in trading_days:
         is_today = (d == today_str)
