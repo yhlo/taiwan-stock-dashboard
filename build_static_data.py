@@ -129,6 +129,18 @@ def parse_twse_t86(api_response):
     else:
         idx_dealer = 11
         
+    idx_dealer_prop = -1
+    for f in ["自營商買賣超股數(自行買賣)", "自營商(自行買賣)買賣超股數"]:
+        if f in fields:
+            idx_dealer_prop = fields.index(f)
+            break
+        
+    idx_dealer_hedge = -1
+    for f in ["自營商買賣超股數(避險)", "自營商(避險)買賣超股數"]:
+        if f in fields:
+            idx_dealer_hedge = fields.index(f)
+            break
+        
     idx_total = -1
     if "三大法人買賣超股數" in fields:
         idx_total = fields.index("三大法人買賣超股數")
@@ -148,6 +160,8 @@ def parse_twse_t86(api_response):
         foreign = get_val_safe(r, idx_foreign)
         trust = get_val_safe(r, idx_trust)
         dealer = get_val_safe(r, idx_dealer)
+        dealer_prop = get_val_safe(r, idx_dealer_prop) if idx_dealer_prop != -1 else 0
+        dealer_hedge = get_val_safe(r, idx_dealer_hedge) if idx_dealer_hedge != -1 else 0
         total = get_val_safe(r, idx_total)
         
         rows.append({
@@ -156,6 +170,8 @@ def parse_twse_t86(api_response):
             "Foreign": foreign,
             "Trust": trust,
             "Dealer": dealer,
+            "DealerProp": dealer_prop,
+            "DealerHedge": dealer_hedge,
             "Total": total
         })
     return pd.DataFrame(rows)
@@ -176,6 +192,8 @@ def parse_tpex_t86(api_response):
             foreign = _clean_int(r[10])
             trust = _clean_int(r[13])
             dealer = _clean_int(r[22])
+            dealer_prop = _clean_int(r[16])
+            dealer_hedge = _clean_int(r[19])
             total = _clean_int(r[23])
             
             rows.append({
@@ -184,6 +202,8 @@ def parse_tpex_t86(api_response):
                 "Foreign": foreign,
                 "Trust": trust,
                 "Dealer": dealer,
+                "DealerProp": dealer_prop,
+                "DealerHedge": dealer_hedge,
                 "Total": total
             })
         elif len(r) >= 19:
@@ -193,6 +213,8 @@ def parse_tpex_t86(api_response):
             foreign = _clean_int(r[4])
             trust = _clean_int(r[10])
             dealer = _clean_int(r[17])
+            dealer_prop = 0
+            dealer_hedge = 0
             total = _clean_int(r[18])
             
             rows.append({
@@ -201,6 +223,8 @@ def parse_tpex_t86(api_response):
                 "Foreign": foreign,
                 "Trust": trust,
                 "Dealer": dealer,
+                "DealerProp": dealer_prop,
+                "DealerHedge": dealer_hedge,
                 "Total": total
             })
     return pd.DataFrame(rows)
@@ -311,6 +335,8 @@ def calculate_streaks(df_list):
             "Foreign": [0] * len(df_list),
             "Trust": [0] * len(df_list),
             "Dealer": [0] * len(df_list),
+            "DealerProp": [0] * len(df_list),
+            "DealerHedge": [0] * len(df_list),
             "Total": [0] * len(df_list)
         }
         
@@ -324,6 +350,8 @@ def calculate_streaks(df_list):
                 symbol_data[sym]["Foreign"][i] = row["Foreign"]
                 symbol_data[sym]["Trust"][i] = row["Trust"]
                 symbol_data[sym]["Dealer"][i] = row["Dealer"]
+                symbol_data[sym]["DealerProp"][i] = row["DealerProp"] if "DealerProp" in row else 0
+                symbol_data[sym]["DealerHedge"][i] = row["DealerHedge"] if "DealerHedge" in row else 0
                 symbol_data[sym]["Total"][i] = row["Total"]
                 
     def get_streak_days(vals):
@@ -346,6 +374,8 @@ def calculate_streaks(df_list):
         foreign_streak = get_streak_days(data["Foreign"])
         trust_streak = get_streak_days(data["Trust"])
         dealer_streak = get_streak_days(data["Dealer"])
+        dealer_prop_streak = get_streak_days(data["DealerProp"])
+        dealer_hedge_streak = get_streak_days(data["DealerHedge"])
         total_streak = get_streak_days(data["Total"])
         
         streak_results.append({
@@ -358,6 +388,10 @@ def calculate_streaks(df_list):
             "Trust_Latest": data["Trust"][0],
             "Dealer_Streak": dealer_streak,
             "Dealer_Latest": data["Dealer"][0],
+            "DealerProp_Streak": dealer_prop_streak,
+            "DealerProp_Latest": data["DealerProp"][0],
+            "DealerHedge_Streak": dealer_hedge_streak,
+            "DealerHedge_Latest": data["DealerHedge"][0],
             "Total_Streak": total_streak,
             "Total_Latest": data["Total"][0]
         })
@@ -1112,6 +1146,10 @@ def main():
             "Trust_Latest": int(row["Trust_Latest"]),
             "Dealer_Streak": int(row["Dealer_Streak"]),
             "Dealer_Latest": int(row["Dealer_Latest"]),
+            "DealerProp_Streak": int(row["DealerProp_Streak"]),
+            "DealerProp_Latest": int(row["DealerProp_Latest"]),
+            "DealerHedge_Streak": int(row["DealerHedge_Streak"]),
+            "DealerHedge_Latest": int(row["DealerHedge_Latest"]),
             "Total_Streak": int(row["Total_Streak"]),
             "Total_Latest": int(row["Total_Latest"]),
             

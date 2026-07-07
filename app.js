@@ -605,25 +605,53 @@ function renderMarketSummary() {
             .replace('外資自營商', '外資自營');
     }
 
-    let twseHtml = '';
-    let tpexHtml = '';
-    
+    const orderMap = {
+        '外資 (不含自營)': 1,
+        '外資自營': 2,
+        '投信': 3,
+        '自營 (自行買賣)': 4,
+        '自營 (避險)': 5,
+        '合計': 6,
+        '三大法人合計': 6
+    };
+
+    const twseRows = [];
+    const tpexRows = [];
+
     marketSummary.Data.forEach(row => {
         const shortenedName = shortenCategoryName(row.Category);
-        const rowHtml = `
+        if (orderMap.hasOwnProperty(shortenedName)) {
+            const mappedRow = {
+                Category: shortenedName,
+                Buy: row.Buy,
+                Sell: row.Sell,
+                Net: row.Net
+            };
+            if (row.Market.includes("上市")) {
+                twseRows.push(mappedRow);
+            } else if (row.Market.includes("上櫃")) {
+                tpexRows.push(mappedRow);
+            }
+        }
+    });
+
+    const sortByOrder = (a, b) => orderMap[a.Category] - orderMap[b.Category];
+    twseRows.sort(sortByOrder);
+    tpexRows.sort(sortByOrder);
+
+    const buildTableHtml = (rows) => {
+        return rows.map(row => `
             <tr>
-                <td><strong>${shortenedName}</strong></td>
+                <td><strong>${row.Category}</strong></td>
                 <td class="text-right">${formatBillionValue(row.Buy)}</td>
                 <td class="text-right">${formatBillionValue(row.Sell)}</td>
                 <td class="text-right">${formatBillion(row.Net)}</td>
             </tr>
-        `;
-        if (row.Market.includes("上市")) {
-            twseHtml += rowHtml;
-        } else if (row.Market.includes("上櫃")) {
-            tpexHtml += rowHtml;
-        }
-    });
+        `).join('');
+    };
+
+    const twseHtml = buildTableHtml(twseRows);
+    const tpexHtml = buildTableHtml(tpexRows);
     
     if (twseBody) twseBody.innerHTML = twseHtml || '<tr><td colspan="4" class="text-center">無上市資料</td></tr>';
     if (tpexBody) tpexBody.innerHTML = tpexHtml || '<tr><td colspan="4" class="text-center">無上櫃資料</td></tr>';
@@ -1114,6 +1142,8 @@ function showStockDetails(stock) {
     // Streaks
     document.getElementById('stock-streak-foreign').innerHTML = formatStreakText(stock.Foreign_Streak, stock.Foreign_Latest);
     document.getElementById('stock-streak-trust').innerHTML = formatStreakText(stock.Trust_Streak, stock.Trust_Latest);
+    document.getElementById('stock-streak-dealer-prop').innerHTML = formatStreakText(stock.DealerProp_Streak, stock.DealerProp_Latest);
+    document.getElementById('stock-streak-dealer-hedge').innerHTML = formatStreakText(stock.DealerHedge_Streak, stock.DealerHedge_Latest);
     document.getElementById('stock-streak-dealer').innerHTML = formatStreakText(stock.Dealer_Streak, stock.Dealer_Latest);
     document.getElementById('stock-streak-total').innerHTML = formatStreakText(stock.Total_Streak, stock.Total_Latest);
 

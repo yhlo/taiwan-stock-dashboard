@@ -609,7 +609,7 @@ tbody tr:hover {
 
 @media (min-width: 768px) {
     .stock-streaks-grid {
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(3, 1fr);
     }
 }
 
