@@ -29,6 +29,36 @@
       "TMF_Total_Net": -51370
     },
     {
+      "Date": "20260707",
+      "Foreign_Net": -80042,
+      "Trust_Net": 68187,
+      "Dealer_Net": 3793,
+      "Total_Net": -8062,
+      "MTX_Foreign_Net": 1630,
+      "MTX_Trust_Net": 36,
+      "MTX_Dealer_Net": -8861,
+      "MTX_Total_Net": -7195,
+      "TMF_Foreign_Net": 9159,
+      "TMF_Trust_Net": 0,
+      "TMF_Dealer_Net": -61419,
+      "TMF_Total_Net": -52260
+    },
+    {
+      "Date": "20260706",
+      "Foreign_Net": -80087,
+      "Trust_Net": 67254,
+      "Dealer_Net": 2670,
+      "Total_Net": -10163,
+      "MTX_Foreign_Net": 1903,
+      "MTX_Trust_Net": 34,
+      "MTX_Dealer_Net": -7110,
+      "MTX_Total_Net": -5173,
+      "TMF_Foreign_Net": 14666,
+      "TMF_Trust_Net": 0,
+      "TMF_Dealer_Net": -47454,
+      "TMF_Total_Net": -32788
+    },
+    {
       "Date": "20260703",
       "Foreign_Net": -81052,
       "Trust_Net": 67213,
@@ -104,6 +134,21 @@
       "TMF_Total_Net": -40444
     },
     {
+      "Date": "20260626",
+      "Foreign_Net": -76391,
+      "Trust_Net": 61247,
+      "Dealer_Net": 4641,
+      "Total_Net": -10503,
+      "MTX_Foreign_Net": -268,
+      "MTX_Trust_Net": 13,
+      "MTX_Dealer_Net": -6807,
+      "MTX_Total_Net": -7062,
+      "TMF_Foreign_Net": 2709,
+      "TMF_Trust_Net": 0,
+      "TMF_Dealer_Net": -64948,
+      "TMF_Total_Net": -62239
+    },
+    {
       "Date": "20260625",
       "Foreign_Net": -81051,
       "Trust_Net": 60921,
@@ -162,6 +207,21 @@
       "TMF_Trust_Net": 0,
       "TMF_Dealer_Net": -7928,
       "TMF_Total_Net": -1063
+    },
+    {
+      "Date": "20260618",
+      "Foreign_Net": -68337,
+      "Trust_Net": 58597,
+      "Dealer_Net": 63,
+      "Total_Net": -9677,
+      "MTX_Foreign_Net": 2185,
+      "MTX_Trust_Net": 19,
+      "MTX_Dealer_Net": -7876,
+      "MTX_Total_Net": -5672,
+      "TMF_Foreign_Net": 2758,
+      "TMF_Trust_Net": 0,
+      "TMF_Dealer_Net": -15077,
+      "TMF_Total_Net": -12319
     },
     {
       "Date": "20260617",
@@ -261,15 +321,19 @@
     45396.98828125,
     45809.19140625,
     45877.390625,
+    46465.19921875,
     47741.51171875,
     47100.6484375,
     46043.6015625,
     46255.26171875,
+    44571.76171875,
     44999.8984375,
     46125.91015625,
     47018.98828125,
     46744.16015625,
     46780.62109375,
+    46556.390625,
+    45479.109375,
     45734.41015625
   ]
 }
