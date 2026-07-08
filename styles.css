@@ -1649,3 +1649,212 @@ section.card {
         display: none !important;
     }
 }
+
+/* ========== OI Info Accordion ========== */
+.oi-info-accordion {
+    margin-top: 16px;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.oi-info-toggle {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.02));
+    border: none;
+    color: var(--text-secondary);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.25s ease, color 0.25s ease;
+    text-align: left;
+    gap: 12px;
+    font-family: inherit;
+}
+
+.oi-info-toggle:hover {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.04));
+    color: var(--text-primary);
+}
+
+.oi-info-toggle[aria-expanded="true"] {
+    color: var(--text-primary);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.oi-info-chevron {
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    flex-shrink: 0;
+}
+
+.oi-info-toggle[aria-expanded="true"] .oi-info-chevron {
+    transform: rotate(180deg);
+}
+
+.oi-info-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.45s cubic-bezier(0.4, 0, 0.2, 1), padding 0.35s ease;
+    padding: 0 18px;
+}
+
+.oi-info-body.open {
+    max-height: 550px;
+    padding: 16px;
+}
+
+.oi-info-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.oi-info-section {
+    margin-bottom: 0;
+}
+
+.oi-info-subtitle {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+    letter-spacing: 0.3px;
+}
+
+/* Info Table */
+.oi-info-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12.5px;
+    margin-bottom: 4px;
+}
+
+.oi-info-table thead th {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-secondary);
+    font-weight: 600;
+    padding: 8px 10px;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    white-space: nowrap;
+    font-size: 12px;
+}
+
+.oi-info-table tbody td {
+    padding: 9px 10px;
+    color: var(--text-secondary);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    line-height: 1.55;
+    vertical-align: top;
+}
+
+.oi-info-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.oi-info-table tbody td strong {
+    color: var(--text-primary);
+}
+
+/* Text & List */
+.oi-info-text {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin: 0 0 10px 0;
+}
+
+.oi-info-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.oi-info-list li {
+    position: relative;
+    padding: 8px 0 8px 20px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.oi-info-list li:last-child {
+    border-bottom: none;
+}
+
+.oi-info-list li::before {
+    content: "▸";
+    position: absolute;
+    left: 2px;
+    top: 8px;
+    color: var(--accent-blue);
+    font-size: 12px;
+}
+
+.oi-info-list li strong {
+    color: var(--text-primary);
+}
+
+.oi-info-list li em {
+    color: var(--accent-gold);
+    font-style: normal;
+    font-weight: 600;
+}
+
+/* Badge */
+.oi-info-badge-up {
+    display: inline-block;
+    background: rgba(0, 200, 83, 0.15);
+    color: #4cdf8b;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 1px 8px;
+    border-radius: 4px;
+    margin: 0 2px;
+}
+
+/* Tip box */
+.oi-info-tip {
+    margin-top: 16px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.08), rgba(139, 92, 246, 0.06));
+    border-left: 3px solid var(--accent-blue);
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+}
+
+.oi-info-tip strong {
+    color: var(--text-primary);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .oi-info-toggle {
+        padding: 12px 14px;
+        font-size: 13px;
+    }
+    .oi-info-body.open {
+        padding: 14px;
+    }
+    .oi-info-table {
+        font-size: 11.5px;
+    }
+    .oi-info-table thead th,
+    .oi-info-table tbody td {
+        padding: 7px 6px;
+    }
+    .oi-info-table thead th:nth-child(4),
+    .oi-info-table tbody td:nth-child(4) {
+        display: none;
+    }
+    .oi-info-body.open {
+        max-height: 650px;
+    }
+}

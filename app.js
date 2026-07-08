@@ -1264,5 +1264,14 @@ function updateTabCounts(fBuyCount, fSellCount, tBuyCount, tSellCount, dBuyCount
     if (dSellBtn) dSellBtn.textContent = `❄️雙賣 (${dSellCount})`;
 }
 
+// OI Info Accordion Toggle
+function toggleOiInfo() {
+    const btn = document.getElementById('oi-info-toggle-btn');
+    const body = document.getElementById('oi-info-body');
+    const isOpen = btn.getAttribute('aria-expanded') === 'true';
+    btn.setAttribute('aria-expanded', !isOpen);
+    body.classList.toggle('open', !isOpen);
+}
+
 // Bootstrap
 window.addEventListener('DOMContentLoaded', initApp);
