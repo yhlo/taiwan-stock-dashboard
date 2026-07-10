@@ -89,36 +89,6 @@
       "TMF_Total_Net": -30971
     },
     {
-      "Date": "20260702",
-      "Foreign_Net": -84487,
-      "Trust_Net": 66410,
-      "Dealer_Net": 3683,
-      "Total_Net": -14394,
-      "MTX_Foreign_Net": 418,
-      "MTX_Trust_Net": 33,
-      "MTX_Dealer_Net": -8028,
-      "MTX_Total_Net": -7577,
-      "TMF_Foreign_Net": 9645,
-      "TMF_Trust_Net": 0,
-      "TMF_Dealer_Net": -54568,
-      "TMF_Total_Net": -44923
-    },
-    {
-      "Date": "20260701",
-      "Foreign_Net": -84168,
-      "Trust_Net": 67194,
-      "Dealer_Net": 1592,
-      "Total_Net": -15382,
-      "MTX_Foreign_Net": 3132,
-      "MTX_Trust_Net": 33,
-      "MTX_Dealer_Net": -6678,
-      "MTX_Total_Net": -3513,
-      "TMF_Foreign_Net": 9993,
-      "TMF_Trust_Net": 0,
-      "TMF_Dealer_Net": -40245,
-      "TMF_Total_Net": -30252
-    },
-    {
       "Date": "20260630",
       "Foreign_Net": -83063,
       "Trust_Net": 66623,
@@ -254,21 +224,6 @@
       "TMF_Total_Net": -17948
     },
     {
-      "Date": "20260616",
-      "Foreign_Net": -69847,
-      "Trust_Net": 56894,
-      "Dealer_Net": 2219,
-      "Total_Net": -10734,
-      "MTX_Foreign_Net": 933,
-      "MTX_Trust_Net": 12,
-      "MTX_Dealer_Net": -17172,
-      "MTX_Total_Net": -16227,
-      "TMF_Foreign_Net": 18201,
-      "TMF_Trust_Net": 0,
-      "TMF_Dealer_Net": -46944,
-      "TMF_Total_Net": -28743
-    },
-    {
       "Date": "20260615",
       "Foreign_Net": -66734,
       "Trust_Net": 57702,
@@ -282,21 +237,6 @@
       "TMF_Trust_Net": 0,
       "TMF_Dealer_Net": -41732,
       "TMF_Total_Net": -23487
-    },
-    {
-      "Date": "20260612",
-      "Foreign_Net": -65039,
-      "Trust_Net": 57111,
-      "Dealer_Net": 3568,
-      "Total_Net": -4360,
-      "MTX_Foreign_Net": 5734,
-      "MTX_Trust_Net": 7,
-      "MTX_Dealer_Net": -15542,
-      "MTX_Total_Net": -9801,
-      "TMF_Foreign_Net": 15432,
-      "TMF_Trust_Net": 0,
-      "TMF_Dealer_Net": -44278,
-      "TMF_Total_Net": -28846
     },
     {
       "Date": "20260611",
@@ -316,9 +256,7 @@
   ],
   "AlignedPrices": [
     43149.4609375,
-    44169.0390625,
     45396.98828125,
-    45809.19140625,
     45877.390625,
     46465.19921875,
     47741.51171875,
@@ -328,8 +266,6 @@
     44571.76171875,
     44999.8984375,
     46125.91015625,
-    47018.98828125,
-    46744.16015625,
     46780.62109375,
     46556.390625,
     45479.109375,
