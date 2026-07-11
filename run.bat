@@ -1,5 +1,5 @@
 @echo off
-set PYTHON_PATH="C:\Users\P170\AppData\Local\Programs\Python\Python311\python.exe"
+set PYTHON_PATH=python
 cd /d "%~dp0"
 
 :menu
