@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-TW" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BRC4C5P0KX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-BRC4C5P0KX');
+    </script>
+
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16x16.png">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1343288422175015" crossorigin="anonymous"></script>
+
+    <title>關於我 | TWStockWatch 台灣股市法人籌碼看板</title>
+    <meta name="description" content="認識 TWStockWatch：一個專注台灣股市三大法人籌碼分析的免費看板，說明我的使命、資料來源（證交所、櫃買中心、期交所）、每日更新機制與聯絡方式。">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://www.twstockwatch.com/about.html">
+    <script>
+      (function () {
+        const savedTheme = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+          document.documentElement.setAttribute('data-theme', 'dark');
+        }
+      })();
+    </script>
+</head>
+<body>
+    <header class="main-header">
+        <div class="header-container">
+            <h1 class="app-title">
+                <a href="/"><span aria-hidden="true">📈</span>台灣股市法人籌碼與連買連賣看板</a>
+            </h1>
+            <nav class="main-nav">
+                <a href="/articles/">📚 文章專區</a>
+                <a href="/about.html">關於我</a>
+            </nav>
+            <div class="header-controls">
+                <button id="theme-toggle" class="theme-btn" aria-label="切換深淺模式">🌓</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <section class="instruction-section">
+                <h2 class="instruction-title">🏦 關於我｜TWStockWatch</h2>
+                <div class="instruction-body">
+                    <div class="instruction-subtitle">💡 我是誰</div>
+                    <p>大家好，我是<strong>散戶小羅</strong>，TWStockWatch 就是我一個人獨立開發與維護的網站。我不是什麼分析師或投顧，就是一個在市場裡打滾多年、也曾追高殺低、繳過不少學費的普通散戶。起初做這個網站，只是為了解決自己每天盤後要在證交所、櫃買中心、期交所三個網站之間來回查詢法人買賣超資料的困擾，後來想想，既然工具都寫好了，乾脆整理成公開網站，免費分享給所有跟我一樣的散戶朋友。</p>
+                    <p>在<a href="/articles/">文章專區</a>裡，我會用最白話的方式分享籌碼分析的觀念，也會誠實聊聊自己踩過的坑——因為我相信，別人的教訓往往比成功故事更有參考價值。</p>
+
+                    <div class="instruction-subtitle">🎯 我的使命</div>
+                    <p>台灣股市中，三大法人（外資、投信、自營商）的成交金額佔比極高，他們的動向往往牽動個股與大盤的走勢。然而官方公開資料分散在不同機構、格式艱澀，一般散戶難以快速消化。</p>
+                    <p>TWStockWatch 致力於把這些公開數據<strong>整理成人人看得懂的決策看板</strong>：法人連續買賣天數排行、外資與投信「雙買雙賣」共識股、期貨未平倉量趨勢、選擇權最大 OI 支撐壓力、借券放空動態等，幫助散戶投資人用更短的時間掌握資金流向，做出更理性的投資決策。</p>
+
+                    <div class="instruction-subtitle">📊 資料來源與更新機制</div>
+                    <ul class="instruction-list">
+                        <li><strong>資料來源：</strong>臺灣證券交易所（TWSE）、證券櫃檯買賣中心（TPEx）、臺灣期貨交易所（TAIFEX）之公開 OpenAPI 與盤後統計資料。</li>
+                        <li><strong>更新頻率：</strong>每個交易日下午（台北時間）由自動化排程抓取當日盤後數據，經程式計算連買連賣天數、雙買雙賣訊號後發佈。</li>
+                        <li><strong>加值分析：</strong>連續買賣天數統計、法人共識訊號、選擇權支撐壓力判定與結算週提醒等，皆為本站自行開發的演算邏輯，非官方提供。</li>
+                    </ul>
+
+                    <div class="instruction-subtitle">🆓 完全免費與獨立性</div>
+                    <p>本網站所有功能完全免費，不需註冊、不推薦任何個股、不販售會員或課程，亦未接受任何券商、投顧或上市櫃公司的贊助。網站營運成本透過網頁廣告支應。我與各資料來源機構之間並無任何合作或授權關係，僅使用其依法公開之資料。</p>
+
+                    <div class="instruction-subtitle">🌐 我的願景</div>
+                    <p>TWStockWatch 不只是股市觀察站，更希望成為投資人建立正確籌碼觀念的起點。我相信投資不只是數字的遊戲，更是人生的重要選擇。我會持續提供專業、透明、易懂的資訊，並在<a href="/articles/">文章專區</a>分享籌碼分析的觀念教學，陪伴你走向更穩健的財務未來。</p>
+
+                    <div class="instruction-subtitle">📮 聯絡我</div>
+                    <p>若有任何問題、建議或合作提案，歡迎來信：</p>
+                    <ul class="instruction-list">
+                        <li><strong>Email：</strong> <a href="mailto:twstockwatch@gmail.com">twstockwatch@gmail.com</a></li>
+                    </ul>
+
+                    <div class="instruction-summary-box">
+                        📌 提醒：本網站提供的所有數據與分析僅供參考，不構成任何投資建議。詳情請參閱<a href="/disclaimer.html">免責聲明</a>。
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="app-footer">
+        <div class="footer-container">
+            <p>
+                <a href="/">首頁</a> ｜
+                <a href="/articles/">文章專區</a> ｜
+                <a href="/about.html">關於我</a> ｜
+                <a href="/privacy.html">隱私權政策</a> ｜
+                <a href="/disclaimer.html">免責聲明</a>
+            </p>
+            <p>© 2026 TWStockWatch. 本網站內容僅供參考，不構成任何投資建議。</p>
+        </div>
+    </footer>
+
+    <script>
+      document.getElementById('theme-toggle').addEventListener('click', function () {
+        const current = document.documentElement.getAttribute('data-theme');
+        const next = current === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem('theme', next);
+      });
+    </script>
+</body>
+</html>

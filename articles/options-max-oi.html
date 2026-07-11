@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-TW" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BRC4C5P0KX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-BRC4C5P0KX');
+    </script>
+
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16x16.png">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/styles.css">
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1343288422175015" crossorigin="anonymous"></script>
+
+    <title>選擇權最大未平倉量怎麼看支撐與壓力？ | TWStockWatch</title>
+    <meta name="description" content="選擇權最大 Call OI 常被視為大盤壓力區、最大 Put OI 為支撐區。本文解釋背後的莊家邏輯、如何用 OI 分布判斷指數區間，以及結算週使用此指標的三個注意事項。">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://www.twstockwatch.com/articles/options-max-oi.html">
+    <script>
+      (function () {
+        const savedTheme = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+          document.documentElement.setAttribute('data-theme', 'dark');
+        }
+      })();
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": "選擇權最大未平倉量怎麼看支撐與壓力？",
+      "description": "選擇權最大 Call OI 常被視為大盤壓力區、最大 Put OI 為支撐區。本文解釋背後的莊家邏輯、如何用 OI 分布判斷指數區間，以及結算週使用此指標的三個注意事項。",
+      "author": { "@type": "Person", "name": "散戶小羅" },
+      "publisher": { "@type": "Organization", "name": "TWStockWatch", "url": "https://www.twstockwatch.com" },
+      "datePublished": "2026-07-11",
+      "dateModified": "2026-07-11",
+      "mainEntityOfPage": "https://www.twstockwatch.com/articles/options-max-oi.html",
+      "inLanguage": "zh-TW"
+    }
+    </script>
+</head>
+<body>
+    <header class="main-header">
+        <div class="header-container">
+            <h1 class="app-title">
+                <a href="/"><span aria-hidden="true">📈</span>台灣股市法人籌碼與連買連賣看板</a>
+            </h1>
+            <nav class="main-nav">
+                <a href="/articles/">📚 文章專區</a>
+                <a href="/about.html">關於我</a>
+            </nav>
+            <div class="header-controls">
+                <button id="theme-toggle" class="theme-btn" aria-label="切換深淺模式">🌓</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <article class="instruction-section">
+                <p style="margin-bottom: 12px;"><a href="/articles/">← 回文章專區</a></p>
+                <h2 class="instruction-title">🎯 選擇權最大未平倉量怎麼看支撐與壓力？</h2>
+                <div class="instruction-body">
+                    <p><em>作者：散戶小羅 ｜ 發佈日期：2026-07-11 ｜ 分類：空方與衍生性商品籌碼</em></p>
+
+                    <p>「最大 Call OI 在 24000，最大 Put OI 在 23000，這個月大盤大概就在這個區間震盪。」——類似的說法在台股社群十分常見。這套方法的核心，是用<strong>台指選擇權各履約價的未平倉量（OI）分布</strong>，來推估市場認定的大盤支撐與壓力位置。它為什麼有效？又在什麼時候會失效？</p>
+
+                    <div class="instruction-subtitle">🧩 基本概念：Call 與 Put 的 OI 代表什麼</div>
+                    <p>選擇權買方付權利金賭方向，賣方（俗稱莊家，多為機構法人）收權利金賭「不會到」。關鍵在於：<strong>選擇權市場的大額賣方通常是資金雄厚的法人</strong>，而賣方的最大利益是讓選擇權在到期時歸零（價外）。</p>
+                    <ul class="instruction-list">
+                        <li><strong>最大 Call OI 的履約價 → 壓力區：</strong>大量賣出 Call 的法人不希望指數漲過該履約價，該價位上方存在「莊家防守」的賣壓，市場因此把它視為本月壓力。</li>
+                        <li><strong>最大 Put OI 的履約價 → 支撐區：</strong>同理，大量賣出 Put 的法人不希望指數跌破該履約價，該價位形成支撐。</li>
+                    </ul>
+                    <p>兩者之間的區間，就是市場用真金白銀投票出來的「預期波動範圍」。</p>
+
+                    <div class="instruction-subtitle">🔍 進階觀察：OI 的移動比位置更重要</div>
+                    <ol class="instruction-list">
+                        <li><strong>支撐壓力上移：</strong>若最大 Put OI 的履約價隨行情走高不斷上移（例如從 22500 移到 23000 再到 23500），代表賣方願意在更高的位置防守，是多頭趨勢延續的訊號。</li>
+                        <li><strong>區間收斂或擴大：</strong>最大 Call 與最大 Put 的距離收窄，代表市場預期進入盤整；距離突然擴大，常發生在重大事件（如聯準會會議、財報週）前，代表避險需求升溫。</li>
+                        <li><strong>價位被突破後的反轉意義：</strong>當指數強勢突破最大 Call OI 履約價，賣 Call 的法人被迫停損回補或對沖買進期貨，反而助漲——這就是選擇權市場的「軋空」效應。原本的壓力區被突破後，常轉為支撐。</li>
+                    </ol>
+
+                    <div class="instruction-subtitle">📅 結算週的三個注意事項</div>
+                    <p>台指選擇權月合約於<strong>每月第三個星期三</strong>結算，結算週使用此指標要特別小心：</p>
+                    <ol class="instruction-list">
+                        <li><strong>結算週初期 OI 參考價值下降：</strong>臨近結算，價外合約的時間價值快速流失，OI 分布反映的是「殘局」而非新預期，此時應開始關注次月合約的 OI 分布。</li>
+                        <li><strong>結算日行情易受套利影響：</strong>結算日當天期現貨與選擇權之間的套利、沖銷交易頻繁，指數波動未必反映真實供需。</li>
+                        <li><strong>週選擇權的干擾：</strong>台指另有週選擇權（每週三結算），週選 OI 反映的是極短線預期，與月選的中期區間判斷混用容易誤判，需分開解讀。</li>
+                    </ol>
+
+                    <div class="instruction-subtitle">⚠️ 這個指標什麼時候會失效？</div>
+                    <p>最大 OI 支撐壓力本質上是「莊家防守線」的推估，在<strong>震盪盤與正常波動</strong>中相當實用；但遇到突發性系統風險（地緣政治、國際股市暴跌），賣方自身也會停損撤退，支撐壓力可能像紙糊的一樣被貫穿。因此它適合用來設定區間操作的參考框架，不適合作為重倉押注的唯一依據。搭配<a href="/articles/futures-oi-guide.html">外資期貨淨部位</a>與現貨法人買賣超一起看，才能形成完整的大盤籌碼視角。</p>
+
+                    <div class="instruction-summary-box">
+                        📌 <strong>總結：</strong>最大 Call OI 看壓力、最大 Put OI 看支撐，且「OI 的移動方向」比「OI 的所在位置」更具趨勢意義，結算週則須改看次月合約。<a href="/">TWStockWatch 首頁</a>每日更新最大 Call／Put OI 位置與結算週判定，並提供大盤籌碼面的自動化綜合分析。
+                    </div>
+
+                    <p><em>本文僅供教學參考，不構成任何投資建議，詳見<a href="/disclaimer.html">免責聲明</a>。</em></p>
+                </div>
+            </article>
+        </div>
+    </main>
+
+    <footer class="app-footer">
+        <div class="footer-container">
+            <p>
+                <a href="/">首頁</a> ｜
+                <a href="/articles/">文章專區</a> ｜
+                <a href="/about.html">關於我</a> ｜
+                <a href="/privacy.html">隱私權政策</a> ｜
+                <a href="/disclaimer.html">免責聲明</a>
+            </p>
+            <p>© 2026 TWStockWatch. 本網站內容僅供參考，不構成任何投資建議。</p>
+        </div>
+    </footer>
+
+    <script>
+      document.getElementById('theme-toggle').addEventListener('click', function () {
+        const current = document.documentElement.getAttribute('data-theme');
+        const next = current === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem('theme', next);
+      });
+    </script>
+</body>
+</html>

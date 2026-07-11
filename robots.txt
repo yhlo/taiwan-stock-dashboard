@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /data/cache/
+
+Sitemap: https://www.twstockwatch.com/sitemap.xml
