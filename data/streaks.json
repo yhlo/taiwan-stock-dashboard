@@ -4443,8 +4443,8 @@
       "Name": "富邦金融投等債",
       "Market": "上櫃 (TPEx)",
       "Industry": "其他",
-      "Foreign_Streak": -1,
-      "Foreign_Latest": -1000,
+      "Foreign_Streak": 4,
+      "Foreign_Latest": 27999000,
       "Trust_Streak": 0,
       "Trust_Latest": 0,
       "Dealer_Streak": -1,
@@ -4453,8 +4453,8 @@
       "DealerProp_Latest": 0,
       "DealerHedge_Streak": -1,
       "DealerHedge_Latest": -1056,
-      "Total_Streak": -1,
-      "Total_Latest": -2056,
+      "Total_Streak": 4,
+      "Total_Latest": 27997944,
       "Dual_Buy_Streak": 0,
       "Dual_Sell_Streak": 0,
       "Open": 35.17,
@@ -4462,7 +4462,7 @@
       "Low": 35.1,
       "Close": 35.1,
       "Change": -0.1,
-      "Volume": 5,
+      "Volume": 28005,
       "SBL_Sold": 0,
       "SBL_Returned": 0,
       "SBL_Balance": 0
@@ -12959,7 +12959,7 @@
       "Low": 18.15,
       "Close": 18.3,
       "Change": -0.2,
-      "Volume": 5694,
+      "Volume": 7171,
       "SBL_Sold": 0,
       "SBL_Returned": 0,
       "SBL_Balance": 0
@@ -16932,7 +16932,7 @@
       "Low": 116.5,
       "Close": 120.0,
       "Change": -9.0,
-      "Volume": 24571,
+      "Volume": 24721,
       "SBL_Sold": 0,
       "SBL_Returned": 0,
       "SBL_Balance": 0
@@ -18701,7 +18701,7 @@
       "Low": 33.9,
       "Close": 34.2,
       "Change": -0.35,
-      "Volume": 2711,
+      "Volume": 10271,
       "SBL_Sold": 0,
       "SBL_Returned": 0,
       "SBL_Balance": 0
@@ -20035,7 +20035,7 @@
       "Low": 737.0,
       "Close": 778.0,
       "Change": -38.0,
-      "Volume": 81598,
+      "Volume": 82779,
       "SBL_Sold": 0,
       "SBL_Returned": 0,
       "SBL_Balance": 0
@@ -20122,7 +20122,7 @@
       "Low": 2390.0,
       "Close": 2420.0,
       "Change": -20.0,
-      "Volume": 40558,
+      "Volume": 42857,
       "SBL_Sold": 0,
       "SBL_Returned": 0,
       "SBL_Balance": 0
@@ -20673,7 +20673,7 @@
       "Low": 690.0,
       "Close": 703.0,
       "Change": -1.0,
-      "Volume": 4859,
+      "Volume": 4883,
       "SBL_Sold": 0,
       "SBL_Returned": 0,
       "SBL_Balance": 0
@@ -20731,7 +20731,7 @@
       "Low": 1730.0,
       "Close": 1820.0,
       "Change": -30.0,
-      "Volume": 2625,
+      "Volume": 3375,
       "SBL_Sold": 0,
       "SBL_Returned": 0,
       "SBL_Balance": 0
@@ -21195,7 +21195,7 @@
       "Low": 368.0,
       "Close": 380.0,
       "Change": 2.0,
-      "Volume": 22476,
+      "Volume": 25976,
       "SBL_Sold": 0,
       "SBL_Returned": 0,
       "SBL_Balance": 0
@@ -23051,7 +23051,7 @@
       "Low": 186.0,
       "Close": 189.5,
       "Change": -3.0,
-      "Volume": 4938,
+      "Volume": 5535,
       "SBL_Sold": 0,
       "SBL_Returned": 0,
       "SBL_Balance": 0
@@ -23457,7 +23457,7 @@
       "Low": 377.5,
       "Close": 390.0,
       "Change": -29.0,
-      "Volume": 25184,
+      "Volume": 29328,
       "SBL_Sold": 0,
       "SBL_Returned": 0,
       "SBL_Balance": 0
@@ -26966,7 +26966,7 @@
       "Low": 66.3,
       "Close": 66.7,
       "Change": -1.6,
-      "Volume": 33674,
+      "Volume": 34272,
       "SBL_Sold": 0,
       "SBL_Returned": 0,
       "SBL_Balance": 0
@@ -27285,7 +27285,7 @@
       "Low": 63.5,
       "Close": 65.0,
       "Change": -1.5,
-      "Volume": 80126,
+      "Volume": 80377,
       "SBL_Sold": 0,
       "SBL_Returned": 0,
       "SBL_Balance": 0
@@ -29170,7 +29170,7 @@
       "Low": 402.0,
       "Close": 421.5,
       "Change": -17.5,
-      "Volume": 3587,
+      "Volume": 3886,
       "SBL_Sold": 0,
       "SBL_Returned": 0,
       "SBL_Balance": 0
@@ -34506,7 +34506,7 @@
       "Low": 1840.0,
       "Close": 1925.0,
       "Change": -55.0,
-      "Volume": 810,
+      "Volume": 824,
       "SBL_Sold": 0,
       "SBL_Returned": 0,
       "SBL_Balance": 0
@@ -35985,7 +35985,7 @@
       "Low": 3725.0,
       "Close": 3725.0,
       "Change": -410.0,
-      "Volume": 3316,
+      "Volume": 3381,
       "SBL_Sold": 0,
       "SBL_Returned": 0,
       "SBL_Balance": 0
@@ -42626,7 +42626,7 @@
       "Low": 591.0,
       "Close": 629.0,
       "Change": -17.0,
-      "Volume": 57566,
+      "Volume": 57818,
       "SBL_Sold": 0,
       "SBL_Returned": 0,
       "SBL_Balance": 0
@@ -46657,7 +46657,7 @@
       "Low": 1110.0,
       "Close": 1155.0,
       "Change": -25.0,
-      "Volume": 836,
+      "Volume": 899,
       "SBL_Sold": 0,
       "SBL_Returned": 0,
       "SBL_Balance": 0
@@ -47585,7 +47585,7 @@
       "Low": 102.5,
       "Close": 103.5,
       "Change": -1.5,
-      "Volume": 1243,
+      "Volume": 13243,
       "SBL_Sold": 0,
       "SBL_Returned": 0,
       "SBL_Balance": 0
@@ -49412,7 +49412,7 @@
       "Low": 85.4,
       "Close": 87.8,
       "Change": -2.2,
-      "Volume": 7703,
+      "Volume": 7885,
       "SBL_Sold": 0,
       "SBL_Returned": 0,
       "SBL_Balance": 0
@@ -49905,7 +49905,7 @@
       "Low": 510.0,
       "Close": 539.0,
       "Change": -12.0,
-      "Volume": 1678,
+      "Volume": 1753,
       "SBL_Sold": 0,
       "SBL_Returned": 0,
       "SBL_Balance": 0
