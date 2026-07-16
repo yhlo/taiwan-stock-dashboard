@@ -236,8 +236,13 @@ def load_t86_both_markets(date_str, cache_dir, is_today=False):
     twse_url = f"https://www.twse.com.tw/rwd/zh/fund/T86?response=json&date={date_str}&selectType=ALLBUT0999"
     twse_cache = os.path.join(cache_dir, f"T86_{date_str}.json")
     twse_data = fetch_data_with_cache(twse_url, twse_cache, is_today)
-    
-    if twse_data and twse_data.get("stat") == "NO_DATA":
+
+    if twse_data is None:
+        # Every retry failed, so we cannot tell a holiday from an outage here.
+        # Say so rather than reporting "no data" and letting the day disappear.
+        raise T86FetchError(f"TWSE T86 unavailable for {date_str}")
+
+    if twse_data.get("stat") == "NO_DATA":
         if not is_today:
             tpex_cache = os.path.join(cache_dir, f"TPEX_T86_{date_str}.json")
             if not os.path.exists(tpex_cache):
@@ -252,8 +257,14 @@ def load_t86_both_markets(date_str, cache_dir, is_today=False):
     tpex_url = f"https://www.tpex.org.tw/web/stock/3insti/daily_trade/3itrade_hedge_result.php?l=zh-tw&o=json&se=EW&t=D&d={roc_date}"
     tpex_cache = os.path.join(cache_dir, f"TPEX_T86_{date_str}.json")
     tpex_data = fetch_data_with_cache(tpex_url, tpex_cache, is_today)
-    
-    has_twse = twse_data and twse_data.get("stat") == "OK" and "data" in twse_data and len(twse_data["data"]) > 0
+
+    if tpex_data is None:
+        # TWSE answered but TPEx did not: publishing now would record a
+        # listed-only day and corrupt every OTC streak. Treat the whole day as
+        # unknown so the caller keeps whatever was published before.
+        raise T86FetchError(f"TPEx T86 unavailable for {date_str}")
+
+    has_twse = twse_data.get("stat") == "OK" and "data" in twse_data and len(twse_data["data"]) > 0
     has_tpex = False
     if tpex_data:
         if "aaData" in tpex_data and len(tpex_data["aaData"]) > 0:
@@ -277,48 +288,58 @@ def load_t86_both_markets(date_str, cache_dir, is_today=False):
     df_combined = pd.concat([df_twse, df_tpex], ignore_index=True)
     return df_combined
 
-def find_latest_trading_days(n=20, as_of_date=None):
+
+def collect_t86_history(latest_date_str, cache_dir, n=20, today_str=None,
+                        skip_today=False):
+    """Collect the latest `n` trading days of T86 data, newest first.
+
+    Walks calendar weekdays backwards and asks TWSE/TPEx about each one directly.
+    T86 itself is the source of the streak data, so it -- not Yahoo's ^TWII
+    calendar -- decides which days are trading days: a day TWSE reports as
+    NO_DATA is a holiday and skipped over.
+
+    Streaks are derived over a contiguous window, so a day that fails to fetch is
+    NOT skipped: doing so would splice the days on either side together and
+    inflate every streak count. Instead the window is truncated at the gap,
+    yielding a shorter but never-corrupted history that self-heals once the
+    upstream day comes back. (Contrast fetch of per-day OI, where an isolated
+    missing day is harmless and merely skipped.)
+
+    Returns (history, truncated_at) where history is a list of (date_str, df)
+    newest first, and truncated_at is the date that cut the window short (or None).
     """
-    Returns the latest `n` trading days, in YYYYMMDD strings, newest first.
-    If as_of_date (YYYYMMDD string) is given, returns trading days up to and
-    including that date instead of up to the actual current date.
-    """
-    import yfinance as yf
-    print("Pre-checking trading days using Yahoo Finance...")
-    try:
-        ticker = yf.Ticker("^TWII")
-        if as_of_date:
-            # yfinance's `end` is exclusive, so add a day to include as_of_date itself.
-            end_dt = datetime.datetime.strptime(as_of_date, "%Y%m%d") + datetime.timedelta(days=1)
-            start_dt = end_dt - datetime.timedelta(days=90)
-            hist = ticker.history(start=start_dt.strftime("%Y-%m-%d"), end=end_dt.strftime("%Y-%m-%d"))
-        else:
-            hist = ticker.history(period="60d")
-        if not hist.empty:
-            dates = hist.index.strftime("%Y%m%d").tolist()
-            dates.sort(reverse=True)
-            return dates[:n]
-    except Exception as e:
-        print(f"Error fetching from yfinance: {e}, falling back to manual date generation", file=sys.stderr)
-        
-    trading_days = []
-    if as_of_date:
-        current_date = datetime.datetime.strptime(as_of_date, "%Y%m%d").date()
-    else:
-        taipei_now = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=8)
-        current_date = taipei_now.date()
-    if current_date.weekday() == 5:
-        current_date -= datetime.timedelta(days=1)
-    elif current_date.weekday() == 6:
-        current_date -= datetime.timedelta(days=2)
-        
+    history = []
+    truncated_at = None
+    current = datetime.datetime.strptime(latest_date_str, "%Y%m%d").date()
     checked = 0
-    while len(trading_days) < n and checked < n * 3:
-        if current_date.weekday() not in (5, 6):
-            trading_days.append(current_date.strftime("%Y%m%d"))
-        current_date -= datetime.timedelta(days=1)
+
+    while len(history) < n and checked < n * 4:
         checked += 1
-    return trading_days
+        if current.weekday() in (5, 6):
+            current -= datetime.timedelta(days=1)
+            continue
+
+        date_str = current.strftime("%Y%m%d")
+        is_today = (date_str == today_str)
+        if is_today and skip_today:
+            # Today's session data is not out yet; don't treat it as a gap.
+            current -= datetime.timedelta(days=1)
+            continue
+
+        try:
+            df = load_t86_both_markets(date_str, cache_dir, is_today)
+        except T86FetchError as e:
+            print(f"Warning: T86 unavailable for {date_str}; truncating streak "
+                  f"window here: {e}", file=sys.stderr)
+            truncated_at = date_str
+            break
+
+        if df is not None:
+            history.append((date_str, df))
+        current -= datetime.timedelta(days=1)
+
+    return history, truncated_at
+
 
 def calculate_streaks(df_list):
     all_symbols = set()
@@ -401,12 +422,20 @@ def calculate_streaks(df_list):
         
     return pd.DataFrame(streak_results)
 
-class TaifexFetchError(Exception):
-    """TAIFEX was unreachable or returned an unusable response.
+class UpstreamFetchError(Exception):
+    """An upstream source was unreachable or returned an unusable response.
 
     Kept separate from a genuine no-data day (reported as None) so that a
-    transport failure is never mistaken for "this day has no futures data".
+    transport failure is never mistaken for "this day has no data".
     """
+
+
+class TaifexFetchError(UpstreamFetchError):
+    """TAIFEX could not be reached for a given day."""
+
+
+class T86FetchError(UpstreamFetchError):
+    """TWSE's T86 endpoint could not be reached for a given day."""
 
 
 def fetch_taifex_futures_oi(date_str, cache_dir, is_today=False):
@@ -1190,31 +1219,26 @@ def main():
         taipei_now = real_taipei_now
 
     today_str = taipei_now.strftime("%Y%m%d")
+    real_today_str = real_taipei_now.strftime("%Y%m%d")
 
-    # 1. Find the latest 20 trading days up to and including today_str
-    trading_days = find_latest_trading_days(n=20, as_of_date=today_str)
-    if not trading_days:
-        print("Failed to identify trading days.", file=sys.stderr)
-        sys.exit(1)
-        
-    latest_date = trading_days[0]
-    print(f"Latest Trading Day: {latest_date[:4]}/{latest_date[4:6]}/{latest_date[6:]}")
-    
-    day_dfs = []
-    
-    for d in trading_days:
-        is_today = (d == today_str)
-        # Skip today if it is before 3 PM Taipei Time
-        if is_today and taipei_now.time() < datetime.time(15, 0):
-            continue
-        df = load_t86_both_markets(d, cache_dir, is_today)
-        if df is not None:
-            day_dfs.append((d, df))
-            
+    # 1. Collect the latest 20 trading days of T86 by asking TWSE/TPEx directly.
+    # T86 decides which days are trading days; Yahoo is no longer in this path.
+    # Skip today only before 15:00 Taipei, when the session data is not out yet.
+    skip_today = (today_str == real_today_str
+                  and real_taipei_now.time() < datetime.time(15, 0))
+    day_dfs, t86_truncated_at = collect_t86_history(
+        today_str, cache_dir, n=20, today_str=real_today_str, skip_today=skip_today
+    )  # newest first
+
     if not day_dfs:
         print("No stock trading data found.", file=sys.stderr)
         sys.exit(1)
-        
+
+    if t86_truncated_at:
+        print(f"Note: streak window truncated to {len(day_dfs)} day(s) because "
+              f"{t86_truncated_at} could not be fetched; it will self-heal on a "
+              f"later run.", file=sys.stderr)
+
     latest_active_date = day_dfs[0][0]
     print(f"Latest Active Date for Data: {latest_active_date}")
     
