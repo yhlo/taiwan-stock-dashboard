@@ -13,6 +13,9 @@ HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36"
 }
 
+# Stop walking the TAIFEX calendar once this many days in a row fail to fetch.
+MAX_CONSECUTIVE_TAIFEX_FAILURES = 5
+
 def _clean_int(val):
     """Strip thousands separators and parse an int. None-safe, never raises."""
     if val is None:
@@ -398,9 +401,20 @@ def calculate_streaks(df_list):
         
     return pd.DataFrame(streak_results)
 
-def fetch_taifex_futures_oi(date_str, cache_dir):
+class TaifexFetchError(Exception):
+    """TAIFEX was unreachable or returned an unusable response.
+
+    Kept separate from a genuine no-data day (reported as None) so that a
+    transport failure is never mistaken for "this day has no futures data".
+    """
+
+
+def fetch_taifex_futures_oi(date_str, cache_dir, is_today=False):
+    # Today's figures are still provisional until TAIFEX settles them, so they are
+    # neither read from nor written to the cache -- otherwise an early-afternoon
+    # run would pin a half-finished number for good.
     cache_path = os.path.join(cache_dir, f"futures_oi_{date_str}.json")
-    if os.path.exists(cache_path):
+    if os.path.exists(cache_path) and not is_today:
         with open(cache_path, "r", encoding="utf-8") as f:
             try:
                 data = json.load(f)
@@ -408,69 +422,172 @@ def fetch_taifex_futures_oi(date_str, cache_dir):
                     return data
             except Exception:
                 pass
-                
+
     formatted_date = f"{date_str[:4]}/{date_str[4:6]}/{date_str[6:]}"
     url = "https://www.taifex.com.tw/cht/3/futContractsDate"
     payload = {"queryDate": formatted_date}
     headers = HEADERS
-    
+
     print(f"Fetching Futures OI from TAIFEX for {formatted_date}...")
     time.sleep(1.0)
-    
+
+    try:
+        res = requests.post(url, data=payload, headers=headers, timeout=15)
+    except Exception as e:
+        raise TaifexFetchError(f"{formatted_date}: request failed: {e}") from e
+
+    if res.status_code != 200:
+        raise TaifexFetchError(f"{formatted_date}: HTTP {res.status_code}")
+
     try:
         from bs4 import BeautifulSoup
-        res = requests.post(url, data=payload, headers=headers, timeout=15)
-        if res.status_code == 200:
-            res.encoding = 'utf-8'
-            soup = BeautifulSoup(res.text, "html.parser")
-            rows = soup.find_all("tr")
-            
-            contracts = {}
-            
-            for i, r in enumerate(rows):
-                cells = [td.get_text().strip() for td in r.find_all(["td", "th"])]
-                if len(cells) > 1:
-                    contract_name = cells[1]
-                    if contract_name in ["臺股期貨", "小型臺指期貨", "微型臺指期貨"]:
-                        dealers_long = _clean_int(cells[9])
-                        dealers_short = _clean_int(cells[11])
-                        dealers_net = _clean_int(cells[13])
-                        
-                        cells_trust = [td.get_text().strip() for td in rows[i+1].find_all(["td", "th"])]
-                        trust_long = _clean_int(cells_trust[7])
-                        trust_short = _clean_int(cells_trust[9])
-                        trust_net = _clean_int(cells_trust[11])
-                        
-                        cells_foreign = [td.get_text().strip() for td in rows[i+2].find_all(["td", "th"])]
-                        foreign_long = _clean_int(cells_foreign[7])
-                        foreign_short = _clean_int(cells_foreign[9])
-                        foreign_net = _clean_int(cells_foreign[11])
-                        
-                        key = "TX" if contract_name == "臺股期貨" else ("MTX" if contract_name == "小型臺指期貨" else "TMF")
-                        contracts[key] = {
-                            "Dealers": {"Long": dealers_long, "Short": dealers_short, "Net": dealers_net},
-                            "Trust": {"Long": trust_long, "Short": trust_short, "Net": trust_net},
-                            "Foreign": {"Long": foreign_long, "Short": foreign_short, "Net": foreign_net}
-                        }
-            
-            if "TX" in contracts:
-                result = {
-                    "Date": date_str,
-                    "Dealers": contracts["TX"]["Dealers"],
-                    "Trust": contracts["TX"]["Trust"],
-                    "Foreign": contracts["TX"]["Foreign"],
-                    "TX": contracts["TX"],
-                    "MTX": contracts.get("MTX", None),
-                    "TMF": contracts.get("TMF", None)
-                }
-                
-                os.makedirs(cache_dir, exist_ok=True)
-                with open(cache_path, "w", encoding="utf-8") as f:
-                    json.dump(result, f, ensure_ascii=False, indent=2)
-                return result
+        res.encoding = 'utf-8'
+        soup = BeautifulSoup(res.text, "html.parser")
+        rows = soup.find_all("tr")
+
+        contracts = {}
+
+        for i, r in enumerate(rows):
+            cells = [td.get_text().strip() for td in r.find_all(["td", "th"])]
+            if len(cells) > 1:
+                contract_name = cells[1]
+                if contract_name in ["臺股期貨", "小型臺指期貨", "微型臺指期貨"]:
+                    dealers_long = _clean_int(cells[9])
+                    dealers_short = _clean_int(cells[11])
+                    dealers_net = _clean_int(cells[13])
+
+                    cells_trust = [td.get_text().strip() for td in rows[i+1].find_all(["td", "th"])]
+                    trust_long = _clean_int(cells_trust[7])
+                    trust_short = _clean_int(cells_trust[9])
+                    trust_net = _clean_int(cells_trust[11])
+
+                    cells_foreign = [td.get_text().strip() for td in rows[i+2].find_all(["td", "th"])]
+                    foreign_long = _clean_int(cells_foreign[7])
+                    foreign_short = _clean_int(cells_foreign[9])
+                    foreign_net = _clean_int(cells_foreign[11])
+
+                    key = "TX" if contract_name == "臺股期貨" else ("MTX" if contract_name == "小型臺指期貨" else "TMF")
+                    contracts[key] = {
+                        "Dealers": {"Long": dealers_long, "Short": dealers_short, "Net": dealers_net},
+                        "Trust": {"Long": trust_long, "Short": trust_short, "Net": trust_net},
+                        "Foreign": {"Long": foreign_long, "Short": foreign_short, "Net": foreign_net}
+                    }
     except Exception as e:
-        print(f"Error parsing futures OI: {e}", file=sys.stderr)
-    return None
+        raise TaifexFetchError(f"{formatted_date}: parse failed: {e}") from e
+
+    if "TX" not in contracts:
+        # Page came back fine but holds no TX contract: a non-trading day.
+        return None
+
+    result = {
+        "Date": date_str,
+        "Dealers": contracts["TX"]["Dealers"],
+        "Trust": contracts["TX"]["Trust"],
+        "Foreign": contracts["TX"]["Foreign"],
+        "TX": contracts["TX"],
+        "MTX": contracts.get("MTX", None),
+        "TMF": contracts.get("TMF", None)
+    }
+
+    if not is_today:
+        os.makedirs(cache_dir, exist_ok=True)
+        with open(cache_path, "w", encoding="utf-8") as f:
+            json.dump(result, f, ensure_ascii=False, indent=2)
+    return result
+
+
+def collect_futures_oi_history(latest_date_str, cache_dir, n=20, today_str=None):
+    """Collect the latest `n` days of futures OI, newest first.
+
+    Walks calendar weekdays backwards and asks TAIFEX about each one directly.
+    TAIFEX is the authority on which days have futures data, so this deliberately
+    does not reuse the Yahoo-derived trading-day list or the T86 results: a gap in
+    either of those must not decide whether OI gets fetched.
+    """
+    history = []
+    failed_dates = []
+    consecutive_failures = 0
+    current = datetime.datetime.strptime(latest_date_str, "%Y%m%d").date()
+    checked = 0
+
+    while len(history) < n and checked < n * 4:
+        checked += 1
+        if current.weekday() in (5, 6):
+            current -= datetime.timedelta(days=1)
+            continue
+
+        date_str = current.strftime("%Y%m%d")
+        try:
+            oi_data = fetch_taifex_futures_oi(date_str, cache_dir, is_today=(date_str == today_str))
+        except TaifexFetchError as e:
+            # Do not treat an outage as a holiday: note it and keep the slot open
+            # so the merge below preserves whatever was published previously.
+            print(f"Warning: futures OI unavailable for {date_str}: {e}", file=sys.stderr)
+            failed_dates.append(date_str)
+            consecutive_failures += 1
+            if consecutive_failures >= MAX_CONSECUTIVE_TAIFEX_FAILURES:
+                # TAIFEX is down rather than merely quiet; stop hammering it and let
+                # the merge keep the published history until the next run.
+                print(f"Giving up on TAIFEX after {consecutive_failures} consecutive "
+                      f"failures.", file=sys.stderr)
+                break
+            oi_data = None
+        else:
+            consecutive_failures = 0
+
+        if oi_data:
+            history.append((date_str, oi_data))
+        current -= datetime.timedelta(days=1)
+
+    if failed_dates:
+        print(f"Warning: {len(failed_dates)} day(s) could not be fetched from TAIFEX: "
+              f"{', '.join(failed_dates)}", file=sys.stderr)
+    return history
+
+
+def flatten_oi_entry(date_str, oi):
+    """Turn a raw TAIFEX OI record into the flat shape stored in futures_options.json."""
+    tx = oi["TX"] if "TX" in oi else oi
+    entry = {
+        "Date": date_str,
+        "Foreign_Net": tx["Foreign"]["Net"],
+        "Trust_Net": tx["Trust"]["Net"],
+        "Dealer_Net": tx["Dealers"]["Net"],
+        "Total_Net": tx["Foreign"]["Net"] + tx["Trust"]["Net"] + tx["Dealers"]["Net"],
+    }
+    for key in ("MTX", "TMF"):
+        sub = oi.get(key)
+        entry[f"{key}_Foreign_Net"] = sub["Foreign"]["Net"] if sub else None
+        entry[f"{key}_Trust_Net"] = sub["Trust"]["Net"] if sub else None
+        entry[f"{key}_Dealer_Net"] = sub["Dealers"]["Net"] if sub else None
+        entry[f"{key}_Total_Net"] = (
+            sub["Foreign"]["Net"] + sub["Trust"]["Net"] + sub["Dealers"]["Net"]
+        ) if sub else None
+    return entry
+
+
+def load_published_futures_history(path="data/futures_options.json"):
+    """Read the FuturesHistory already published on disk, newest first."""
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            return json.load(f).get("FuturesHistory") or []
+    except Exception:
+        return []
+
+
+def merge_futures_history(published_entries, fresh_entries, n=20):
+    """Merge freshly fetched entries over previously published ones, newest first.
+
+    History is append-only: a day that once reached futures_options.json is never
+    dropped just because an upstream source temporarily stopped reporting it.
+    """
+    by_date = {}
+    for entry in published_entries:
+        if isinstance(entry, dict) and entry.get("Date"):
+            by_date[entry["Date"]] = entry
+    for entry in fresh_entries:
+        by_date[entry["Date"]] = entry
+    return sorted(by_date.values(), key=lambda e: e["Date"], reverse=True)[:n]
 
 def fetch_taifex_options_max_oi(date_str, cache_dir):
     cache_path = os.path.join(cache_dir, f"options_oi_{date_str}.json")
@@ -605,8 +722,8 @@ def generate_trend_chart(futures_history, cache_dir):
         
     matplotlib.rcParams['axes.unicode_minus'] = False
     
-    dates = [item[0] for item in futures_history]
-    foreign_nets = [item[1]["Foreign"]["Net"] for item in futures_history]
+    dates = [item["Date"] for item in futures_history]
+    foreign_nets = [item["Foreign_Net"] for item in futures_history]
     
     if not dates:
         return None, []
@@ -1199,14 +1316,18 @@ def main():
     print("Saved data/market_summary.json")
     
     # 8. Load Futures & Options
-    futures_history = []
-    for date_str, _ in reversed(day_dfs[:20]):  # From oldest to newest
-        oi_data = fetch_taifex_futures_oi(date_str, cache_dir)
-        if oi_data:
-            futures_history.append((date_str, oi_data))
-            
-    # Generate Chart & aligned prices
-    chart_path, aligned_prices = generate_trend_chart(futures_history, cache_dir)
+    # Walk back from today_str rather than from latest_active_date: TAIFEX decides
+    # which days have OI, independently of Yahoo's calendar and of T86 succeeding.
+    fresh_oi = collect_futures_oi_history(
+        today_str, cache_dir, n=20, today_str=real_taipei_now.strftime("%Y%m%d")
+    )  # newest first
+    fresh_entries = [flatten_oi_entry(d, oi) for d, oi in fresh_oi]
+    futures_history = merge_futures_history(
+        load_published_futures_history(), fresh_entries, n=20
+    )  # newest first
+
+    # Generate Chart & aligned prices (chart wants oldest to newest)
+    chart_path, aligned_prices = generate_trend_chart(list(reversed(futures_history)), cache_dir)
     
     opt_data = fetch_taifex_options_max_oi(latest_active_date, cache_dir)
     is_settlement, settlement_date = check_settlement_week(latest_active_date)
@@ -1218,29 +1339,7 @@ def main():
             "SettlementDate": settlement_date
         },
         "Options": opt_data,
-        "FuturesHistory": [
-            {
-                "Date": d,
-                # TX (大台)
-                "Foreign_Net": oi["TX"]["Foreign"]["Net"] if "TX" in oi else oi["Foreign"]["Net"],
-                "Trust_Net": oi["TX"]["Trust"]["Net"] if "TX" in oi else oi["Trust"]["Net"],
-                "Dealer_Net": oi["TX"]["Dealers"]["Net"] if "TX" in oi else oi["Dealers"]["Net"],
-                "Total_Net": (oi["TX"]["Foreign"]["Net"] + oi["TX"]["Trust"]["Net"] + oi["TX"]["Dealers"]["Net"]) if "TX" in oi else (oi["Foreign"]["Net"] + oi["Trust"]["Net"] + oi["Dealers"]["Net"]),
-                
-                # MTX (小台)
-                "MTX_Foreign_Net": oi["MTX"]["Foreign"]["Net"] if oi.get("MTX") else None,
-                "MTX_Trust_Net": oi["MTX"]["Trust"]["Net"] if oi.get("MTX") else None,
-                "MTX_Dealer_Net": oi["MTX"]["Dealers"]["Net"] if oi.get("MTX") else None,
-                "MTX_Total_Net": (oi["MTX"]["Foreign"]["Net"] + oi["MTX"]["Trust"]["Net"] + oi["MTX"]["Dealers"]["Net"]) if oi.get("MTX") else None,
-                
-                # TMF (微台)
-                "TMF_Foreign_Net": oi["TMF"]["Foreign"]["Net"] if oi.get("TMF") else None,
-                "TMF_Trust_Net": oi["TMF"]["Trust"]["Net"] if oi.get("TMF") else None,
-                "TMF_Dealer_Net": oi["TMF"]["Dealers"]["Net"] if oi.get("TMF") else None,
-                "TMF_Total_Net": (oi["TMF"]["Foreign"]["Net"] + oi["TMF"]["Trust"]["Net"] + oi["TMF"]["Dealers"]["Net"]) if oi.get("TMF") else None,
-            }
-            for d, oi in reversed(futures_history)
-        ],
+        "FuturesHistory": futures_history,
         "AlignedPrices": aligned_prices
     }
     
