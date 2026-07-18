@@ -1329,7 +1329,14 @@ def main():
             "Data": final_streaks
         }, f, ensure_ascii=False, indent=2)
     print("Saved data/streaks.json")
-    
+
+    # 6b. 將今日焦點 Top 10 注入 index.html（供搜尋引擎與無 JS 環境直接閱讀）
+    try:
+        from inject_rankings import inject
+        inject()
+    except Exception as e:
+        print(f"[warn] inject_rankings 注入失敗（不影響資料產出）：{e}")
+
     # 7. Load Market Summary
     summary_data = load_market_summary(latest_active_date, cache_dir, (latest_active_date == today_str))
     with open("data/market_summary.json", "w", encoding="utf-8") as f:

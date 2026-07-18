@@ -4,6 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <!-- 在渲染前先套用主題，避免深色模式閃爍白底 -->
+    <script>
+      (function () {
+        const savedTheme = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+          document.documentElement.setAttribute('data-theme', 'dark');
+        }
+      })();
+    </script>
+
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-BRC4C5P0KX"></script>
     <script>
@@ -177,6 +188,43 @@
             </div>
         </section>
 
+        <!-- 今日焦點 · 靜態每日快照：由 build_static_data.py 於每個交易日盤後自動更新，供搜尋引擎與無 JS 環境直接閱讀 -->
+        <section class="card" style="margin-bottom: 24px;">
+            <div class="card-header">
+                <h2 class="card-title">🔥 今日焦點 · 法人連買 Top 10</h2>
+            </div>
+            <!-- STATIC_RANKINGS:START -->
+<p style="margin-bottom: 14px; color: var(--text-secondary); font-size: 13px;">📅 資料日期：<strong>2026/07/14</strong>（每個交易日盤後自動更新）　以下為外資、投信連續買超天數與外資投信「雙買」共識股的當日前十名，完整排行與篩選請見下方<a href="#streaks-ranking">🏆 三大法人連買連賣天數排行榜</a>。</p><div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px;"><div class="table-container"><h3 class="table-subtitle">🌊 外資連買 Top 10</h3><table><thead><tr><th>代號</th><th>名稱</th><th class="text-right">連續天數</th><th class="text-right">最新買賣超</th></tr></thead><tbody><tr><td><strong>6414</strong></td><td>樺漢</td><td class="text-right">19 天</td><td class="text-right"><span style="color: var(--color-up); font-weight: 600;">+484 張</span></td></tr>
+<tr><td><strong>8446</strong></td><td>華研</td><td class="text-right">18 天</td><td class="text-right"><span style="color: var(--color-up); font-weight: 600;">+30 張</span></td></tr>
+<tr><td><strong>6568</strong></td><td>宏觀</td><td class="text-right">16 天</td><td class="text-right"><span style="color: var(--color-up); font-weight: 600;">+34 張</span></td></tr>
+<tr><td><strong>8462</strong></td><td>柏文</td><td class="text-right">14 天</td><td class="text-right"><span style="color: var(--color-up); font-weight: 600;">+539 張</span></td></tr>
+<tr><td><strong>6957</strong></td><td>裕慶-KY</td><td class="text-right">11 天</td><td class="text-right"><span style="color: var(--color-up); font-weight: 600;">+23 張</span></td></tr>
+<tr><td><strong>1468</strong></td><td>昶和</td><td class="text-right">11 天</td><td class="text-right"><span style="color: var(--color-up); font-weight: 600;">+9 張</span></td></tr>
+<tr><td><strong>1454</strong></td><td>台富</td><td class="text-right">11 天</td><td class="text-right"><span style="color: var(--color-up); font-weight: 600;">+8 張</span></td></tr>
+<tr><td><strong>00898</strong></td><td>國泰基因免疫革命</td><td class="text-right">10 天</td><td class="text-right"><span style="color: var(--color-up); font-weight: 600;">+294 張</span></td></tr>
+<tr><td><strong>6741</strong></td><td>91APP*-KY</td><td class="text-right">10 天</td><td class="text-right"><span style="color: var(--color-up); font-weight: 600;">+80 張</span></td></tr>
+<tr><td><strong>2105</strong></td><td>正新</td><td class="text-right">9 天</td><td class="text-right"><span style="color: var(--color-up); font-weight: 600;">+1,723 張</span></td></tr></tbody></table></div><div class="table-container"><h3 class="table-subtitle">🚀 投信連買 Top 10</h3><table><thead><tr><th>代號</th><th>名稱</th><th class="text-right">連續天數</th><th class="text-right">最新買賣超</th></tr></thead><tbody><tr><td><strong>2382</strong></td><td>廣達</td><td class="text-right">20 天</td><td class="text-right"><span style="color: var(--color-up); font-weight: 600;">+3,549 張</span></td></tr>
+<tr><td><strong>2886</strong></td><td>兆豐金</td><td class="text-right">20 天</td><td class="text-right"><span style="color: var(--color-up); font-weight: 600;">+2,200 張</span></td></tr>
+<tr><td><strong>2633</strong></td><td>台灣高鐵</td><td class="text-right">20 天</td><td class="text-right"><span style="color: var(--color-up); font-weight: 600;">+2,040 張</span></td></tr>
+<tr><td><strong>2377</strong></td><td>微星</td><td class="text-right">20 天</td><td class="text-right"><span style="color: var(--color-up); font-weight: 600;">+48 張</span></td></tr>
+<tr><td><strong>3596</strong></td><td>智易</td><td class="text-right">19 天</td><td class="text-right"><span style="color: var(--color-up); font-weight: 600;">+9 張</span></td></tr>
+<tr><td><strong>6526</strong></td><td>達發</td><td class="text-right">18 天</td><td class="text-right"><span style="color: var(--color-up); font-weight: 600;">+82 張</span></td></tr>
+<tr><td><strong>1303</strong></td><td>南亞</td><td class="text-right">17 天</td><td class="text-right"><span style="color: var(--color-up); font-weight: 600;">+11,984 張</span></td></tr>
+<tr><td><strong>2542</strong></td><td>興富發</td><td class="text-right">17 天</td><td class="text-right"><span style="color: var(--color-up); font-weight: 600;">+1,183 張</span></td></tr>
+<tr><td><strong>1216</strong></td><td>統一</td><td class="text-right">17 天</td><td class="text-right"><span style="color: var(--color-up); font-weight: 600;">+834 張</span></td></tr>
+<tr><td><strong>5269</strong></td><td>祥碩</td><td class="text-right">16 天</td><td class="text-right"><span style="color: var(--color-up); font-weight: 600;">+42 張</span></td></tr></tbody></table></div><div class="table-container"><h3 class="table-subtitle">🔥 雙買共識 Top 10</h3><table><thead><tr><th>代號</th><th>名稱</th><th class="text-right">連續天數</th><th class="text-right">最新買賣超</th></tr></thead><tbody><tr><td><strong>2912</strong></td><td>統一超</td><td class="text-right">8 天</td><td class="text-right"><span style="color: var(--color-up); font-weight: 600;">+933 張</span></td></tr>
+<tr><td><strong>8415</strong></td><td>大國鋼</td><td class="text-right">6 天</td><td class="text-right"><span style="color: var(--color-up); font-weight: 600;">+1,270 張</span></td></tr>
+<tr><td><strong>2207</strong></td><td>和泰車</td><td class="text-right">5 天</td><td class="text-right"><span style="color: var(--color-up); font-weight: 600;">+79 張</span></td></tr>
+<tr><td><strong>2884</strong></td><td>玉山金</td><td class="text-right">4 天</td><td class="text-right"><span style="color: var(--color-up); font-weight: 600;">+4,495 張</span></td></tr>
+<tr><td><strong>3189</strong></td><td>景碩</td><td class="text-right">4 天</td><td class="text-right"><span style="color: var(--color-up); font-weight: 600;">+289 張</span></td></tr>
+<tr><td><strong>2006</strong></td><td>東和鋼鐵</td><td class="text-right">3 天</td><td class="text-right"><span style="color: var(--color-up); font-weight: 600;">+1,258 張</span></td></tr>
+<tr><td><strong>5522</strong></td><td>遠雄</td><td class="text-right">3 天</td><td class="text-right"><span style="color: var(--color-up); font-weight: 600;">+779 張</span></td></tr>
+<tr><td><strong>9914</strong></td><td>美利達</td><td class="text-right">3 天</td><td class="text-right"><span style="color: var(--color-up); font-weight: 600;">+294 張</span></td></tr>
+<tr><td><strong>2891</strong></td><td>中信金</td><td class="text-right">2 天</td><td class="text-right"><span style="color: var(--color-up); font-weight: 600;">+22,001 張</span></td></tr>
+<tr><td><strong>1326</strong></td><td>台化</td><td class="text-right">2 天</td><td class="text-right"><span style="color: var(--color-up); font-weight: 600;">+13,987 張</span></td></tr></tbody></table></div></div>
+            <!-- STATIC_RANKINGS:END -->
+        </section>
+
         <!-- Card 1: 大盤三大法人進出統計 (上市櫃平行擺放，滿版寬度) -->
         <section class="card" style="margin-bottom: 24px;">
             <div class="card-header">
@@ -340,7 +388,7 @@
         </div>
 
         <!-- Streaks Rankings Section -->
-        <section class="card">
+        <section class="card" id="streaks-ranking">
             <div class="card-header">
                 <h2 class="card-title">🏆 三大法人連買連賣天數排行榜</h2>
                 <div class="streak-filter-control" style="display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-secondary); font-weight: 500; flex-wrap: wrap;">
