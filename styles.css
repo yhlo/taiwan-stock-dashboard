@@ -2326,4 +2326,83 @@ section.card {
     table td {
         font-size: 13px;
     }
+
+    /* 5.「每日訊號紀錄」改為堆疊卡片。
+       六欄表格在手機需要 548px、容器只有 317px，會有 231px 被藏在右側，
+       且「選出個股」擠在 158px 內讓每列高達 123px。改成一筆一張卡後
+       不再需要左右捲動，欄位標題由 td 的 data-label 提供。 */
+    #scoreboard-table thead {
+        display: none;
+    }
+
+    #scoreboard-table,
+    #scoreboard-table tbody,
+    #scoreboard-table tr,
+    #scoreboard-table td {
+        display: block;
+        width: 100%;
+    }
+
+    /* 五個短欄位兩欄並排，避免卡片過高（單欄時整頁要捲十個螢幕） */
+    #scoreboard-table tr {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2px 14px;
+        background-color: var(--bg-primary);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-lg);
+        padding: 12px 14px;
+        margin-bottom: 12px;
+    }
+
+    #scoreboard-table td {
+        border-bottom: none;
+        padding: 5px 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 12px;
+        white-space: normal;
+        text-align: left;
+    }
+
+    #scoreboard-table td::before {
+        content: attr(data-label);
+        flex-shrink: 0;
+        color: var(--text-secondary);
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    /* 「待次一交易日結算」原設 nowrap，在半寬欄位會撐出去，改為可換行 */
+    #scoreboard-table .score-pending {
+        white-space: normal;
+        text-align: right;
+        font-size: 11.5px;
+    }
+
+    /* 選出個股：橫跨兩欄，標題自成一行，股票標籤全寬流動排列 */
+    #scoreboard-table td[data-label="選出個股"] {
+        display: block;
+        grid-column: 1 / -1;
+        margin-top: 6px;
+        padding-top: 8px;
+        border-top: 1px dashed var(--border-color);
+    }
+
+    #scoreboard-table td[data-label="選出個股"]::before {
+        display: block;
+        margin-bottom: 6px;
+    }
+
+    /* 「載入中…／尚無紀錄／載入失敗」這類整列訊息不套卡片欄位樣式 */
+    #scoreboard-table td[colspan] {
+        display: block;
+        grid-column: 1 / -1;
+        text-align: center;
+    }
+
+    #scoreboard-table td[colspan]::before {
+        content: none;
+    }
 }

@@ -98,18 +98,20 @@ function renderEntries(entries) {
             ? `<span class="score-partial" title="部分個股無可取得的歷史股價，未計入平均">計入 ${e.Scored}/${e.Stocks.length}</span>`
             : '';
 
+        // data-label 供手機版使用：窄螢幕下表格會改以卡片呈現，
+        // 由 CSS 讀取這個屬性當作各欄位的標題（見 styles.css 的 576px 區塊）。
         return `
             <tr>
-                <td><strong>${fmtDate(e.SignalDate)}</strong></td>
-                <td>${e.Label}</td>
-                <td class="text-right">${pending
+                <td data-label="訊號日"><strong>${fmtDate(e.SignalDate)}</strong></td>
+                <td data-label="訊號">${e.Label}</td>
+                <td data-label="結算日" class="text-right">${pending
                     ? `<span class="score-pending" title="訊號於 ${fmtDate(e.SignalDate)} 收盤後產生，需等次一交易日收盤才能結算，以免用當天自己的收盤價回頭評分。">待次一交易日結算</span>`
                     : fmtDate(e.EvalDate)}</td>
-                <td class="text-right ${pctClass(e.AvgReturn)}">
+                <td data-label="平均報酬" class="text-right ${pctClass(e.AvgReturn)}">
                     ${pending ? '—' : `<strong>${fmtPct(e.AvgReturn)}</strong>`}
                 </td>
-                <td class="text-right">${pending ? '—' : `${e.WinRate}% ${scoredNote}`}</td>
-                <td><div class="stock-chips">${stocks}</div></td>
+                <td data-label="上漲比例" class="text-right">${pending ? '—' : `${e.WinRate}% ${scoredNote}`}</td>
+                <td data-label="選出個股"><div class="stock-chips">${stocks}</div></td>
             </tr>`;
     }).join('');
 }
