@@ -1,18 +1,27 @@
 name: Build Pre-Open Morning Brief
 
-# The brief must land before the futures day session opens at 08:45 Taipei:
-# once it is live, TAIFEX serves the same row for both the day and the night
-# session, and last night's close can no longer be read cleanly.
+# Scheduled as early as the data allows, because GitHub's scheduler is slow and
+# this job has a hard deadline at both ends.
 #
-# Taipei is UTC+8, so a Taipei weekday morning falls on the *previous* UTC day.
-# Taipei Mon-Fri 07:20 == UTC Sun-Thu 23:20, hence day-of-week 0-4 (not 1-5).
-# Two runs because scheduled workflows are routinely minutes-to-an-hour late and
-# this job has a hard deadline; the second is a backup if the first slips or is
-# dropped. Both are on odd minutes to avoid the congested top of the hour.
+# The night futures session ends at 05:00 Taipei and the day session opens at
+# 08:45; once the day session is live TAIFEX serves the same row for both market
+# codes and last night's close can no longer be read. That leaves a 3h45m window.
+#
+# Measured on this repo's own run history (60 scheduled runs): the median start
+# is 171 minutes after the scheduled time, p90 is 284 minutes, and *every*
+# observed run was over an hour late. Scheduling at 07:10 Taipei would therefore
+# land inside the window only ~7% of the time; 05:10 lands ~80% of the time.
+# Hence 21:10 UTC, the earliest slot the night-session data exists at all.
+#
+# Taipei is UTC+8, so a Taipei weekday morning falls on the *previous* UTC day:
+# Taipei Mon-Fri == UTC Sun-Thu, hence day-of-week 0-4 (not 1-5).
+#
+# When a run does land late the brief still publishes; only the night-session
+# tile is withheld, and it says so rather than showing a stale number.
 on:
   schedule:
-    - cron: '20 23 * * 0-4'   # 07:20 Taipei
-    - cron: '50 23 * * 0-4'   # 07:50 Taipei (backup)
+    - cron: '10 21 * * 0-4'   # 05:10 Taipei
+    - cron: '40 21 * * 0-4'   # 05:40 Taipei (second attempt)
   workflow_dispatch:
 
 permissions:

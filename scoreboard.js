@@ -103,7 +103,7 @@ function renderEntries(entries) {
                 <td><strong>${fmtDate(e.SignalDate)}</strong></td>
                 <td>${e.Label}</td>
                 <td class="text-right">${pending
-                    ? '<span class="score-pending">待結算</span>'
+                    ? `<span class="score-pending" title="訊號於 ${fmtDate(e.SignalDate)} 收盤後產生，需等次一交易日收盤才能結算，以免用當天自己的收盤價回頭評分。">待次一交易日結算</span>`
                     : fmtDate(e.EvalDate)}</td>
                 <td class="text-right ${pctClass(e.AvgReturn)}">
                     ${pending ? '—' : `<strong>${fmtPct(e.AvgReturn)}</strong>`}
