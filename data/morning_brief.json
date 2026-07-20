@@ -1,6 +1,6 @@
 {
   "Date": "20260721",
-  "GeneratedAt": "2026-07-21T06:09:38+08:00",
+  "GeneratedAt": "2026-07-21T06:32:35+08:00",
   "UsMarkets": [
     {
       "Name": "道瓊工業",
@@ -31,8 +31,8 @@
     "Close": 402.3,
     "ChangePct": 0.99,
     "Date": "20260720",
-    "FxRate": 32.28,
-    "ImpliedTwd": 2597.2,
+    "FxRate": 32.281,
+    "ImpliedTwd": 2597.3,
     "TwClose": 2320.0,
     "TwCloseDate": "20260720",
     "PremiumPct": 11.95
