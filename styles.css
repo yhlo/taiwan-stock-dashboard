@@ -2253,3 +2253,77 @@ section.card {
 .brief-toggle.collapsed .brief-chevron {
     transform: rotate(-90deg);
 }
+
+/* =========================================================================
+   手機版體驗優化
+   1. 瘦身 sticky header（原本佔掉 22% 螢幕高度）
+   2. 排行榜頁籤改為換行，避免「雙買/雙賣」被藏在畫面外
+   3. 觸控目標放大到好按的尺寸
+   4. 表格內容字級微調
+   ========================================================================= */
+@media (max-width: 576px) {
+    /* 1. header 瘦身：標題原本吃 h1 預設 28px，長標題會折成三行 */
+    .app-title {
+        font-size: 17px;
+        line-height: 1.35;
+    }
+
+    .header-container {
+        padding: 10px 14px;
+        gap: 10px;
+    }
+
+    .main-nav a {
+        padding: 6px 10px;
+        font-size: 12.5px;
+    }
+
+    /* 2. 頁籤換行，六個分頁一次全部看得到（原本需 732px 卻只顯示 317px） */
+    .tabs-header {
+        flex-wrap: wrap;
+        overflow-x: visible;
+        white-space: normal;
+        gap: 6px;
+    }
+
+    .tabs-header .tab-btn {
+        flex: 1 1 calc(33.333% - 6px);
+        min-height: 44px;
+        padding: 10px 4px;
+        font-size: 12px;
+        text-align: center;
+    }
+
+    /* 3. 觸控目標：iOS/Android 建議至少 44px，這些原本只有 13～29px */
+    .close-btn {
+        min-width: 44px;
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .favorite-btn,
+    .dock-btn,
+    .yahoo-btn,
+    .brief-toggle {
+        min-height: 40px;
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .futures-type-tabs .futures-tab-btn {
+        min-height: 40px;
+    }
+
+    .streak-filter-control input,
+    .streak-filter-control select,
+    #apply-streak-btn {
+        min-height: 36px;
+    }
+
+    /* 4. 表格內容字級：12px 在手機上偏小 */
+    table td {
+        font-size: 13px;
+    }
+}
