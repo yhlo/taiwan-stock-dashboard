@@ -341,6 +341,259 @@ def collect_t86_history(latest_date_str, cache_dir, n=20, today_str=None,
     return history, truncated_at
 
 
+def load_daily_quotes(date_str, cache_dir):
+    """Listed-market OHLC for one past date, cached by date.
+
+    Listed only, on purpose. TPEx's quote endpoint takes no date parameter and
+    always answers with the most recent session, so asking it for an older date
+    returns today's prices wearing that date's label -- which would quietly
+    corrupt every average and return built on top of it. OTC prices are
+    therefore left out of historical loads: callers see a missing symbol, which
+    they already handle, instead of a plausible wrong number.
+
+    Historical days never change, so caching keeps a 20-day walk to one live
+    fetch per run instead of twenty.
+    """
+    cache_path = os.path.join(cache_dir, f"quotes_twse_{date_str}.json")
+    if os.path.exists(cache_path):
+        try:
+            with open(cache_path, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception:
+            pass
+
+    try:
+        quotes = scrape_twse_quotes(date_str) or {}
+    except Exception as e:
+        print(f"Warning: TWSE quotes unavailable for {date_str}: {e}", file=sys.stderr)
+        return {}
+
+    if quotes:
+        os.makedirs(cache_dir, exist_ok=True)
+        with open(cache_path, "w", encoding="utf-8") as f:
+            json.dump(quotes, f, ensure_ascii=False)
+    return quotes
+
+
+def load_daily_typical_prices(date_str, cache_dir):
+    """Whole-market typical price ((H+L+C)/3) for one date.
+
+    Typical price stands in for the day's average execution price; it is a
+    closer proxy than the close alone for flow spread across a session.
+    """
+    prices = {}
+    for sym, q in load_daily_quotes(date_str, cache_dir).items():
+        high, low, close = q.get("High") or 0, q.get("Low") or 0, q.get("Close") or 0
+        if close > 0 and high > 0 and low > 0:
+            prices[sym] = round((high + low + close) / 3, 2)
+        elif close > 0:
+            prices[sym] = close
+    return prices
+
+
+def load_daily_closes(date_str, cache_dir):
+    """Whole-market closing prices for one date."""
+    return {
+        sym: q["Close"]
+        for sym, q in load_daily_quotes(date_str, cache_dir).items()
+        if q.get("Close")
+    }
+
+
+def compute_streak_avg_prices(day_dfs, cache_dir, columns=("Foreign", "Trust")):
+    """Share-weighted average price across each symbol's current streak.
+
+    This is NOT a cost basis. T86 reports *net* shares, so a day of "+1000"
+    may be ten thousand bought against nine thousand sold; weighting price by
+    net flow yields a reference level for the streak, not what anyone paid.
+    Named and surfaced accordingly.
+
+    Only streaks of two days or more get a value: a single day's average is
+    just that day's price and would dress up nothing as insight.
+
+    Coverage is effectively listed-only, since historical prices come from the
+    one endpoint that honours a date (see load_daily_quotes). OTC symbols get
+    no value rather than a wrong one.
+    """
+    if not day_dfs:
+        return {}
+
+    dates = [d for d, _ in day_dfs]
+    prices_by_date = {}
+    for date_str in dates:
+        try:
+            prices_by_date[date_str] = load_daily_typical_prices(date_str, cache_dir)
+        except Exception as e:
+            print(f"Warning: prices unavailable for {date_str}: {e}", file=sys.stderr)
+            prices_by_date[date_str] = {}
+
+    # Per-day {symbol: shares} for each tracked column, newest first.
+    shares_by_day = []
+    for _, df in day_dfs:
+        day_map = {}
+        for col in columns:
+            if col in df.columns:
+                day_map[col] = dict(zip(df["Symbol"], df[col]))
+            else:
+                day_map[col] = {}
+        shares_by_day.append(day_map)
+
+    symbols = set()
+    for _, df in day_dfs:
+        symbols.update(df["Symbol"].tolist())
+
+    result = {}
+    for sym in symbols:
+        entry = {}
+        for col in columns:
+            first = shares_by_day[0][col].get(sym, 0) or 0
+            if first == 0:
+                continue
+            buying = first > 0
+
+            weighted, total = 0.0, 0.0
+            days = 0
+            for i, date_str in enumerate(dates):
+                shares = shares_by_day[i][col].get(sym, 0) or 0
+                if buying and shares <= 0:
+                    break
+                if not buying and shares >= 0:
+                    break
+                price = prices_by_date.get(date_str, {}).get(sym)
+                if not price:
+                    # A missing price would silently reweight the average, so
+                    # stop here rather than average over an incomplete streak.
+                    break
+                weighted += abs(shares) * price
+                total += abs(shares)
+                days += 1
+
+            if days >= 2 and total > 0:
+                entry[col] = round(weighted / total, 2)
+        if entry:
+            result[sym] = entry
+    return result
+
+
+SCOREBOARD_SIGNALS = [
+    ("ForeignBuy", "Foreign_Streak", "外資連買"),
+    ("TrustBuy", "Trust_Streak", "投信連買"),
+]
+SCOREBOARD_TOP_N = 10
+SCOREBOARD_MIN_STREAK = 3
+SCOREBOARD_MAX_ENTRIES = 120
+
+
+def _pick_signal_stocks(rows, streak_field, top_n=SCOREBOARD_TOP_N,
+                        min_streak=SCOREBOARD_MIN_STREAK):
+    """The stocks a signal would have flagged after this session's close."""
+    picked = [r for r in rows if (r.get(streak_field) or 0) >= min_streak]
+    picked.sort(key=lambda r: (r.get(streak_field) or 0), reverse=True)
+    return [
+        {"Symbol": r["Symbol"], "Name": r["Name"], "Streak": r[streak_field]}
+        for r in picked[:top_n]
+    ]
+
+
+def update_scoreboard(latest_date, rows, cache_dir, path="data/scoreboard.json"):
+    """Record what each signal flagged, and score it once the next day is in.
+
+    A signal computed from session T's chips is only actionable from T+1, so an
+    entry is written on T with no result and filled in on the next run that sees
+    a later trading day. Scoring never touches the day the signal was formed --
+    that would be reading tomorrow's paper.
+
+    The ledger is append-only and self-contained: it accumulates as the site
+    runs rather than being recomputed, so a bad day upstream cannot silently
+    rewrite past results.
+    """
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            board = json.load(f)
+    except Exception:
+        board = {"Entries": []}
+
+    entries = board.get("Entries") or []
+
+    # 1. Score any entry still waiting for a follow-up session.
+    closes_today = None
+    for entry in entries:
+        if entry.get("EvalDate") or entry.get("SignalDate") >= latest_date:
+            continue
+        if closes_today is None:
+            closes_today = load_daily_closes(latest_date, cache_dir)
+        closes_signal = load_daily_closes(entry["SignalDate"], cache_dir)
+        if not closes_signal or not closes_today:
+            continue
+
+        scored = []
+        for stock in entry.get("Stocks", []):
+            before = closes_signal.get(stock["Symbol"])
+            after = closes_today.get(stock["Symbol"])
+            if not before or not after:
+                continue
+            stock["Return"] = round((after / before - 1) * 100, 2)
+            scored.append(stock["Return"])
+
+        if scored:
+            entry["EvalDate"] = latest_date
+            entry["AvgReturn"] = round(sum(scored) / len(scored), 2)
+            entry["WinRate"] = round(
+                100.0 * sum(1 for r in scored if r > 0) / len(scored), 1
+            )
+            entry["Scored"] = len(scored)
+
+    # 2. Open an entry for this session, unless one already exists.
+    for key, field, label in SCOREBOARD_SIGNALS:
+        if any(e.get("Signal") == key and e.get("SignalDate") == latest_date
+               for e in entries):
+            continue
+        stocks = _pick_signal_stocks(rows, field)
+        if stocks:
+            entries.append({
+                "Signal": key,
+                "Label": label,
+                "SignalDate": latest_date,
+                "EvalDate": None,
+                "Stocks": stocks,
+            })
+
+    entries.sort(key=lambda e: (e.get("SignalDate"), e.get("Signal")), reverse=True)
+    del entries[SCOREBOARD_MAX_ENTRIES:]
+
+    # 3. Roll the scored entries up per signal.
+    summary = {}
+    for key, field, label in SCOREBOARD_SIGNALS:
+        scored = [e for e in entries if e.get("Signal") == key and e.get("EvalDate")]
+        if not scored:
+            continue
+        returns = [e["AvgReturn"] for e in scored]
+        summary[key] = {
+            "Label": label,
+            "Sessions": len(scored),
+            "AvgReturn": round(sum(returns) / len(returns), 2),
+            # Share of *sessions* that came out ahead. Deliberately not named
+            # WinRate: that field on an entry means share of *stocks*, and one
+            # name for two denominators invites misreading.
+            "PositiveSessionRate": round(
+                100.0 * sum(1 for r in returns if r > 0) / len(returns), 1
+            ),
+            "BestReturn": max(returns),
+            "WorstReturn": min(returns),
+        }
+
+    board = {
+        "UpdatedFor": latest_date,
+        "Note": ("訊號於當日收盤後產生，報酬以次一交易日收盤價計算，未計交易成本。"
+                 "報酬僅涵蓋可取得歷史股價的上市個股，Scored 為實際計入檔數。"),
+        "Summary": summary,
+        "Entries": entries,
+    }
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(board, f, ensure_ascii=False, indent=2)
+    return board
+
+
 def calculate_streaks(df_list):
     all_symbols = set()
     symbol_to_name = {}
@@ -957,7 +1210,56 @@ def scrape_daily_stock_quotes(date_str):
     quotes_map = {}
     headers = HEADERS
     
-    # 1. TWSE
+    quotes_map.update(scrape_twse_quotes(date_str))
+
+    # 2. TPEx
+    tpex_success = False
+    for attempt in range(3):
+        try:
+            url_tpex = "https://www.tpex.org.tw/openapi/v1/tpex_mainboard_daily_close_quotes"
+            print(f"Fetching TPEx OpenAPI quotes (Attempt {attempt+1})...")
+            res = requests.get(url_tpex, headers=headers, timeout=25)
+            if res.status_code == 200:
+                data = res.json()
+                print(f"Parsing TPEx quotes ({len(data)} stocks)...")
+                for r in data:
+                    sym = str(r.get("SecuritiesCompanyCode", "")).strip()
+
+                    vol = _clean_float(r.get("TradingShares", 0)) // 1000
+                    open_p = _clean_float(r.get("Open", 0))
+                    high_p = _clean_float(r.get("High", 0))
+                    low_p = _clean_float(r.get("Low", 0))
+                    close_p = _clean_float(r.get("Close", 0))
+                    change_val = _clean_float(r.get("Change", 0))
+
+                    quotes_map[sym] = {
+                        "Open": open_p,
+                        "High": high_p,
+                        "Low": low_p,
+                        "Close": close_p,
+                        "Change": change_val,
+                        "Volume": int(vol)
+                    }
+                tpex_success = True
+                break
+            else:
+                print(f"TPEx returned status code {res.status_code} on attempt {attempt+1}")
+        except Exception as e:
+            print(f"Error fetching TPEx daily quotes on attempt {attempt+1}: {e}", file=sys.stderr)
+        if not tpex_success and attempt < 2:
+            time.sleep(2)
+
+    if not tpex_success:
+        raise RuntimeError("Failed to fetch TPEx daily quotes after 3 attempts.")
+
+    return quotes_map
+
+
+def scrape_twse_quotes(date_str):
+    """Listed-market OHLC for `date_str`. TWSE's endpoint honours the date."""
+    quotes_map = {}
+    headers = HEADERS
+
     twse_success = False
     for attempt in range(3):
         try:
@@ -1014,47 +1316,7 @@ def scrape_daily_stock_quotes(date_str):
 
     if not twse_success:
         raise RuntimeError("Failed to fetch TWSE daily quotes after 3 attempts.")
-        
-    # 2. TPEx
-    tpex_success = False
-    for attempt in range(3):
-        try:
-            url_tpex = "https://www.tpex.org.tw/openapi/v1/tpex_mainboard_daily_close_quotes"
-            print(f"Fetching TPEx OpenAPI quotes (Attempt {attempt+1})...")
-            res = requests.get(url_tpex, headers=headers, timeout=25)
-            if res.status_code == 200:
-                data = res.json()
-                print(f"Parsing TPEx quotes ({len(data)} stocks)...")
-                for r in data:
-                    sym = str(r.get("SecuritiesCompanyCode", "")).strip()
-                    
-                    vol = _clean_float(r.get("TradingShares", 0)) // 1000
-                    open_p = _clean_float(r.get("Open", 0))
-                    high_p = _clean_float(r.get("High", 0))
-                    low_p = _clean_float(r.get("Low", 0))
-                    close_p = _clean_float(r.get("Close", 0))
-                    change_val = _clean_float(r.get("Change", 0))
-                    
-                    quotes_map[sym] = {
-                        "Open": open_p,
-                        "High": high_p,
-                        "Low": low_p,
-                        "Close": close_p,
-                        "Change": change_val,
-                        "Volume": int(vol)
-                    }
-                tpex_success = True
-                break
-            else:
-                print(f"TPEx returned status code {res.status_code} on attempt {attempt+1}")
-        except Exception as e:
-            print(f"Error fetching TPEx daily quotes on attempt {attempt+1}: {e}", file=sys.stderr)
-        if not tpex_success and attempt < 2:
-            time.sleep(2)
 
-    if not tpex_success:
-        raise RuntimeError("Failed to fetch TPEx daily quotes after 3 attempts.")
-        
     return quotes_map
 
 def load_market_summary(date_str, cache_dir, is_today=False):
@@ -1254,7 +1516,10 @@ def main():
     
     # 6. Load industry mapping
     industry_mapping = load_industry_mapping(cache_dir)
-    
+
+    # 6b. Reference price level across each current streak
+    avg_prices = compute_streak_avg_prices(day_dfs, cache_dir)
+
     # 7. Merge quotes, SBL, and industry mapping into streaks
     final_streaks = []
     for _, row in df_streaks.iterrows():
@@ -1262,6 +1527,7 @@ def main():
         quote = quotes_map.get(sym, {"Open": 0.0, "High": 0.0, "Low": 0.0, "Close": 0.0, "Change": 0.0, "Volume": 0})
         ind = industry_mapping.get(sym, "其他")
         sbl = sbl_map.get(sym, {"SBL_Sold": 0, "SBL_Returned": 0, "SBL_Balance": 0})
+        avg = avg_prices.get(sym, {})
         
         f_streak = int(row["Foreign_Streak"])
         t_streak = int(row["Trust_Streak"])
@@ -1305,7 +1571,12 @@ def main():
             "Volume": quote["Volume"],
             "SBL_Sold": int(sbl["SBL_Sold"]),
             "SBL_Returned": int(sbl["SBL_Returned"]),
-            "SBL_Balance": int(sbl["SBL_Balance"])
+            "SBL_Balance": int(sbl["SBL_Balance"]),
+
+            # Share-weighted price across the current streak; a reference level,
+            # not a cost basis (see compute_streak_avg_prices).
+            "Foreign_StreakAvgPrice": avg.get("Foreign"),
+            "Trust_StreakAvgPrice": avg.get("Trust")
         })
 
     # Read existing files to detect changes later
@@ -1329,6 +1600,14 @@ def main():
             "Data": final_streaks
         }, f, ensure_ascii=False, indent=2)
     print("Saved data/streaks.json")
+
+    # 6c. Score yesterday's signals and open today's
+    try:
+        update_scoreboard(latest_active_date, final_streaks, cache_dir)
+        print("Saved data/scoreboard.json")
+    except Exception as e:
+        # The scoreboard is a retrospective extra; never let it fail the build.
+        print(f"Warning: scoreboard update failed: {e}", file=sys.stderr)
 
     # 6b. 將今日焦點 Top 10 注入 index.html（供搜尋引擎與無 JS 環境直接閱讀）
     try:
