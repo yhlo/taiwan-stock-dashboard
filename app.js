@@ -991,6 +991,113 @@ function renderTableWithPagination(tabId, tableId, sortedList, streakCol, latest
 
 // ---------- Pre-open morning brief ----------
 
+const MORNING_BRIEF_PREF_KEY = 'morning-brief-collapsed';
+// After the open the brief is yesterday's context and the rankings below are
+// what people came for, so it folds itself away. Before then it is the point
+// of the visit and stays open.
+const BRIEF_AUTO_COLLAPSE_HOUR = 9;
+
+// Shifted epoch, read with getUTC* / toISOString: Date.now() is already an
+// absolute instant, so adding 8h and reading UTC fields yields the Taipei wall
+// clock regardless of where the reader is. The rule is about the Taipei
+// session, so a reader abroad should see the same state as one here.
+function taipeiNow() {
+    return new Date(Date.now() + 8 * 3600000);
+}
+
+function taipeiDateKey() {
+    return taipeiNow().toISOString().slice(0, 10);
+}
+
+function readBriefPref() {
+    try {
+        const raw = localStorage.getItem(MORNING_BRIEF_PREF_KEY);
+        if (!raw) return null;
+        const pref = JSON.parse(raw);
+        // An explicit choice only governs the day it was made; each morning the
+        // brief gets to introduce itself again.
+        return pref.date === taipeiDateKey() ? !!pref.collapsed : null;
+    } catch (e) {
+        return null;
+    }
+}
+
+function writeBriefPref(collapsed) {
+    try {
+        localStorage.setItem(MORNING_BRIEF_PREF_KEY, JSON.stringify({
+            collapsed: collapsed,
+            date: taipeiDateKey()
+        }));
+    } catch (e) { /* private mode: fall back to the time-based default */ }
+}
+
+function briefShouldStartCollapsed() {
+    const saved = readBriefPref();
+    if (saved !== null) return saved;
+    return taipeiNow().getUTCHours() >= BRIEF_AUTO_COLLAPSE_HOUR;
+}
+
+function setBriefCollapsed(collapsed, animate) {
+    const wrap = document.getElementById('morning-brief-collapse');
+    const btn = document.getElementById('morning-brief-toggle');
+    if (!wrap || !btn) return;
+
+    btn.setAttribute('aria-expanded', String(!collapsed));
+    const label = btn.querySelector('.brief-toggle-text');
+    if (label) label.textContent = collapsed ? '展開' : '收合';
+    btn.classList.toggle('collapsed', collapsed);
+
+    if (!animate) wrap.classList.add('no-transition');
+
+    // Drop any listener left over from a previous toggle. Without this, the
+    // release-to-`none` queued by an expand can fire at the end of a *collapse*
+    // that interrupted it, and the panel springs back open.
+    if (wrap._briefTransitionEnd) {
+        wrap.removeEventListener('transitionend', wrap._briefTransitionEnd);
+        wrap._briefTransitionEnd = null;
+    }
+
+    if (collapsed) {
+        // Pin the current height first so the transition has somewhere to run from.
+        wrap.style.maxHeight = `${wrap.scrollHeight}px`;
+        void wrap.offsetHeight;
+        wrap.style.maxHeight = '0px';
+        wrap.classList.add('collapsed');
+    } else {
+        wrap.classList.remove('collapsed');
+        // Measured, not a fixed cap: the brief's height varies with content and
+        // viewport, and a hard-coded max-height would silently clip it.
+        wrap.style.maxHeight = `${wrap.scrollHeight}px`;
+        if (animate) {
+            // Release the cap once open so later reflows (font load, resize,
+            // orientation change) are not clipped by a stale pixel value.
+            const done = (e) => {
+                if (e.target !== wrap || e.propertyName !== 'max-height') return;
+                wrap.style.maxHeight = 'none';
+                wrap.removeEventListener('transitionend', done);
+                wrap._briefTransitionEnd = null;
+            };
+            wrap._briefTransitionEnd = done;
+            wrap.addEventListener('transitionend', done);
+        } else {
+            wrap.style.maxHeight = 'none';
+        }
+    }
+
+    if (!animate) {
+        void wrap.offsetHeight;
+        wrap.classList.remove('no-transition');
+    }
+}
+
+window.toggleMorningBrief = function () {
+    const btn = document.getElementById('morning-brief-toggle');
+    if (!btn) return;
+    const collapsed = btn.getAttribute('aria-expanded') === 'true';
+    setBriefCollapsed(collapsed, true);
+    writeBriefPref(collapsed);
+};
+
 function briefPctClass(v) {
     if (v === null || v === undefined) return '';
     return v >= 0 ? 'text-up' : 'text-down';
@@ -1139,6 +1246,10 @@ async function renderMorningBrief(dataVersion) {
 
     body.innerHTML = groups.join('');
     section.classList.remove('hidden');
+
+    // Apply after the card is visible: a collapsed element measures 0, so the
+    // opening height has to be taken once the content actually has a layout.
+    setBriefCollapsed(briefShouldStartCollapsed(), false);
 }
 
 // Share-weighted price over the current streak, shown next to the last close so

@@ -184,13 +184,25 @@
         <section id="morning-brief-section" class="card hidden" style="margin-bottom: 24px;">
             <div class="card-header">
                 <h2 class="card-title">🌅 盤前晨報</h2>
-                <span id="morning-brief-date" class="date-badge">載入中...</span>
+                <div class="card-header-actions">
+                    <span id="morning-brief-date" class="date-badge">載入中...</span>
+                    <button id="morning-brief-toggle" class="brief-toggle" aria-expanded="true"
+                            aria-controls="morning-brief-collapse" onclick="toggleMorningBrief()">
+                        <span class="brief-toggle-text">收合</span>
+                        <svg class="brief-chevron" viewBox="0 0 24 24" width="15" height="15" fill="none"
+                             stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </button>
+                </div>
             </div>
-            <div id="morning-brief-body" class="brief-body"></div>
-            <p class="brief-disclaimer">
-                美股與 ADR 為前一交易日收盤；夜盤為台指期盤後交易時段（前日 15:00–05:00）。
-                本頁為公開資訊整理，非投資建議。
-            </p>
+            <div id="morning-brief-collapse" class="brief-collapse">
+                <div id="morning-brief-body" class="brief-body"></div>
+                <p class="brief-disclaimer">
+                    美股與 ADR 為前一交易日收盤；夜盤為台指期盤後交易時段（前日 15:00–05:00）。
+                    本頁為公開資訊整理，非投資建議。
+                </p>
+            </div>
         </section>
 
         <section id="watchlist-section" class="card" style="margin-bottom: 24px;">

@@ -2212,3 +2212,44 @@ section.card {
 .score-pending {
     white-space: nowrap;
 }
+
+/* ---------- Morning brief collapse ---------- */
+
+.brief-collapse {
+    overflow: hidden;
+    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Used while restoring the saved state on load, so a card that starts
+   collapsed does not visibly fold itself shut on every page view. */
+.brief-collapse.no-transition {
+    transition: none;
+}
+
+.brief-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.brief-toggle:hover {
+    color: var(--accent-blue);
+    border-color: var(--accent-blue);
+}
+
+.brief-chevron {
+    transition: transform 0.3s ease;
+}
+
+.brief-toggle.collapsed .brief-chevron {
+    transform: rotate(-90deg);
+}
