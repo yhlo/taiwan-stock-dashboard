@@ -1,19 +1,19 @@
 {
-  "UpdatedFor": "20260717",
+  "UpdatedFor": "20260720",
   "Note": "訊號於當日收盤後產生，報酬以次一交易日收盤價計算，未計交易成本。報酬僅涵蓋可取得歷史股價的上市個股，Scored 為實際計入檔數。",
   "Summary": {
     "ForeignBuy": {
       "Label": "外資連買",
-      "Sessions": 9,
-      "AvgReturn": 0.43,
-      "PositiveSessionRate": 66.7,
+      "Sessions": 10,
+      "AvgReturn": 0.53,
+      "PositiveSessionRate": 70.0,
       "BestReturn": 2.88,
       "WorstReturn": -1.48
     },
     "TrustBuy": {
       "Label": "投信連買",
-      "Sessions": 9,
-      "AvgReturn": -1.53,
+      "Sessions": 10,
+      "AvgReturn": -1.56,
       "PositiveSessionRate": 0.0,
       "BestReturn": -0.02,
       "WorstReturn": -4.57
@@ -23,65 +23,65 @@
     {
       "Signal": "TrustBuy",
       "Label": "投信連買",
-      "SignalDate": "20260717",
+      "SignalDate": "20260720",
       "EvalDate": null,
       "Stocks": [
         {
-          "Symbol": "5434",
-          "Name": "崇越",
-          "Streak": 15
-        },
-        {
           "Symbol": "1216",
           "Name": "統一",
-          "Streak": 14
+          "Streak": 20
         },
         {
           "Symbol": "1303",
           "Name": "南亞",
-          "Streak": 14
+          "Streak": 20
         },
         {
           "Symbol": "2542",
           "Name": "興富發",
-          "Streak": 14
+          "Streak": 20
         },
         {
           "Symbol": "6526",
           "Name": "達發",
-          "Streak": 14
+          "Streak": 20
         },
         {
           "Symbol": "8046",
           "Name": "南電",
-          "Streak": 14
+          "Streak": 19
+        },
+        {
+          "Symbol": "5434",
+          "Name": "崇越",
+          "Streak": 16
         },
         {
           "Symbol": "1477",
           "Name": "聚陽",
-          "Streak": 12
+          "Streak": 13
         },
         {
           "Symbol": "2006",
           "Name": "東和鋼鐵",
-          "Streak": 12
-        },
-        {
-          "Symbol": "2383",
-          "Name": "台光電",
-          "Streak": 11
+          "Streak": 13
         },
         {
           "Symbol": "9917",
           "Name": "中保科",
-          "Streak": 11
+          "Streak": 12
+        },
+        {
+          "Symbol": "7769",
+          "Name": "鴻勁",
+          "Streak": 10
         }
       ]
     },
     {
       "Signal": "ForeignBuy",
       "Label": "外資連買",
-      "SignalDate": "20260717",
+      "SignalDate": "20260720",
       "EvalDate": null,
       "Stocks": [
         {
@@ -90,51 +90,193 @@
           "Streak": 20
         },
         {
+          "Symbol": "8462",
+          "Name": "柏文",
+          "Streak": 18
+        },
+        {
           "Symbol": "1454",
           "Name": "台富",
-          "Streak": 14
+          "Streak": 15
         },
         {
           "Symbol": "1468",
           "Name": "昶和",
-          "Streak": 14
-        },
-        {
-          "Symbol": "8462",
-          "Name": "柏文",
-          "Streak": 14
+          "Streak": 15
         },
         {
           "Symbol": "00898",
           "Name": "國泰基因免疫革命",
-          "Streak": 13
+          "Streak": 14
         },
         {
           "Symbol": "2105",
           "Name": "正新",
-          "Streak": 12
+          "Streak": 13
         },
         {
           "Symbol": "2357",
           "Name": "華碩",
-          "Streak": 12
+          "Streak": 13
         },
         {
           "Symbol": "4104",
           "Name": "佳醫",
-          "Streak": 12
+          "Streak": 13
         },
         {
           "Symbol": "1903",
           "Name": "士紙",
-          "Streak": 11
+          "Streak": 12
+        },
+        {
+          "Symbol": "2867",
+          "Name": "三商壽",
+          "Streak": 12
+        }
+      ]
+    },
+    {
+      "Signal": "TrustBuy",
+      "Label": "投信連買",
+      "SignalDate": "20260717",
+      "EvalDate": "20260720",
+      "Stocks": [
+        {
+          "Symbol": "5434",
+          "Name": "崇越",
+          "Streak": 15,
+          "Return": -3.2
+        },
+        {
+          "Symbol": "1216",
+          "Name": "統一",
+          "Streak": 14,
+          "Return": 0.37
+        },
+        {
+          "Symbol": "1303",
+          "Name": "南亞",
+          "Streak": 14,
+          "Return": -6.28
+        },
+        {
+          "Symbol": "2542",
+          "Name": "興富發",
+          "Streak": 14,
+          "Return": 0.0
+        },
+        {
+          "Symbol": "6526",
+          "Name": "達發",
+          "Streak": 14,
+          "Return": -2.66
+        },
+        {
+          "Symbol": "8046",
+          "Name": "南電",
+          "Streak": 14,
+          "Return": -3.91
+        },
+        {
+          "Symbol": "1477",
+          "Name": "聚陽",
+          "Streak": 12,
+          "Return": 0.0
+        },
+        {
+          "Symbol": "2006",
+          "Name": "東和鋼鐵",
+          "Streak": 12,
+          "Return": -0.28
+        },
+        {
+          "Symbol": "2383",
+          "Name": "台光電",
+          "Streak": 11,
+          "Return": -2.22
+        },
+        {
+          "Symbol": "9917",
+          "Name": "中保科",
+          "Streak": 11,
+          "Return": 0.0
+        }
+      ],
+      "AvgReturn": -1.82,
+      "WinRate": 10.0,
+      "Scored": 10
+    },
+    {
+      "Signal": "ForeignBuy",
+      "Label": "外資連買",
+      "SignalDate": "20260717",
+      "EvalDate": "20260720",
+      "Stocks": [
+        {
+          "Symbol": "6414",
+          "Name": "樺漢",
+          "Streak": 20,
+          "Return": 2.53
+        },
+        {
+          "Symbol": "1454",
+          "Name": "台富",
+          "Streak": 14,
+          "Return": 3.19
+        },
+        {
+          "Symbol": "1468",
+          "Name": "昶和",
+          "Streak": 14,
+          "Return": 9.93
+        },
+        {
+          "Symbol": "8462",
+          "Name": "柏文",
+          "Streak": 14,
+          "Return": -0.64
+        },
+        {
+          "Symbol": "00898",
+          "Name": "國泰基因免疫革命",
+          "Streak": 13,
+          "Return": 1.52
+        },
+        {
+          "Symbol": "2105",
+          "Name": "正新",
+          "Streak": 12,
+          "Return": -1.19
+        },
+        {
+          "Symbol": "2357",
+          "Name": "華碩",
+          "Streak": 12,
+          "Return": -1.71
+        },
+        {
+          "Symbol": "4104",
+          "Name": "佳醫",
+          "Streak": 12,
+          "Return": 0.71
+        },
+        {
+          "Symbol": "1903",
+          "Name": "士紙",
+          "Streak": 11,
+          "Return": 0.0
         },
         {
           "Symbol": "2106",
           "Name": "建大",
-          "Streak": 11
+          "Streak": 11,
+          "Return": 0.0
         }
-      ]
+      ],
+      "AvgReturn": 1.43,
+      "WinRate": 50.0,
+      "Scored": 10
     },
     {
       "Signal": "TrustBuy",
