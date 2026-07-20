@@ -1,0 +1,167 @@
+{
+  "Date": "20260720",
+  "GeneratedAt": "2026-07-20T12:44:38+08:00",
+  "UsMarkets": [
+    {
+      "Name": "道瓊工業",
+      "Close": 52146.42,
+      "ChangePct": -0.77,
+      "Date": "20260717"
+    },
+    {
+      "Name": "那斯達克",
+      "Close": 25520.24,
+      "ChangePct": -1.4,
+      "Date": "20260717"
+    },
+    {
+      "Name": "標普500",
+      "Close": 7457.69,
+      "ChangePct": -1.01,
+      "Date": "20260717"
+    },
+    {
+      "Name": "費城半導體",
+      "Close": 11673.89,
+      "ChangePct": -1.63,
+      "Date": "20260717"
+    }
+  ],
+  "Adr": {
+    "Close": 398.37,
+    "ChangePct": -2.77,
+    "Date": "20260717",
+    "FxRate": 32.378,
+    "ImpliedTwd": 2579.7,
+    "TwClose": 2290.0,
+    "TwCloseDate": "20260717",
+    "PremiumPct": 12.65
+  },
+  "NightSession": null,
+  "Chips": {
+    "ForeignFuturesNet": {
+      "Date": "20260717",
+      "Net": -86189,
+      "Change": -1736
+    },
+    "OptionLevels": {
+      "Resistance": 48000,
+      "ResistanceOI": 4348,
+      "Support": 42800,
+      "SupportOI": 2793,
+      "ActiveMonth": "202607F3"
+    },
+    "ChipDate": "20260717",
+    "ForeignBuyStreak": [
+      {
+        "Symbol": "6414",
+        "Name": "樺漢",
+        "Streak": 20,
+        "Close": 395.0,
+        "Change": -5.0
+      },
+      {
+        "Symbol": "8462",
+        "Name": "柏文",
+        "Streak": 17,
+        "Close": 156.5,
+        "Change": -3.5
+      },
+      {
+        "Symbol": "1454",
+        "Name": "台富",
+        "Streak": 14,
+        "Close": 12.55,
+        "Change": -0.45
+      },
+      {
+        "Symbol": "1468",
+        "Name": "昶和",
+        "Streak": 14,
+        "Close": 13.6,
+        "Change": 0.95
+      },
+      {
+        "Symbol": "00898",
+        "Name": "國泰基因免疫革命",
+        "Streak": 13,
+        "Close": 9.22,
+        "Change": -0.24
+      }
+    ],
+    "TrustBuyStreak": [
+      {
+        "Symbol": "1216",
+        "Name": "統一",
+        "Streak": 20,
+        "Close": 80.0,
+        "Change": 1.0
+      },
+      {
+        "Symbol": "1303",
+        "Name": "南亞",
+        "Streak": 20,
+        "Close": 199.0,
+        "Change": -22.0
+      },
+      {
+        "Symbol": "2542",
+        "Name": "興富發",
+        "Streak": 20,
+        "Close": 43.3,
+        "Change": -0.05
+      },
+      {
+        "Symbol": "6526",
+        "Name": "達發",
+        "Streak": 20,
+        "Close": 563.0,
+        "Change": -56.0
+      },
+      {
+        "Symbol": "8046",
+        "Name": "南電",
+        "Streak": 18,
+        "Close": 1150.0,
+        "Change": -125.0
+      }
+    ],
+    "TrustFreshBuys": [
+      {
+        "Symbol": "2880",
+        "Name": "華南金",
+        "Shares": 11454399,
+        "Close": 40.15
+      },
+      {
+        "Symbol": "2801",
+        "Name": "彰銀",
+        "Shares": 9759445,
+        "Close": 23.9
+      },
+      {
+        "Symbol": "2890",
+        "Name": "永豐金",
+        "Shares": 8953778,
+        "Close": 40.0
+      },
+      {
+        "Symbol": "2610",
+        "Name": "華航",
+        "Shares": 6406550,
+        "Close": 20.75
+      },
+      {
+        "Symbol": "2303",
+        "Name": "聯電",
+        "Shares": 5846495,
+        "Close": 144.0
+      }
+    ]
+  },
+  "Settlement": {
+    "IsSettlementWeek": false,
+    "SettlementDate": null,
+    "IsSettlementDay": false
+  }
+}

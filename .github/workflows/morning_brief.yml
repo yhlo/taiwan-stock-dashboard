@@ -1,0 +1,58 @@
+name: Build Pre-Open Morning Brief
+
+# The brief must land before the futures day session opens at 08:45 Taipei:
+# once it is live, TAIFEX serves the same row for both the day and the night
+# session, and last night's close can no longer be read cleanly.
+#
+# Taipei is UTC+8, so a Taipei weekday morning falls on the *previous* UTC day.
+# Taipei Mon-Fri 07:20 == UTC Sun-Thu 23:20, hence day-of-week 0-4 (not 1-5).
+# Two runs because scheduled workflows are routinely minutes-to-an-hour late and
+# this job has a hard deadline; the second is a backup if the first slips or is
+# dropped. Both are on odd minutes to avoid the congested top of the hour.
+on:
+  schedule:
+    - cron: '20 23 * * 0-4'   # 07:20 Taipei
+    - cron: '50 23 * * 0-4'   # 07:50 Taipei (backup)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+# Never let the backup run collide with a first run that is still going.
+concurrency:
+  group: morning-brief
+  cancel-in-progress: false
+
+jobs:
+  build_brief:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Python environment
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+        cache: 'pip'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install requests pandas beautifulsoup4 yfinance lxml
+
+    - name: Build morning brief
+      run: |
+        python build_morning_brief.py
+
+    - name: Commit and push morning brief
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git add data/morning_brief.json
+        if ! git diff --staged --quiet; then
+          git commit -m "Update morning brief: $(date -u -d '+8 hours' +'%Y-%m-%d')"
+          git pull --rebase origin main
+          git push origin main
+        fi

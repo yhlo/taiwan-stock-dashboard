@@ -1,15 +1,17 @@
 name: Scrape Daily Taiwan Stock Data
 
 on:
+  # Minutes are deliberately off the hour and half-hour: GitHub's scheduler is
+  # most heavily contended at :00, and a run queued there is routinely delayed.
   schedule:
-    # 原本 07:15 UTC → 提前到 05:45 UTC (台北時間 13:45)
-    - cron: '45 5 * * 1-5'
-    # 原本 08:00 UTC → 提前到 06:30 UTC (台北時間 14:30)
-    - cron: '30 6 * * 1-5'
-    # 原本 09:30 UTC → 提前到 08:00 UTC (台北時間 16:00)
-    - cron: '0 8 * * 1-5'
-    # 原本 13:30 UTC → 提前到 12:00 UTC (台北時間 20:00)
-    - cron: '0 12 * * 1-5'
+    # 台北時間 13:45
+    - cron: '47 5 * * 1-5'
+    # 台北時間 14:30
+    - cron: '33 6 * * 1-5'
+    # 台北時間 16:00
+    - cron: '7 8 * * 1-5'
+    # 台北時間 20:00
+    - cron: '7 12 * * 1-5'
   workflow_dispatch:
 
 permissions:
