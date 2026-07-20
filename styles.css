@@ -1959,3 +1959,240 @@ section.card {
         max-height: 650px;
     }
 }
+/* ---------- Pre-open morning brief ---------- */
+
+.brief-body {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.brief-group-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-secondary);
+    margin: 0 0 10px;
+    letter-spacing: 0.02em;
+}
+
+/* Tiles wrap rather than scroll: the brief is read at a glance, and a hidden
+   row of numbers is worse than a taller card. */
+.brief-tiles {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px;
+}
+
+.brief-tile {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 10px 12px;
+}
+
+.brief-tile-label {
+    font-size: 12px;
+    color: var(--text-secondary);
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.brief-tile-value {
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.2;
+    font-variant-numeric: tabular-nums;
+}
+
+.brief-tile-sub {
+    font-size: 11px;
+    color: var(--text-secondary);
+    margin-top: 3px;
+    font-variant-numeric: tabular-nums;
+}
+
+.brief-lists {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+}
+
+.brief-list-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-secondary);
+    margin: 0 0 6px;
+}
+
+.brief-list ol {
+    margin: 0;
+    padding-left: 18px;
+}
+
+.brief-list li {
+    font-size: 13px;
+    padding: 3px 0;
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    font-variant-numeric: tabular-nums;
+}
+
+.brief-li-name {
+    cursor: pointer;
+    color: var(--text-primary);
+}
+
+.brief-li-name:hover {
+    color: var(--accent-blue);
+    text-decoration: underline;
+}
+
+.brief-alert {
+    background: var(--bg-up);
+    border: 1px solid var(--border-up);
+    border-radius: var(--radius-md);
+    padding: 10px 12px;
+    font-size: 13px;
+    color: var(--text-primary);
+}
+
+.brief-disclaimer {
+    font-size: 11px;
+    color: var(--text-secondary);
+    margin: 14px 0 0;
+    line-height: 1.6;
+}
+
+/* ---------- Streak reference price ---------- */
+
+.avg-price-cell {
+    line-height: 1.35;
+}
+
+.avg-price-value {
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+}
+
+.avg-price-diff {
+    display: block;
+    font-size: 11px;
+    font-variant-numeric: tabular-nums;
+}
+
+.avg-price-empty {
+    color: var(--text-secondary);
+    opacity: 0.6;
+}
+
+/* ---------- Signal scoreboard ---------- */
+
+.scoreboard-intro {
+    font-size: 14px;
+    line-height: 1.75;
+    color: var(--text-secondary);
+    margin: 0 0 18px;
+}
+
+.scoreboard-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 14px;
+}
+
+.score-card {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 16px;
+}
+
+.score-card-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-secondary);
+}
+
+.score-card-main {
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 6px 0 2px;
+    font-variant-numeric: tabular-nums;
+}
+
+.score-card-sub {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-bottom: 12px;
+}
+
+.score-card-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    border-top: 1px solid var(--border-color);
+    padding-top: 10px;
+}
+
+.score-k {
+    display: block;
+    font-size: 11px;
+    color: var(--text-secondary);
+}
+
+.score-v {
+    display: block;
+    font-size: 14px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+
+.score-caveat {
+    margin-top: 16px;
+    line-height: 1.7;
+}
+
+.score-pending {
+    color: var(--text-secondary);
+    font-size: 12px;
+}
+
+.score-partial {
+    display: inline-block;
+    font-size: 10px;
+    color: var(--text-secondary);
+    margin-left: 4px;
+}
+
+/* Chips wrap: the picked names are the evidence behind each average, so they
+   stay visible rather than being collapsed behind a toggle. */
+.stock-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    max-width: 460px;
+}
+
+.stock-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    padding: 2px 7px;
+    border-radius: 999px;
+    background: var(--bg-hover);
+    border: 1px solid var(--border-color);
+    white-space: nowrap;
+}
+
+.chip-ret {
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 768px) {
+    .stock-chips { max-width: none; }
+    .score-card-main { font-size: 26px; }
+}

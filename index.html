@@ -63,6 +63,7 @@
                 <a href="/"><span aria-hidden="true">📈</span>台灣股市法人籌碼與連買連賣看板</a>
             </h1>
             <nav class="main-nav">
+                <a href="/scoreboard.html">📋 訊號計分板</a>
                 <a href="/articles/">📚 文章專區</a>
                 <a href="/about.html">關於我</a>
             </nav>
@@ -179,6 +180,19 @@
         </section>
 
         <!-- Watchlist Section (My Favorites) -->
+        <!-- Pre-open brief: hidden entirely when data/morning_brief.json is absent or stale -->
+        <section id="morning-brief-section" class="card hidden" style="margin-bottom: 24px;">
+            <div class="card-header">
+                <h2 class="card-title">🌅 盤前晨報</h2>
+                <span id="morning-brief-date" class="date-badge">載入中...</span>
+            </div>
+            <div id="morning-brief-body" class="brief-body"></div>
+            <p class="brief-disclaimer">
+                美股與 ADR 為前一交易日收盤；夜盤為台指期盤後交易時段（前日 15:00–05:00）。
+                本頁為公開資訊整理，非投資建議。
+            </p>
+        </section>
+
         <section id="watchlist-section" class="card" style="margin-bottom: 24px;">
             <div class="card-header" style="margin-bottom: 12px;">
                 <h2 class="card-title">⭐ 我的關注名單</h2>
@@ -195,7 +209,7 @@
             </div>
             <!-- STATIC_RANKINGS:START -->
 <p style="margin-bottom: 14px; color: var(--text-secondary); font-size: 13px;">📅 資料日期：<strong>2026/07/17</strong>（每個交易日盤後自動更新）　以下為外資、投信連續買超天數與外資投信「雙買」共識股的當日前十名，完整排行與篩選請見下方<a href="#streaks-ranking">🏆 三大法人連買連賣天數排行榜</a>。</p><div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px;"><div class="table-container"><h3 class="table-subtitle">🌊 外資連買 Top 10</h3><table><thead><tr><th>代號</th><th>名稱</th><th class="text-right">連續天數</th><th class="text-right">最新買賣超</th></tr></thead><tbody><tr><td><strong>6414</strong></td><td>樺漢</td><td class="text-right">20 天</td><td class="text-right"><span style="color: var(--color-up); font-weight: 600;">+692 張</span></td></tr>
-<tr><td><strong>8462</strong></td><td>柏文</td><td class="text-right">17 天</td><td class="text-right"><span style="color: var(--color-up); font-weight: 600;">+47 張</span></td></tr>
+<tr><td><strong>8462</strong></td><td>柏文</td><td class="text-right">14 天</td><td class="text-right"><span style="color: var(--color-up); font-weight: 600;">+47 張</span></td></tr>
 <tr><td><strong>1454</strong></td><td>台富</td><td class="text-right">14 天</td><td class="text-right"><span style="color: var(--color-up); font-weight: 600;">+18 張</span></td></tr>
 <tr><td><strong>1468</strong></td><td>昶和</td><td class="text-right">14 天</td><td class="text-right"><span style="color: var(--color-up); font-weight: 600;">+1 張</span></td></tr>
 <tr><td><strong>00898</strong></td><td>國泰基因免疫革命</td><td class="text-right">13 天</td><td class="text-right"><span style="color: var(--color-up); font-weight: 600;">+418 張</span></td></tr>
@@ -203,12 +217,12 @@
 <tr><td><strong>2357</strong></td><td>華碩</td><td class="text-right">12 天</td><td class="text-right"><span style="color: var(--color-up); font-weight: 600;">+1,263 張</span></td></tr>
 <tr><td><strong>4104</strong></td><td>佳醫</td><td class="text-right">12 天</td><td class="text-right"><span style="color: var(--color-up); font-weight: 600;">+79 張</span></td></tr>
 <tr><td><strong>2867</strong></td><td>三商壽</td><td class="text-right">11 天</td><td class="text-right"><span style="color: var(--color-up); font-weight: 600;">+24,279 張</span></td></tr>
-<tr><td><strong>5324</strong></td><td>士開</td><td class="text-right">11 天</td><td class="text-right"><span style="color: var(--color-up); font-weight: 600;">+522 張</span></td></tr></tbody></table></div><div class="table-container"><h3 class="table-subtitle">🚀 投信連買 Top 10</h3><table><thead><tr><th>代號</th><th>名稱</th><th class="text-right">連續天數</th><th class="text-right">最新買賣超</th></tr></thead><tbody><tr><td><strong>1303</strong></td><td>南亞</td><td class="text-right">20 天</td><td class="text-right"><span style="color: var(--color-up); font-weight: 600;">+48,782 張</span></td></tr>
-<tr><td><strong>2542</strong></td><td>興富發</td><td class="text-right">20 天</td><td class="text-right"><span style="color: var(--color-up); font-weight: 600;">+6,804 張</span></td></tr>
-<tr><td><strong>1216</strong></td><td>統一</td><td class="text-right">20 天</td><td class="text-right"><span style="color: var(--color-up); font-weight: 600;">+6,316 張</span></td></tr>
-<tr><td><strong>6526</strong></td><td>達發</td><td class="text-right">20 天</td><td class="text-right"><span style="color: var(--color-up); font-weight: 600;">+21 張</span></td></tr>
-<tr><td><strong>8046</strong></td><td>南電</td><td class="text-right">18 天</td><td class="text-right"><span style="color: var(--color-up); font-weight: 600;">+82 張</span></td></tr>
-<tr><td><strong>5434</strong></td><td>崇越</td><td class="text-right">15 天</td><td class="text-right"><span style="color: var(--color-up); font-weight: 600;">+362 張</span></td></tr>
+<tr><td><strong>5324</strong></td><td>士開</td><td class="text-right">11 天</td><td class="text-right"><span style="color: var(--color-up); font-weight: 600;">+522 張</span></td></tr></tbody></table></div><div class="table-container"><h3 class="table-subtitle">🚀 投信連買 Top 10</h3><table><thead><tr><th>代號</th><th>名稱</th><th class="text-right">連續天數</th><th class="text-right">最新買賣超</th></tr></thead><tbody><tr><td><strong>5434</strong></td><td>崇越</td><td class="text-right">15 天</td><td class="text-right"><span style="color: var(--color-up); font-weight: 600;">+362 張</span></td></tr>
+<tr><td><strong>1303</strong></td><td>南亞</td><td class="text-right">14 天</td><td class="text-right"><span style="color: var(--color-up); font-weight: 600;">+48,782 張</span></td></tr>
+<tr><td><strong>2542</strong></td><td>興富發</td><td class="text-right">14 天</td><td class="text-right"><span style="color: var(--color-up); font-weight: 600;">+6,804 張</span></td></tr>
+<tr><td><strong>1216</strong></td><td>統一</td><td class="text-right">14 天</td><td class="text-right"><span style="color: var(--color-up); font-weight: 600;">+6,316 張</span></td></tr>
+<tr><td><strong>8046</strong></td><td>南電</td><td class="text-right">14 天</td><td class="text-right"><span style="color: var(--color-up); font-weight: 600;">+82 張</span></td></tr>
+<tr><td><strong>6526</strong></td><td>達發</td><td class="text-right">14 天</td><td class="text-right"><span style="color: var(--color-up); font-weight: 600;">+21 張</span></td></tr>
 <tr><td><strong>2006</strong></td><td>東和鋼鐵</td><td class="text-right">12 天</td><td class="text-right"><span style="color: var(--color-up); font-weight: 600;">+9 張</span></td></tr>
 <tr><td><strong>1477</strong></td><td>聚陽</td><td class="text-right">12 天</td><td class="text-right"><span style="color: var(--color-up); font-weight: 600;">+1 張</span></td></tr>
 <tr><td><strong>9917</strong></td><td>中保科</td><td class="text-right">11 天</td><td class="text-right"><span style="color: var(--color-up); font-weight: 600;">+217 張</span></td></tr>
@@ -430,11 +444,12 @@
                                     <th>市場</th>
                                     <th class="text-right">連續天數</th>
                                     <th class="text-right">最新一日買賣超</th>
+                                    <th class="text-right">期間均價</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td colspan="6" class="text-center">載入中...</td>
+                                    <td colspan="7" class="text-center">載入中...</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -456,11 +471,12 @@
                                     <th>市場</th>
                                     <th class="text-right">連續天數</th>
                                     <th class="text-right">最新一日買賣超</th>
+                                    <th class="text-right">期間均價</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td colspan="6" class="text-center">載入中...</td>
+                                    <td colspan="7" class="text-center">載入中...</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -482,11 +498,12 @@
                                     <th>市場</th>
                                     <th class="text-right">連續天數</th>
                                     <th class="text-right">最新一日買賣超</th>
+                                    <th class="text-right">期間均價</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td colspan="6" class="text-center">載入中...</td>
+                                    <td colspan="7" class="text-center">載入中...</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -508,11 +525,12 @@
                                     <th>市場</th>
                                     <th class="text-right">連續天數</th>
                                     <th class="text-right">最新一日買賣超</th>
+                                    <th class="text-right">期間均價</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td colspan="6" class="text-center">載入中...</td>
+                                    <td colspan="7" class="text-center">載入中...</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -534,11 +552,12 @@
                                     <th>市場</th>
                                     <th class="text-right">連續天數</th>
                                     <th class="text-right">最新一日買賣超</th>
+                                    <th class="text-right">期間均價</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td colspan="6" class="text-center">載入中...</td>
+                                    <td colspan="7" class="text-center">載入中...</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -560,11 +579,12 @@
                                     <th>市場</th>
                                     <th class="text-right">連續天數</th>
                                     <th class="text-right">最新一日買賣超</th>
+                                    <th class="text-right">期間均價</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td colspan="6" class="text-center">載入中...</td>
+                                    <td colspan="7" class="text-center">載入中...</td>
                                 </tr>
                             </tbody>
                         </table>

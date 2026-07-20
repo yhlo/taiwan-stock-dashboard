@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-TW" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- 在渲染前先套用主題，避免深色模式閃爍白底 -->
+    <script>
+      (function () {
+        const savedTheme = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+          document.documentElement.setAttribute('data-theme', 'dark');
+        }
+      })();
+    </script>
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BRC4C5P0KX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-BRC4C5P0KX');
+    </script>
+
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16x16.png">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1343288422175015" crossorigin="anonymous"></script>
+
+    <title>籌碼訊號計分板 | 外資投信連買隔日績效追蹤 - TWStockWatch</title>
+    <meta name="description" content="每日記錄外資連買、投信連買訊號選出的個股，並以次一交易日收盤價結算實際報酬。公開累積戰績、勝率與最佳最差表現，檢驗「跟著法人買」到底有沒有用。">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://www.twstockwatch.com/scoreboard.html">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.twstockwatch.com/scoreboard.html">
+    <meta property="og:site_name" content="TWStockWatch">
+    <meta property="og:locale" content="zh_TW">
+    <meta property="og:title" content="籌碼訊號計分板 | 跟著法人買到底有沒有用？">
+    <meta property="og:description" content="每日記錄法人連買訊號並以次一交易日收盤結算，公開累積勝率與報酬，不修飾、不挑好看的講。">
+</head>
+<body>
+    <header class="main-header">
+        <div class="header-container">
+            <h1 class="app-title">
+                <a href="/"><span aria-hidden="true">📈</span>台灣股市法人籌碼與連買連賣看板</a>
+            </h1>
+            <nav class="main-nav">
+                <a href="/scoreboard.html">📋 訊號計分板</a>
+                <a href="/articles/">📚 文章專區</a>
+                <a href="/about.html">關於我</a>
+            </nav>
+            <div class="header-controls">
+                <button id="theme-toggle" class="theme-btn" aria-label="切換深淺模式">🌓</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <section class="card" style="margin-bottom: 24px;">
+            <div class="card-header">
+                <h2 class="card-title">📋 籌碼訊號計分板</h2>
+                <span id="scoreboard-date" class="date-badge">載入中...</span>
+            </div>
+            <p class="scoreboard-intro">
+                「跟著法人買」到底有沒有用？與其憑感覺，不如記帳。
+                每個交易日收盤後，我們把<strong>外資連買</strong>與<strong>投信連買</strong>天數最長的前 10 檔記錄下來，
+                並在<strong>次一交易日收盤</strong>結算它們的實際漲跌。所有結果照實登錄，賠錢的日子也一樣留著。
+            </p>
+            <div id="scoreboard-summary" class="scoreboard-summary"></div>
+            <div id="scoreboard-caveat" class="scoreboard-caveat"></div>
+        </section>
+
+        <section class="card">
+            <div class="card-header">
+                <h2 class="card-title">🗓️ 每日訊號紀錄</h2>
+            </div>
+            <div class="table-container">
+                <table id="scoreboard-table">
+                    <thead>
+                        <tr>
+                            <th>訊號日</th>
+                            <th>訊號</th>
+                            <th class="text-right">結算日</th>
+                            <th class="text-right">平均報酬</th>
+                            <th class="text-right">上漲比例</th>
+                            <th>選出個股</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td colspan="6" class="text-center">載入中...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p id="scoreboard-note" class="brief-disclaimer"></p>
+        </section>
+    </main>
+
+    <footer class="app-footer">
+        <div class="footer-container">
+            <p>
+                <a href="/">首頁</a> ｜
+                <a href="/scoreboard.html">訊號計分板</a> ｜
+                <a href="/articles/">文章專區</a> ｜
+                <a href="/about.html">關於我</a> ｜
+                <a href="/privacy.html">隱私權政策</a> ｜
+                <a href="/disclaimer.html">免責聲明</a>
+            </p>
+            <p>© 2026 TWStockWatch. 本網站內容僅供參考，不構成任何投資建議。</p>
+        </div>
+    </footer>
+
+    <script>
+      document.getElementById('theme-toggle').addEventListener('click', function () {
+        const current = document.documentElement.getAttribute('data-theme');
+        const next = current === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem('theme', next);
+      });
+    </script>
+    <script src="scoreboard.js"></script>
+</body>
+</html>
