@@ -24,6 +24,10 @@ from build_static_data import HEADERS, check_settlement_week
 # TSM's ADR represents this many ordinary 2330 shares.
 ADR_SHARES_PER_UNIT = 5
 
+# When the TX day session starts trading (Taipei). Before this, TAIFEX cannot be
+# serving live day prices, so identical day/night rows are just the night session.
+DAY_SESSION_OPEN = datetime.time(8, 45)
+
 US_INDICES = [
     ("^DJI", "道瓊工業"),
     ("^IXIC", "那斯達克"),
@@ -131,26 +135,44 @@ def _query_tx_session(date_str, market_code):
     return None
 
 
-def fetch_night_session(date_str, prev_close, prev_close_date):
+def fetch_night_session(date_str, prev_close, prev_close_date,
+                        day_session_open=True, prev_day_row=None):
     """The overnight TX futures session that belongs to `date_str`.
 
     TAIFEX files the 15:00->05:00 session under the *following* trading day, so
     querying today returns last night's session -- the cleanest read on how the
     market wants to gap at the open.
 
-    Guard: once the day session is live, TAIFEX serves identical rows for both
-    market codes, so an intraday run would read the live day price as if it
-    were last night's close. When the two rows match we report nothing rather
-    than publish a gap signal pointing the wrong way.
+    Two ways that read can go wrong, guarded separately:
+
+    1. Once the day session is live, TAIFEX serves the running day price under
+       *both* market codes, so an intraday run would publish the current price
+       as if it were last night's close. Identical rows therefore mean pollution
+       -- but only while the day session can actually be trading.
+
+       Before the open there is no day data to serve and TAIFEX echoes the night
+       session under both codes, so identical rows there are simply the night
+       session. (A date with no session at all returns nothing under either code
+       rather than stale data, so an echo cannot be mistaken for a real session.)
+
+    2. If the night report is not published yet, a stale row could stand in for
+       it. Compared against the previous session's row to catch that.
     """
     night = _query_tx_session(date_str, "1")
     if not night:
         return None
 
-    day = _query_tx_session(date_str, "0")
-    if day and day[:8] == night[:8]:
-        print("Warning: TAIFEX day and night rows are identical (day session "
-              "already live); skipping the night-session signal.", file=sys.stderr)
+    if day_session_open:
+        day = _query_tx_session(date_str, "0")
+        if day and day[:8] == night[:8]:
+            print("Warning: day session is trading and TAIFEX returns the same row "
+                  "for both market codes; withholding the night-session signal.",
+                  file=sys.stderr)
+            return None
+
+    if prev_day_row and night[:8] == prev_day_row[:8]:
+        print("Warning: night row is identical to the previous session; treating "
+              "it as not yet published.", file=sys.stderr)
         return None
 
     try:
@@ -173,9 +195,13 @@ def fetch_night_session(date_str, prev_close, prev_close_date):
     return payload
 
 
-def load_prev_day_tx_close(date_str):
-    """Previous trading day's TX day-session close, used as the gap baseline."""
-    row = _query_tx_session(date_str, "0")
+def load_prev_day_tx_row(date_str):
+    """Previous trading day's TX day-session row: the gap baseline, and the
+    reference for spotting a night report that has not been published yet."""
+    return _query_tx_session(date_str, "0")
+
+
+def row_close(row):
     if not row:
         return None
     try:
@@ -280,8 +306,17 @@ def main():
     tw_close, chip_date = load_2330_close()
 
     chips = summarize_chips()
-    prev_close = load_prev_day_tx_close(chip_date) if chip_date else None
-    night = fetch_night_session(today_str, prev_close, chip_date)
+    prev_day_row = load_prev_day_tx_row(chip_date) if chip_date else None
+    prev_close = row_close(prev_day_row)
+
+    # The TX day session opens at 08:45 Taipei. Before then it cannot be the
+    # source of what TAIFEX returns, which is what makes the identical-rows
+    # check meaningful rather than a false alarm.
+    day_session_open = taipei_now.time() >= DAY_SESSION_OPEN
+
+    night = fetch_night_session(today_str, prev_close, chip_date,
+                                day_session_open=day_session_open,
+                                prev_day_row=prev_day_row)
     is_settlement, settlement_date = check_settlement_week(today_str)
 
     brief = {
