@@ -14,6 +14,21 @@
   },
   "FuturesHistory": [
     {
+      "Date": "20260722",
+      "Foreign_Net": 0,
+      "Trust_Net": 0,
+      "Dealer_Net": 0,
+      "Total_Net": 0,
+      "MTX_Foreign_Net": 0,
+      "MTX_Trust_Net": 0,
+      "MTX_Dealer_Net": 0,
+      "MTX_Total_Net": 0,
+      "TMF_Foreign_Net": 0,
+      "TMF_Trust_Net": 0,
+      "TMF_Dealer_Net": 0,
+      "TMF_Total_Net": 0
+    },
+    {
       "Date": "20260721",
       "Foreign_Net": -78490,
       "Trust_Net": 75570,
@@ -297,25 +312,9 @@
       "TMF_Trust_Net": 0,
       "TMF_Dealer_Net": -46697,
       "TMF_Total_Net": -47234
-    },
-    {
-      "Date": "20260623",
-      "Foreign_Net": -76502,
-      "Trust_Net": 60180,
-      "Dealer_Net": 930,
-      "Total_Net": -15392,
-      "MTX_Foreign_Net": -3553,
-      "MTX_Trust_Net": 20,
-      "MTX_Dealer_Net": -8002,
-      "MTX_Total_Net": -11535,
-      "TMF_Foreign_Net": -178,
-      "TMF_Trust_Net": 0,
-      "TMF_Dealer_Net": -29891,
-      "TMF_Total_Net": -30069
     }
   ],
   "AlignedPrices": [
-    47100.6484375,
     46043.6015625,
     46255.26171875,
     44571.76171875,
@@ -334,6 +333,7 @@
     45624.98046875,
     42671.26953125,
     42449.69921875,
-    44232.87109375
+    44232.87109375,
+    44825.78125
   ]
 }
