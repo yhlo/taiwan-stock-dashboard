@@ -1,5 +1,5 @@
 {
-  "UpdatedFor": "20260721",
+  "UpdatedFor": "20260722",
   "Note": "訊號於當日收盤後產生，報酬以次一交易日收盤價計算，未計交易成本。報酬僅涵蓋可取得歷史股價的上市個股，Scored 為實際計入檔數。",
   "Summary": {
     "ForeignBuy": {
@@ -20,6 +20,122 @@
     }
   },
   "Entries": [
+    {
+      "Signal": "TrustBuy",
+      "Label": "投信連買",
+      "SignalDate": "20260722",
+      "EvalDate": null,
+      "Stocks": [
+        {
+          "Symbol": "5483",
+          "Name": "中美晶",
+          "Streak": 10
+        },
+        {
+          "Symbol": "6187",
+          "Name": "萬潤",
+          "Streak": 9
+        },
+        {
+          "Symbol": "6683",
+          "Name": "雍智科技",
+          "Streak": 9
+        },
+        {
+          "Symbol": "5274",
+          "Name": "信驊",
+          "Streak": 6
+        },
+        {
+          "Symbol": "3264",
+          "Name": "欣銓",
+          "Streak": 5
+        },
+        {
+          "Symbol": "3374",
+          "Name": "精材",
+          "Streak": 5
+        },
+        {
+          "Symbol": "6548",
+          "Name": "長科*",
+          "Streak": 5
+        },
+        {
+          "Symbol": "8069",
+          "Name": "元太",
+          "Streak": 5
+        },
+        {
+          "Symbol": "3357",
+          "Name": "臺慶科",
+          "Streak": 4
+        },
+        {
+          "Symbol": "6223",
+          "Name": "旺矽",
+          "Streak": 4
+        }
+      ]
+    },
+    {
+      "Signal": "ForeignBuy",
+      "Label": "外資連買",
+      "SignalDate": "20260722",
+      "EvalDate": null,
+      "Stocks": [
+        {
+          "Symbol": "5324",
+          "Name": "士開",
+          "Streak": 14
+        },
+        {
+          "Symbol": "8415",
+          "Name": "大國鋼",
+          "Streak": 12
+        },
+        {
+          "Symbol": "00931B",
+          "Name": "統一美債20年",
+          "Streak": 9
+        },
+        {
+          "Symbol": "4909",
+          "Name": "新復興",
+          "Streak": 9
+        },
+        {
+          "Symbol": "5213",
+          "Name": "亞昕",
+          "Streak": 9
+        },
+        {
+          "Symbol": "8924",
+          "Name": "大田",
+          "Streak": 9
+        },
+        {
+          "Symbol": "00857B",
+          "Name": "永豐20年美公債",
+          "Streak": 8
+        },
+        {
+          "Symbol": "1788",
+          "Name": "杏昌",
+          "Streak": 8
+        },
+        {
+          "Symbol": "3163",
+          "Name": "波若威",
+          "Streak": 8
+        },
+        {
+          "Symbol": "3548",
+          "Name": "兆利",
+          "Streak": 8
+        }
+      ]
+    },
     {
       "Signal": "TrustBuy",
       "Label": "投信連買",
