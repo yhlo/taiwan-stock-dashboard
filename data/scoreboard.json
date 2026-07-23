@@ -1,5 +1,5 @@
 {
-  "UpdatedFor": "20260722",
+  "UpdatedFor": "20260723",
   "Note": "訊號於當日收盤後產生，報酬以次一交易日收盤價計算，未計交易成本。報酬僅涵蓋可取得歷史股價的上市個股，Scored 為實際計入檔數。",
   "Summary": {
     "ForeignBuy": {
@@ -20,6 +20,117 @@
     }
   },
   "Entries": [
+    {
+      "Signal": "TrustBuy",
+      "Label": "投信連買",
+      "SignalDate": "20260723",
+      "EvalDate": null,
+      "Stocks": [
+        {
+          "Symbol": "6187",
+          "Name": "萬潤",
+          "Streak": 10
+        },
+        {
+          "Symbol": "5274",
+          "Name": "信驊",
+          "Streak": 7
+        },
+        {
+          "Symbol": "3264",
+          "Name": "欣銓",
+          "Streak": 6
+        },
+        {
+          "Symbol": "6548",
+          "Name": "長科*",
+          "Streak": 6
+        },
+        {
+          "Symbol": "8069",
+          "Name": "元太",
+          "Streak": 6
+        },
+        {
+          "Symbol": "6223",
+          "Name": "旺矽",
+          "Streak": 5
+        },
+        {
+          "Symbol": "3693",
+          "Name": "營邦",
+          "Streak": 3
+        },
+        {
+          "Symbol": "6510",
+          "Name": "精測",
+          "Streak": 3
+        },
+        {
+          "Symbol": "6739",
+          "Name": "竹陞科技",
+          "Streak": 3
+        }
+      ]
+    },
+    {
+      "Signal": "ForeignBuy",
+      "Label": "外資連買",
+      "SignalDate": "20260723",
+      "EvalDate": null,
+      "Stocks": [
+        {
+          "Symbol": "5324",
+          "Name": "士開",
+          "Streak": 15
+        },
+        {
+          "Symbol": "8415",
+          "Name": "大國鋼",
+          "Streak": 13
+        },
+        {
+          "Symbol": "00931B",
+          "Name": "統一美債20年",
+          "Streak": 10
+        },
+        {
+          "Symbol": "5213",
+          "Name": "亞昕",
+          "Streak": 10
+        },
+        {
+          "Symbol": "8924",
+          "Name": "大田",
+          "Streak": 10
+        },
+        {
+          "Symbol": "00857B",
+          "Name": "永豐20年美公債",
+          "Streak": 9
+        },
+        {
+          "Symbol": "1788",
+          "Name": "杏昌",
+          "Streak": 9
+        },
+        {
+          "Symbol": "3548",
+          "Name": "兆利",
+          "Streak": 9
+        },
+        {
+          "Symbol": "5609",
+          "Name": "中菲行",
+          "Streak": 9
+        },
+        {
+          "Symbol": "6121",
+          "Name": "新普",
+          "Streak": 9
+        }
+      ]
+    },
     {
       "Signal": "TrustBuy",
       "Label": "投信連買",
