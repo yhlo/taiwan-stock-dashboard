@@ -2064,6 +2064,22 @@ section.card {
     line-height: 1.6;
 }
 
+.brief-focus-link {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin: 4px 0 0;
+}
+
+.brief-focus-link a {
+    color: var(--accent-blue);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.brief-focus-link a:hover {
+    text-decoration: underline;
+}
+
 /* ---------- Streak reference price ---------- */
 
 .avg-price-cell {

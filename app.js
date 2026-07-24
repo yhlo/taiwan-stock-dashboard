@@ -1134,7 +1134,13 @@ async function renderMorningBrief(dataVersion) {
 
     const dateLabel = `${brief.Date.slice(0, 4)}/${brief.Date.slice(4, 6)}/${brief.Date.slice(6)}`;
     const badge = document.getElementById('morning-brief-date');
-    if (badge) badge.textContent = `${dateLabel} 盤前`;
+    if (badge) {
+        // GeneratedAt carries its own +08:00 offset; slicing the wall-clock
+        // portion avoids a redundant timezone conversion (and possible
+        // off-by-one if the viewer's browser isn't in Taipei).
+        const genTime = (brief.GeneratedAt || '').match(/T(\d{2}:\d{2})/);
+        badge.textContent = genTime ? `${dateLabel} 盤前 · ${genTime[1]} 產出` : `${dateLabel} 盤前`;
+    }
 
     const groups = [];
 
@@ -1216,6 +1222,12 @@ async function renderMorningBrief(dataVersion) {
                      </div>`);
     }
 
+    // Connect-buy streak Top 5/10 is deliberately NOT repeated here -- it's the
+    // same latest-session snapshot as the "今日焦點" section below (that one
+    // just shows more rows), so duplicating it would only cost a stale read if
+    // a reader skims the brief and skips the fuller table. Only "投信昨日新進場"
+    // is shown here because it surfaces day-1 entries that haven't built a
+    // streak yet, which the streak-length ranking can't surface at all.
     const listGroups = [];
     const mkList = (title, arr, fmt) => {
         if (!arr || !arr.length) return '';
@@ -1224,15 +1236,17 @@ async function renderMorningBrief(dataVersion) {
                     <ol>${arr.map(fmt).join('')}</ol>
                 </div>`;
     };
-    listGroups.push(mkList('外資連買天數 Top 5', c.ForeignBuyStreak,
-        s => `<li><span class="brief-li-name" onclick="searchStockDirectly('${s.Symbol}')">${s.Symbol} ${s.Name}</span><span class="text-up">${s.Streak} 天</span></li>`));
-    listGroups.push(mkList('投信連買天數 Top 5', c.TrustBuyStreak,
-        s => `<li><span class="brief-li-name" onclick="searchStockDirectly('${s.Symbol}')">${s.Symbol} ${s.Name}</span><span class="text-up">${s.Streak} 天</span></li>`));
     listGroups.push(mkList('投信昨日新進場', c.TrustFreshBuys,
         s => `<li><span class="brief-li-name" onclick="searchStockDirectly('${s.Symbol}')">${s.Symbol} ${s.Name}</span><span class="text-secondary">${Math.round((s.Shares || 0) / 1000).toLocaleString()} 張</span></li>`));
     const listsHtml = listGroups.filter(Boolean).join('');
     if (listsHtml) {
         groups.push(`<div class="brief-group"><div class="brief-lists">${listsHtml}</div></div>`);
+    }
+    if (c.ForeignBuyStreak?.length || c.TrustBuyStreak?.length) {
+        groups.push(`<p class="brief-focus-link">
+                        📋 完整連買天數排行請見下方
+                        <a href="#today-focus-section">🔥 今日焦點・法人連買 Top 10</a>
+                     </p>`);
     }
 
     // Settlement notice only when it is actually relevant
