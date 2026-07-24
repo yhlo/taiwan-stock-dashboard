@@ -218,6 +218,11 @@ body {
     display: flex;
     flex-direction: column;
     gap: 24px;
+    /* Grid items default to min-width: auto (their content's min-content
+       size), so without this a wide descendant (e.g. the futures type tabs)
+       can force this column past its 1fr track and blow out the whole page's
+       width on narrow screens, instead of wrapping/scrolling locally. */
+    min-width: 0;
 }
 
 @media (min-width: 1024px) {
