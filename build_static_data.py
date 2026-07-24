@@ -342,19 +342,18 @@ def collect_t86_history(latest_date_str, cache_dir, n=20, today_str=None,
 
 
 def load_daily_quotes(date_str, cache_dir):
-    """Listed-market OHLC for one past date, cached by date.
+    """Listed + OTC OHLC for one past date, cached by date.
 
-    Listed only, on purpose. TPEx's quote endpoint takes no date parameter and
-    always answers with the most recent session, so asking it for an older date
-    returns today's prices wearing that date's label -- which would quietly
-    corrupt every average and return built on top of it. OTC prices are
-    therefore left out of historical loads: callers see a missing symbol, which
-    they already handle, instead of a plausible wrong number.
+    TPEx's live quote endpoint (used for "today") takes no date parameter and
+    always answers with the most recent session, so it cannot serve history.
+    `otc_quotes_no1430` is the dated report instead: it honours `d=` the same
+    way TWSE's MI_INDEX does, so OTC history is fetched from there rather than
+    left out.
 
     Historical days never change, so caching keeps a 20-day walk to one live
     fetch per run instead of twenty.
     """
-    cache_path = os.path.join(cache_dir, f"quotes_twse_{date_str}.json")
+    cache_path = os.path.join(cache_dir, f"quotes_{date_str}.json")
     if os.path.exists(cache_path):
         try:
             with open(cache_path, "r", encoding="utf-8") as f:
@@ -368,7 +367,19 @@ def load_daily_quotes(date_str, cache_dir):
         print(f"Warning: TWSE quotes unavailable for {date_str}: {e}", file=sys.stderr)
         return {}
 
-    if quotes:
+    # If OTC fails, still return what TWSE gave so callers can score the
+    # listed subset -- but don't cache it, or a transient OTC failure would
+    # freeze that day at "listed-only" forever, silently repeating the exact
+    # bug this function was written to fix.
+    try:
+        quotes.update(scrape_tpex_quotes_historical(date_str) or {})
+        otc_ok = True
+    except Exception as e:
+        print(f"Warning: TPEx historical quotes unavailable for {date_str}: {e}",
+              file=sys.stderr)
+        otc_ok = False
+
+    if quotes and otc_ok:
         os.makedirs(cache_dir, exist_ok=True)
         with open(cache_path, "w", encoding="utf-8") as f:
             json.dump(quotes, f, ensure_ascii=False)
@@ -1318,6 +1329,56 @@ def scrape_twse_quotes(date_str):
         raise RuntimeError("Failed to fetch TWSE daily quotes after 3 attempts.")
 
     return quotes_map
+
+
+def scrape_tpex_quotes_historical(date_str):
+    """OTC OHLC for `date_str` from TPEx's dated closing-quote report.
+
+    Unlike the live `tpex_mainboard_daily_close_quotes` endpoint used for
+    "today", this one takes an ROC date and actually honours it, so it is safe
+    to use for history.
+    """
+    quotes_map = {}
+    roc_date = western_to_roc_date(date_str)
+    url = ("https://www.tpex.org.tw/web/stock/aftertrading/otc_quotes_no1430/"
+           f"stk_wn1430_result.php?l=zh-tw&d={roc_date}&se=EW&o=json")
+
+    tpex_success = False
+    for attempt in range(3):
+        try:
+            print(f"Fetching TPEx historical quotes for {date_str} (Attempt {attempt+1})...")
+            res = requests.get(url, headers=HEADERS, timeout=20)
+            if res.status_code == 200:
+                data = res.json()
+                rows = (data.get("tables") or [{}])[0].get("data", [])
+                print(f"Parsing TPEx historical quotes ({len(rows)} stocks)...")
+                for r in rows:
+                    if len(r) >= 7:
+                        sym = str(r[0]).strip()
+                        quotes_map[sym] = {
+                            "Open": _clean_float(r[4]),
+                            "High": _clean_float(r[5]),
+                            "Low": _clean_float(r[6]),
+                            "Close": _clean_float(r[2]),
+                            "Change": _clean_float(r[3]),
+                            "Volume": int(_clean_float(r[7]) // 1000) if len(r) > 7 else 0,
+                        }
+                tpex_success = True
+                break
+            else:
+                print(f"TPEx historical quotes returned status code {res.status_code} "
+                      f"on attempt {attempt+1}")
+        except Exception as e:
+            print(f"Error fetching TPEx historical quotes on attempt {attempt+1}: {e}",
+                  file=sys.stderr)
+        if not tpex_success and attempt < 2:
+            time.sleep(2)
+
+    if not tpex_success:
+        raise RuntimeError(f"Failed to fetch TPEx historical quotes for {date_str}.")
+
+    return quotes_map
+
 
 def load_market_summary(date_str, cache_dir, is_today=False):
     twse_url = f"https://www.twse.com.tw/rwd/zh/fund/BFI82U?response=json&dayDate={date_str}&type=day"
