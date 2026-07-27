@@ -1,41 +1,41 @@
 {
   "Date": "20260728",
-  "GeneratedAt": "2026-07-28T06:14:22+08:00",
+  "GeneratedAt": "2026-07-28T06:37:28+08:00",
   "UsMarkets": [
     {
       "Name": "道瓊工業",
       "Close": 52210.08,
-      "ChangePct": 0.96,
+      "ChangePct": 0.51,
       "Date": "20260727"
     },
     {
       "Name": "那斯達克",
       "Close": 24932.08,
-      "ChangePct": -0.82,
+      "ChangePct": -0.18,
       "Date": "20260727"
     },
     {
       "Name": "標普500",
       "Close": 7413.18,
-      "ChangePct": 0.07,
+      "ChangePct": 0.02,
       "Date": "20260727"
     },
     {
       "Name": "費城半導體",
       "Close": 11554.88,
-      "ChangePct": -6.39,
+      "ChangePct": -2.23,
       "Date": "20260727"
     }
   ],
   "Adr": {
     "Close": 399.09,
-    "ChangePct": -3.97,
+    "ChangePct": -1.07,
     "Date": "20260727",
-    "FxRate": 32.289,
-    "ImpliedTwd": 2577.2,
+    "FxRate": 32.295,
+    "ImpliedTwd": 2577.7,
     "TwClose": 2350.0,
     "TwCloseDate": "20260727",
-    "PremiumPct": 9.67
+    "PremiumPct": 9.69
   },
   "NightSession": {
     "Contract": "202608",
