@@ -14,6 +14,7 @@ out of the payload rather than reported with a wrong or stale number.
 
 import datetime
 import json
+import math
 import os
 import sys
 
@@ -42,7 +43,12 @@ def _pct_change(hist):
         return None
     last = float(hist["Close"].iloc[-1])
     prev = float(hist["Close"].iloc[-2])
-    if prev == 0:
+    # yfinance sometimes returns a trailing row for a session that hasn't
+    # settled yet (e.g. queried right around market open/close), with Close
+    # as NaN rather than missing. json.dump would happily emit that as the
+    # bare token `NaN`, which is not valid JSON and breaks JSON.parse in
+    # every browser -- so it has to be caught here, not downstream.
+    if prev == 0 or math.isnan(last) or math.isnan(prev):
         return None
     return {
         "Close": round(last, 2),
@@ -91,6 +97,8 @@ def fetch_adr_premium(tw_close, tw_close_date):
         return None
 
     fx_rate = float(fx_hist["Close"].iloc[-1])
+    if math.isnan(fx_rate):
+        return None
     implied_twd = adr["Close"] * fx_rate / ADR_SHARES_PER_UNIT
     return {
         "Close": adr["Close"],
@@ -337,7 +345,9 @@ def main():
 
     os.makedirs("data", exist_ok=True)
     with open("data/morning_brief.json", "w", encoding="utf-8") as f:
-        json.dump(brief, f, ensure_ascii=False, indent=2)
+        # allow_nan=False: fail the build here, loudly, rather than publish a
+        # `NaN` token that silently breaks JSON.parse for every site visitor.
+        json.dump(brief, f, ensure_ascii=False, indent=2, allow_nan=False)
     print("Saved data/morning_brief.json")
 
 
