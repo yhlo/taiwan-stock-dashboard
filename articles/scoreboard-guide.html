@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-TW" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BRC4C5P0KX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-BRC4C5P0KX');
+    </script>
+
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16x16.png">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/styles.css">
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1343288422175015" crossorigin="anonymous"></script>
+
+    <title>訊號計分板怎麼看？外資投信連買訊號的勝率該怎麼解讀 | TWStockWatch</title>
+    <meta name="description" content="TWStockWatch 訊號計分板記錄外資、投信連買 Top 10 訊號隔日的實際報酬。本文說明計分規則、為什麼用次一交易日收盤結算、以及樣本數還小的時候該怎麼看勝率數字，避免被短期結果誤導。">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://www.twstockwatch.com/articles/scoreboard-guide.html">
+    <script>
+      (function () {
+        const savedTheme = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+          document.documentElement.setAttribute('data-theme', 'dark');
+        }
+      })();
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": "訊號計分板怎麼看？外資投信連買訊號的勝率該怎麼解讀",
+      "description": "TWStockWatch 訊號計分板記錄外資、投信連買 Top 10 訊號隔日的實際報酬。本文說明計分規則、為什麼用次一交易日收盤結算、以及樣本數還小的時候該怎麼看勝率數字，避免被短期結果誤導。",
+      "author": { "@type": "Person", "name": "股市神偷" },
+      "publisher": { "@type": "Organization", "name": "TWStockWatch", "url": "https://www.twstockwatch.com" },
+      "datePublished": "2026-07-27",
+      "dateModified": "2026-07-27",
+      "mainEntityOfPage": "https://www.twstockwatch.com/articles/scoreboard-guide.html",
+      "inLanguage": "zh-TW"
+    }
+    </script>
+</head>
+<body>
+    <header class="main-header">
+        <div class="header-container">
+            <h1 class="app-title">
+                <a href="/"><span aria-hidden="true">📈</span>台灣股市法人籌碼與連買連賣看板</a>
+            </h1>
+            <nav class="main-nav">
+                <a href="/articles/">📚 文章專區</a>
+                <a href="/about.html">關於我</a>
+            </nav>
+            <div class="header-controls">
+                <button id="theme-toggle" class="theme-btn" aria-label="切換深淺模式">🌓</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <article class="instruction-section">
+                <p style="margin-bottom: 12px;"><a href="/articles/">← 回文章專區</a></p>
+                <h2 class="instruction-title">📋 訊號計分板怎麼看？外資投信連買訊號的勝率該怎麼解讀</h2>
+                <div class="instruction-body">
+                    <p><em>作者：股市神偷 ｜ 發佈日期：2026-07-27 ｜ 分類：工具與功能教學</em></p>
+
+                    <p>「外資連買 20 天」聽起來像是很強的訊號，但連買 20 天之後買進，隔天股價到底是漲是跌？這件事很少有人真的記錄下來驗證。<a href="/scoreboard.html">TWStockWatch 訊號計分板</a>就是做這件事的地方：把「外資連買 Top 10」「投信連買 Top 10」這兩個訊號每天實際選出的股票記下來，隔一個交易日回頭結算報酬，誠實地把結果攤開來看，不管是賺是賠都留著。這篇說明計分規則怎麼運作，以及現在的數字該怎麼解讀。</p>
+
+                    <div class="instruction-subtitle">📐 計分規則：訊號怎麼選、怎麼結算</div>
+                    <p>每個交易日收盤後，計分板會做兩件事：</p>
+                    <ul class="instruction-list">
+                        <li><strong>開新的一筆紀錄：</strong>從當天連買天數 <strong>達 3 天以上</strong>的個股裡，各挑出外資、投信連買天數最長的前 10 檔，記下訊號成立當天的收盤價。</li>
+                        <li><strong>結算前一筆還沒結算的紀錄：</strong>用「下一個」有交易資料的交易日收盤價，跟訊號當天的收盤價比較，算出這 10 檔的平均報酬與正報酬比例。</li>
+                    </ul>
+                    <p>結算永遠只看<strong>次一交易日</strong>的收盤，不會用訊號當天自己的收盤價回頭算報酬——這是為了避免「事後諸葛」：如果訊號當天股價已經漲停鎖死才選進來，用當天收盤算報酬毫無意義，實際能做的頂多是隔天才進場。想更完整了解連買天數本身怎麼判讀，可以先看<a href="/articles/dual-buy-dual-sell.html">雙買雙賣是什麼？</a>與<a href="/articles/beginner-guide.html">新手導讀</a>這兩篇。</p>
+
+                    <div class="instruction-subtitle">📊 現在的數字：14 個交易日的紀錄</div>
+                    <p>寫這篇的時候，計分板已經累積了 14 個交易日的結算紀錄：</p>
+                    <ul class="instruction-list">
+                        <li><strong>外資連買 Top 10：</strong>平均報酬 <span class="text-up">+0.49%</span>，71.4% 場次為正，最佳單場 +2.88%，最差單場 -1.48%。</li>
+                        <li><strong>投信連買 Top 10：</strong>平均報酬 <span class="text-down">-1.06%</span>，僅 14.3% 場次為正，最佳單場 +4.11%，最差單場 -5.11%。</li>
+                    </ul>
+                    <p>這兩組數字目前落差不小，但先別急著下「外資訊號比較準」的結論——這正是下一段要講的重點。</p>
+
+                    <div class="instruction-subtitle">⚠️ 樣本數只有 14 天，還不能拿來當勝率保證</div>
+                    <p>計分板頁面本身在樣本不足 20 個交易日時，會主動跳出提醒，這不是隨便設的門檻。14 個交易日代表的可能只是「這段時間剛好投信重壓的股票遇到修正」，換一段行情，數字可能完全不一樣：</p>
+                    <ul class="instruction-list">
+                        <li><strong>單一事件可能同時拖累所有訊號：</strong>如果這 14 天裡有一兩天大盤重挫，外資、投信選出的股票通常會一起被拖累，不代表訊號本身失效。</li>
+                        <li><strong>連買天數門檻本身有取捨：</strong>只挑連買 3 天以上、且排名前 10 的股票，代表選到的常常是已經被買了一段時間、漲勢可能已經有一段的股票，某種程度上比較容易選到「追高」的位置，這也是投信訊號目前表現偏弱值得留意的角度之一，而不只是投信「選股比較差」。</li>
+                        <li><strong>沒有計入交易成本：</strong>手續費、證交稅、滑價都沒算進去，實際報酬會比計分板數字再低一些。</li>
+                    </ul>
+                    <p>樣本數會隨著網站每天自動計分持續累積，正是為了讓這件事有機會被時間驗證，而不是靠單一時間點的印象下結論。</p>
+
+                    <div class="instruction-subtitle">📌 「PositiveSessionRate」跟「WinRate」不是同一件事</div>
+                    <p>計分板上有兩種百分比，容易搞混：</p>
+                    <ul class="instruction-list">
+                        <li><strong>整體卡片上的百分比（正場次比例）：</strong>分母是「交易日」——14 個交易日裡，有幾天的平均報酬是正的。</li>
+                        <li><strong>每一筆紀錄旁的百分比（上漲比例）：</strong>分母是「那天選出的 10 檔股票」——那 10 檔裡有幾檔上漲。</li>
+                    </ul>
+                    <p>兩者分母不同，不能互相替代著看，這也是計分板程式碼裡刻意把兩個欄位取不同名字的原因，避免混用誤讀。</p>
+
+                    <div class="instruction-subtitle">💬 我的實戰做法：計分板是檢查表，不是選股名單</div>
+                    <p>我自己不會直接把計分板 Top 10 當成「照抄買進」的名單。連買天數排名前面的股票，很多時候已經是市場上關注度很高、漲了一段的標的，直接進場的風險跟報酬都不是均勻分布的。我看計分板比較像是<strong>拿來檢驗自己的判斷</strong>：如果我原本就在關注某檔股票的外資買超，計分板可以讓我知道「這類訊號歷史上隔天平均會怎麼走」，而不是憑印象覺得「外資買一定漲」。數字攤在陽光下，賺賠都留著，這比只記得住自己猜對的那幾次可靠多了。</p>
+
+                    <div class="instruction-summary-box">
+                        📌 <strong>總結：</strong>訊號計分板用次一交易日收盤誠實結算外資、投信連買 Top 10 的表現，目前只累積 14 個交易日，數字會隨時間持續更新，現階段請當作觀察紀錄而非勝率保證。想看最新結算結果，隨時可以到<a href="/scoreboard.html">訊號計分板</a>查看，也歡迎搭配<a href="/">首頁看板</a>的每日籌碼數據一起對照。
+                    </div>
+
+                    <p><em>本文僅供教學參考，不構成任何投資建議，歷史績效不代表未來表現，請自行評估風險，詳見<a href="/disclaimer.html">免責聲明</a>。</em></p>
+                </div>
+            </article>
+        </div>
+    </main>
+
+    <footer class="app-footer">
+        <div class="footer-container">
+            <p>
+                <a href="/">首頁</a> ｜
+                <a href="/articles/">文章專區</a> ｜
+                <a href="/about.html">關於我</a> ｜
+                <a href="/privacy.html">隱私權政策</a> ｜
+                <a href="/disclaimer.html">免責聲明</a>
+            </p>
+            <p>© 2026 TWStockWatch. 本網站內容僅供參考，不構成任何投資建議。</p>
+        </div>
+    </footer>
+
+    <script>
+      document.getElementById('theme-toggle').addEventListener('click', function () {
+        const current = document.documentElement.getAttribute('data-theme');
+        const next = current === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem('theme', next);
+      });
+    </script>
+</body>
+</html>
