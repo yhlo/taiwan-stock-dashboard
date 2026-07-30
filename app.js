@@ -140,7 +140,8 @@ async function initApp() {
 
 function displayLastUpdated(lastUpdateInfo) {
     const el = document.getElementById('last-updated');
-    if (el && lastUpdateInfo && lastUpdateInfo.last_updated) {
+    const chartBadge = document.getElementById('trend-chart-updated');
+    if ((el || chartBadge) && lastUpdateInfo && lastUpdateInfo.last_updated) {
         // Parse ISO string and format as "YYYY-MM-DD HH:MM:SS (UTC+8)"
         const d = new Date(lastUpdateInfo.last_updated);
 
@@ -160,8 +161,12 @@ function displayLastUpdated(lastUpdateInfo) {
         const partObj = {};
         parts.forEach(p => partObj[p.type] = p.value);
 
-        const formatted = `${partObj.year}-${partObj.month}-${partObj.day} ${partObj.hour}:${partObj.minute}:${partObj.second} (UTC+8)`;
-        el.textContent = formatted;
+        if (el) {
+            el.textContent = `${partObj.year}-${partObj.month}-${partObj.day} ${partObj.hour}:${partObj.minute}:${partObj.second} (UTC+8)`;
+        }
+        if (chartBadge) {
+            chartBadge.textContent = `更新於 ${partObj.month}/${partObj.day} ${partObj.hour}:${partObj.minute}`;
+        }
     }
 }
 
@@ -714,26 +719,224 @@ function renderFuturesHistoryTable() {
     tableBody.innerHTML = html || '<tr><td colspan="5" class="text-center">無期貨歷史資料</td></tr>';
 }
 
+// Draws the index/foreign-OI/volume overlay chart as an animated, hoverable
+// SVG (replaces the old server-rendered PNG so it can react to theme changes
+// and device width instead of shipping one fixed-size static image). All
+// three metrics share one panel: volume is a faint floor layer anchored to
+// the bottom (capped at ~40% of the panel height so it reads as texture,
+// not a fourth axis), the OI bars paint on top of it, and the price line on
+// top of everything -- avoids a whole separate panel just for volume.
+function renderFuturesTrendChart() {
+    const svg = document.getElementById('futures-trend-svg');
+    const fallback = document.getElementById('chart-fallback');
+    if (!svg) return;
+
+    const histOldestFirst = (futuresOptions && futuresOptions.FuturesHistory)
+        ? [...futuresOptions.FuturesHistory].reverse() : [];
+    const prices = (futuresOptions && futuresOptions.AlignedPrices) || [];
+    const volumesRaw = (futuresOptions && futuresOptions.AlignedVolumes) || [];
+
+    // AlignedPrices/AlignedVolumes are bare number arrays with no dates of
+    // their own -- only safe to zip against FuturesHistory positionally when
+    // they came out the same length. A mismatch means the backend silently
+    // dropped a day while aligning to Yahoo's trading calendar, and there's
+    // no way to tell which one from here, so refuse to guess at the price
+    // line. Volume is treated as independently optional: an older cached
+    // file without AlignedVolumes yet should still show price + OI.
+    if (!histOldestFirst.length || prices.length !== histOldestFirst.length) {
+        svg.classList.add('hidden');
+        if (fallback) fallback.classList.remove('hidden');
+        return;
+    }
+    svg.classList.remove('hidden');
+    if (fallback) fallback.classList.add('hidden');
+
+    const hasVolume = volumesRaw.length === histOldestFirst.length;
+    const volumes = hasVolume ? volumesRaw : [];
+
+    const dates = histOldestFirst.map(h => h.Date);
+    const nets = histOldestFirst.map(h => h.Foreign_Net || 0);
+    const n = dates.length;
+
+    const W = 700, H = 320;
+    const padL = 50, padR = 50, padT = 16, padB = 30;
+    const plotW = W - padL - padR;
+    const mainH = H - padT - padB;
+    const mainTop = padT;
+    const panelBottom = mainTop + mainH;
+
+    const priceMin = Math.min(...prices);
+    const priceMax = Math.max(...prices);
+    const pricePad = (priceMax - priceMin) * 0.12 || 1;
+    const pMin = priceMin - pricePad, pMax = priceMax + pricePad;
+
+    const netAbsMax = Math.max(1, ...nets.map(v => Math.abs(v)));
+    const nMax = netAbsMax * 1.2;
+    const volMax = hasVolume ? Math.max(1, ...volumes) * 1.1 : 1;
+    // Volume bars only ever reach 40% up the panel so they stay a background
+    // texture behind the OI bars and price line rather than competing scale.
+    const volMaxBarH = mainH * 0.4;
+
+    const xFor = i => n === 1 ? padL + plotW / 2 : padL + (plotW * i) / (n - 1);
+    const yForPrice = v => mainTop + mainH * (1 - (v - pMin) / (pMax - pMin));
+    const yZero = mainTop + mainH / 2;
+    const yForNet = v => yZero - (mainH / 2) * (v / nMax);
+    // Anchored above the zero line, growing upward -- foreign OI has been
+    // consistently negative lately, so that half of the panel is otherwise
+    // empty. If OI turns positive on a given day, its bar simply paints over
+    // the (faint, background) volume bar for that one day.
+    const yForVol = v => yZero - (v / volMax) * volMaxBarH;
+    const barW = Math.max(4, Math.min(18, (plotW / n) * 0.55));
+    const volBarW = Math.max(6, (plotW / n) * 0.82);
+    const fmtDateLabel = d => `${d.slice(4, 6)}/${d.slice(6)}`;
+
+    // Horizontal reference lines across the price range, with a price label.
+    const GRID_LINES = 4;
+    let gridSvg = '';
+    for (let g = 0; g <= GRID_LINES; g++) {
+        const y = mainTop + (mainH * g) / GRID_LINES;
+        const priceAtY = pMax - ((pMax - pMin) * g) / GRID_LINES;
+        gridSvg += `<line class="trend-grid-line" x1="${padL}" y1="${y.toFixed(1)}" x2="${W - padR}" y2="${y.toFixed(1)}"></line>`;
+        gridSvg += `<text class="trend-axis-label" x="${(padL - 8).toFixed(1)}" y="${(y + 3).toFixed(1)}" text-anchor="end">${Math.round(priceAtY).toLocaleString()}</text>`;
+    }
+
+    // Thin out date labels on longer ranges so they don't overlap.
+    const labelStep = n <= 10 ? 1 : Math.ceil(n / 8);
+    const dateLabelY = panelBottom + 16;
+    let dateLabelsSvg = '';
+    dates.forEach((d, i) => {
+        if (i % labelStep !== 0 && i !== n - 1) return;
+        dateLabelsSvg += `<text class="trend-axis-label" x="${xFor(i).toFixed(1)}" y="${dateLabelY.toFixed(1)}" text-anchor="middle">${fmtDateLabel(d)}</text>`;
+    });
+
+    // Bars start flat; the real height is set one frame later so the CSS
+    // transition on y/height actually has something to animate from,
+    // instead of jumping straight to its final state.
+    let barsSvg = '';
+    nets.forEach((v, i) => {
+        const x = (xFor(i) - barW / 2).toFixed(1);
+        const cls = v >= 0 ? 'trend-bar-up' : 'trend-bar-down';
+        barsSvg += `<rect class="trend-bar ${cls}" data-i="${i}" x="${x}" y="${yZero.toFixed(1)}" width="${barW.toFixed(1)}" height="0"></rect>`;
+    });
+
+    let volBarsSvg = '';
+    if (hasVolume) {
+        volumes.forEach((v, i) => {
+            const x = (xFor(i) - volBarW / 2).toFixed(1);
+            volBarsSvg += `<rect class="trend-vol-bar" data-i="${i}" x="${x}" y="${yZero.toFixed(1)}" width="${volBarW.toFixed(1)}" height="0"></rect>`;
+        });
+    }
+
+    // pathLength="1" normalizes the dash animation to the point count
+    // instead of the polyline's actual on-screen length in pixels.
+    const linePoints = prices.map((p, i) => `${xFor(i).toFixed(1)},${yForPrice(p).toFixed(1)}`).join(' ');
+    const lineSvg = `<polyline class="trend-line" points="${linePoints}" pathLength="1"></polyline>`;
+
+    let dotsSvg = '';
+    prices.forEach((p, i) => {
+        const cx = xFor(i).toFixed(1);
+        const cy = yForPrice(p).toFixed(1);
+        // Hit target first so the CSS sibling selector (:hover + dot) can
+        // grow the visible dot that follows it.
+        dotsSvg += `<circle class="trend-hit" data-i="${i}" cx="${cx}" cy="${cy}" r="14"></circle>`;
+        dotsSvg += `<circle class="trend-dot" data-i="${i}" cx="${cx}" cy="${cy}" r="3"></circle>`;
+    });
+
+    const zeroLineSvg = `<line class="trend-zero-line" x1="${padL}" y1="${yZero.toFixed(1)}" x2="${W - padR}" y2="${yZero.toFixed(1)}"></line>`;
+
+    // Paint order matters here: volume bars first so they sit behind the OI
+    // bars and price line, which paint over them.
+    svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+    svg.innerHTML = `
+        <g class="trend-grid">${gridSvg}</g>
+        <g class="trend-dates">${dateLabelsSvg}</g>
+        <g class="trend-vol-bars">${volBarsSvg}</g>
+        ${zeroLineSvg}
+        <g class="trend-bars">${barsSvg}</g>
+        ${lineSvg}
+        <g class="trend-dots">${dotsSvg}</g>
+    `;
+
+    // Entrance animation: bars grow from their baseline with a slight
+    // stagger, the price line draws itself left to right, dots fade in
+    // after. A short timeout (rather than requestAnimationFrame) so the
+    // browser paints the "flat" starting state before the transition
+    // target changes -- rAF can be starved indefinitely in a backgrounded
+    // or non-composited tab, a timeout still fires.
+    setTimeout(() => {
+        svg.querySelectorAll('.trend-bar').forEach((rect, i) => {
+            const v = nets[i];
+            const yVal = yForNet(v);
+            const y = Math.min(yZero, yVal);
+            const h = Math.abs(yVal - yZero);
+            rect.style.transitionDelay = `${i * 15}ms`;
+            rect.setAttribute('y', y.toFixed(1));
+            rect.setAttribute('height', h.toFixed(1));
+        });
+        svg.querySelectorAll('.trend-vol-bar').forEach((rect, i) => {
+            const yVal = yForVol(volumes[i] || 0);
+            const h = yZero - yVal;
+            rect.style.transitionDelay = `${i * 15}ms`;
+            rect.setAttribute('y', yVal.toFixed(1));
+            rect.setAttribute('height', Math.max(0, h).toFixed(1));
+        });
+        const line = svg.querySelector('.trend-line');
+        if (line) line.classList.add('trend-line-in');
+        svg.querySelectorAll('.trend-dot').forEach((dot, i) => {
+            dot.style.transitionDelay = `${300 + i * 20}ms`;
+            dot.classList.add('trend-dot-in');
+        });
+    }, 30);
+
+    // Tooltip: hover/tap targets are wider invisible circles so thin data
+    // points on a 20-day chart are still easy to land on.
+    const container = svg.closest('.trend-chart-container');
+    const tooltip = document.getElementById('trend-chart-tooltip');
+    const showTooltip = (i, clientX, clientY) => {
+        if (!tooltip || !container) return;
+        const rect = container.getBoundingClientRect();
+        const net = nets[i];
+        const netCls = net >= 0 ? 'text-up' : 'text-down';
+        const volRow = hasVolume
+            ? `<div class="trend-tip-row"><span>成交量</span><strong>${Math.round(volumes[i] / 1000).toLocaleString()} 張</strong></div>`
+            : '';
+        tooltip.innerHTML = `
+            <div class="trend-tip-date">${dates[i].slice(0, 4)}/${fmtDateLabel(dates[i])}</div>
+            <div class="trend-tip-row"><span>大盤指數</span><strong>${Math.round(prices[i]).toLocaleString()}</strong></div>
+            <div class="trend-tip-row"><span>外資淨OI</span><strong class="${netCls}">${net.toLocaleString()} 口</strong></div>
+            ${volRow}
+        `;
+        tooltip.classList.remove('hidden');
+        let left = clientX - rect.left + 14;
+        const top = clientY - rect.top - 10;
+        if (left + 150 > rect.width) left = clientX - rect.left - 164;
+        tooltip.style.left = `${Math.max(0, left)}px`;
+        tooltip.style.top = `${Math.max(0, top)}px`;
+    };
+    const hideTooltip = () => tooltip && tooltip.classList.add('hidden');
+
+    svg.querySelectorAll('.trend-hit').forEach(hit => {
+        const i = parseInt(hit.getAttribute('data-i'), 10);
+        hit.addEventListener('mouseenter', e => showTooltip(i, e.clientX, e.clientY));
+        hit.addEventListener('mousemove', e => showTooltip(i, e.clientX, e.clientY));
+        hit.addEventListener('mouseleave', hideTooltip);
+        hit.addEventListener('touchstart', e => {
+            const t = e.touches[0];
+            showTooltip(i, t.clientX, t.clientY);
+        }, { passive: true });
+    });
+}
+
 // Render Futures & Options
 function renderFuturesOptions(dataVersion) {
-    const chartImg = document.getElementById('futures-trend-chart');
-    const fallbackTxt = document.getElementById('chart-fallback');
-    
     if (!futuresOptions) {
         const tableBody = document.querySelector('#futures-oi-table tbody');
         if (tableBody) tableBody.innerHTML = '<tr><td colspan="5" class="text-center">查無期貨未平倉資料</td></tr>';
         return;
     }
-    
-    // Set Chart Image src, versioned by the data build timestamp so it's
-    // cached across repeat visits on the same day instead of re-downloaded
-    // on every page load.
-    chartImg.src = `./data/futures_trend.png${dataVersion || ''}`;
-    chartImg.onerror = () => {
-        chartImg.classList.add('hidden');
-        fallbackTxt.classList.remove('hidden');
-    };
-    
+
+    renderFuturesTrendChart();
+
     // Render Futures History table
     renderFuturesHistoryTable();
     

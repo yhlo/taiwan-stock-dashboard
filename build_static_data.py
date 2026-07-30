@@ -1019,35 +1019,39 @@ def generate_trend_chart(futures_history, cache_dir):
     foreign_nets = [item["Foreign_Net"] for item in futures_history]
     
     if not dates:
-        return None, []
-        
+        return None, [], []
+
     start_date_str = f"{dates[0][:4]}-{dates[0][4:6]}-{dates[0][6:]}"
     end_date = datetime.datetime.strptime(dates[-1], "%Y%m%d") + datetime.timedelta(days=2)
     end_date_str = end_date.strftime("%Y-%m-%d")
-    
+
     try:
         print("Downloading Index prices from Yahoo Finance...")
         ticker = yf.Ticker("^TWII")
         hist = ticker.history(start=start_date_str, end=end_date_str)
         if hist.empty:
             print("Failed to download index quotes.", file=sys.stderr)
-            return None, []
+            return None, [], []
             
         hist.index = hist.index.strftime("%Y%m%d")
         
         aligned_dates = []
         aligned_prices = []
         aligned_nets = []
-        
+        aligned_volumes = []
+
         for d, net in zip(dates, foreign_nets):
             if d in hist.index:
                 aligned_dates.append(f"{d[4:6]}/{d[6:]}")
                 aligned_prices.append(hist.loc[d]["Close"])
                 aligned_nets.append(net)
-                
+                # Same row as Close, so it can't drift out of alignment with
+                # aligned_prices the way a separately-fetched series could.
+                aligned_volumes.append(int(hist.loc[d]["Volume"]))
+
         if not aligned_dates:
             print("Failed to align dates.", file=sys.stderr)
-            return None, []
+            return None, [], []
             
         fig, ax1 = plt.subplots(figsize=(10, 5))
         
@@ -1082,10 +1086,10 @@ def generate_trend_chart(futures_history, cache_dir):
         plt.savefig(output_path, dpi=300)
         plt.close()
         print(f"Chart generated and saved to: {output_path}")
-        return output_path, aligned_prices
+        return output_path, aligned_prices, aligned_volumes
     except Exception as e:
         print(f"Error generating chart: {e}", file=sys.stderr)
-    return None, []
+    return None, [], []
 
 def scrape_daily_sbl_data(date_str, cache_dir):
     sbl_map = {}
@@ -1697,12 +1701,14 @@ def main():
         load_published_futures_history(), fresh_entries, n=20
     )  # newest first
 
-    # Generate Chart & aligned prices (chart wants oldest to newest)
-    chart_path, aligned_prices = generate_trend_chart(list(reversed(futures_history)), cache_dir)
-    
+    # Generate Chart & aligned prices/volumes (chart wants oldest to newest)
+    chart_path, aligned_prices, aligned_volumes = generate_trend_chart(
+        list(reversed(futures_history)), cache_dir
+    )
+
     opt_data = fetch_taifex_options_max_oi(latest_active_date, cache_dir)
     is_settlement, settlement_date = check_settlement_week(latest_active_date)
-    
+
     futures_options_data = {
         "Date": latest_active_date,
         "Settlement": {
@@ -1711,7 +1717,8 @@ def main():
         },
         "Options": opt_data,
         "FuturesHistory": futures_history,
-        "AlignedPrices": aligned_prices
+        "AlignedPrices": aligned_prices,
+        "AlignedVolumes": aligned_volumes
     }
     
     with open("data/futures_options.json", "w", encoding="utf-8") as f:
