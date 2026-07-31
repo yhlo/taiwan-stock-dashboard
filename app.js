@@ -822,6 +822,10 @@ function renderFuturesTrendChart() {
     let volBarsSvg = '';
     if (hasVolume) {
         volumes.forEach((v, i) => {
+            // null means "not yet settled" (see build_static_data.py) --
+            // no bar at all, rather than a misleading zero-height one that
+            // reads the same as "market was closed".
+            if (v === null || v === undefined) return;
             const x = (xFor(i) - volBarW / 2).toFixed(1);
             volBarsSvg += `<rect class="trend-vol-bar" data-i="${i}" x="${x}" y="${yZero.toFixed(1)}" width="${volBarW.toFixed(1)}" height="0"></rect>`;
         });
@@ -873,7 +877,12 @@ function renderFuturesTrendChart() {
             rect.setAttribute('y', y.toFixed(1));
             rect.setAttribute('height', h.toFixed(1));
         });
-        svg.querySelectorAll('.trend-vol-bar').forEach((rect, i) => {
+        svg.querySelectorAll('.trend-vol-bar').forEach(rect => {
+            // Volume bars can be sparser than the other series (a null
+            // reading is skipped entirely, see above), so the delay/value
+            // must come from the bar's own data-i, not its position among
+            // the surviving elements.
+            const i = parseInt(rect.getAttribute('data-i'), 10);
             const yVal = yForVol(volumes[i] || 0);
             const h = yZero - yVal;
             rect.style.transitionDelay = `${i * 15}ms`;
@@ -897,8 +906,9 @@ function renderFuturesTrendChart() {
         const rect = container.getBoundingClientRect();
         const net = nets[i];
         const netCls = net >= 0 ? 'text-up' : 'text-down';
+        const vol = hasVolume ? volumes[i] : null;
         const volRow = hasVolume
-            ? `<div class="trend-tip-row"><span>成交量</span><strong>${Math.round(volumes[i] / 1000).toLocaleString()} 張</strong></div>`
+            ? `<div class="trend-tip-row"><span>成交量</span><strong>${(vol === null || vol === undefined) ? '資料尚未更新' : `${Math.round(vol / 1000).toLocaleString()} 張`}</strong></div>`
             : '';
         tooltip.innerHTML = `
             <div class="trend-tip-date">${dates[i].slice(0, 4)}/${fmtDateLabel(dates[i])}</div>

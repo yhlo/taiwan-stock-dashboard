@@ -1047,7 +1047,14 @@ def generate_trend_chart(futures_history, cache_dir):
                 aligned_nets.append(net)
                 # Same row as Close, so it can't drift out of alignment with
                 # aligned_prices the way a separately-fetched series could.
-                aligned_volumes.append(int(hist.loc[d]["Volume"]))
+                # Yahoo finalizes the index's daily Close before its Volume
+                # aggregation catches up, so the most recent trading day can
+                # briefly report Volume=0 even though Close is already
+                # settled. 0 is never a real reading for a whole-market
+                # index, so treat it as "not yet available" (null) rather
+                # than a real zero -- it corrects itself on the next run.
+                vol = int(hist.loc[d]["Volume"])
+                aligned_volumes.append(vol if vol > 0 else None)
 
         if not aligned_dates:
             print("Failed to align dates.", file=sys.stderr)
