@@ -1,20 +1,20 @@
 {
-  "UpdatedFor": "20260806",
+  "UpdatedFor": "20260807",
   "Note": "訊號於當日收盤後產生，報酬以次一交易日收盤價計算，未計交易成本。報酬僅涵蓋可取得歷史股價的上市個股，Scored 為實際計入檔數。",
   "Summary": {
     "ForeignBuy": {
       "Label": "外資連買",
-      "Sessions": 23,
-      "AvgReturn": 0.3,
-      "PositiveSessionRate": 69.6,
+      "Sessions": 24,
+      "AvgReturn": 0.28,
+      "PositiveSessionRate": 66.7,
       "BestReturn": 2.88,
       "WorstReturn": -2.59
     },
     "TrustBuy": {
       "Label": "投信連買",
-      "Sessions": 23,
-      "AvgReturn": -0.56,
-      "PositiveSessionRate": 26.1,
+      "Sessions": 24,
+      "AvgReturn": -0.59,
+      "PositiveSessionRate": 25.0,
       "BestReturn": 7.69,
       "WorstReturn": -7.54
     }
@@ -23,93 +23,230 @@
     {
       "Signal": "TrustBuy",
       "Label": "投信連買",
-      "SignalDate": "20260806",
+      "SignalDate": "20260807",
       "EvalDate": null,
       "Stocks": [
         {
           "Symbol": "5274",
           "Name": "信驊",
+          "Streak": 18
+        },
+        {
+          "Symbol": "2892",
+          "Name": "第一金",
           "Streak": 17
         },
         {
-          "Symbol": "3529",
-          "Name": "力旺",
-          "Streak": 9
+          "Symbol": "3008",
+          "Name": "大立光",
+          "Streak": 17
         },
         {
-          "Symbol": "4749",
-          "Name": "新應材",
-          "Streak": 7
+          "Symbol": "3653",
+          "Name": "健策",
+          "Streak": 17
         },
         {
-          "Symbol": "1815",
-          "Name": "富喬",
-          "Streak": 4
+          "Symbol": "2880",
+          "Name": "華南金",
+          "Streak": 16
         },
         {
-          "Symbol": "6187",
-          "Name": "萬潤",
-          "Streak": 3
+          "Symbol": "2886",
+          "Name": "兆豐金",
+          "Streak": 16
+        },
+        {
+          "Symbol": "2379",
+          "Name": "瑞昱",
+          "Streak": 15
+        },
+        {
+          "Symbol": "1477",
+          "Name": "聚陽",
+          "Streak": 11
+        },
+        {
+          "Symbol": "1717",
+          "Name": "長興",
+          "Streak": 11
+        },
+        {
+          "Symbol": "3044",
+          "Name": "健鼎",
+          "Streak": 11
         }
       ]
     },
     {
       "Signal": "ForeignBuy",
       "Label": "外資連買",
-      "SignalDate": "20260806",
+      "SignalDate": "20260807",
       "EvalDate": null,
       "Stocks": [
         {
-          "Symbol": "7792",
-          "Name": "安葆",
-          "Streak": 15
+          "Symbol": "2618",
+          "Name": "長榮航",
+          "Streak": 20
+        },
+        {
+          "Symbol": "3034",
+          "Name": "聯詠",
+          "Streak": 20
+        },
+        {
+          "Symbol": "00717",
+          "Name": "富邦美國特別股",
+          "Streak": 19
+        },
+        {
+          "Symbol": "1402",
+          "Name": "遠東新",
+          "Streak": 19
+        },
+        {
+          "Symbol": "00653L",
+          "Name": "富邦印度正2",
+          "Streak": 16
+        },
+        {
+          "Symbol": "8467",
+          "Name": "波力-KY",
+          "Streak": 16
         },
         {
           "Symbol": "5201",
           "Name": "凱衛",
+          "Streak": 14
+        },
+        {
+          "Symbol": "009819",
+          "Name": "中信數據及電力",
           "Streak": 13
+        },
+        {
+          "Symbol": "2867",
+          "Name": "三商壽",
+          "Streak": 12
+        },
+        {
+          "Symbol": "00916",
+          "Name": "國泰全球品牌50",
+          "Streak": 11
+        }
+      ]
+    },
+    {
+      "Signal": "TrustBuy",
+      "Label": "投信連買",
+      "SignalDate": "20260806",
+      "EvalDate": "20260807",
+      "Stocks": [
+        {
+          "Symbol": "5274",
+          "Name": "信驊",
+          "Streak": 17,
+          "Return": -2.42
+        },
+        {
+          "Symbol": "3529",
+          "Name": "力旺",
+          "Streak": 9,
+          "Return": 2.44
+        },
+        {
+          "Symbol": "4749",
+          "Name": "新應材",
+          "Streak": 7,
+          "Return": -1.7
+        },
+        {
+          "Symbol": "1815",
+          "Name": "富喬",
+          "Streak": 4,
+          "Return": -1.04
+        },
+        {
+          "Symbol": "6187",
+          "Name": "萬潤",
+          "Streak": 3,
+          "Return": -3.83
+        }
+      ],
+      "AvgReturn": -1.31,
+      "WinRate": 20.0,
+      "Scored": 5
+    },
+    {
+      "Signal": "ForeignBuy",
+      "Label": "外資連買",
+      "SignalDate": "20260806",
+      "EvalDate": "20260807",
+      "Stocks": [
+        {
+          "Symbol": "7792",
+          "Name": "安葆",
+          "Streak": 15,
+          "Return": -4.61
+        },
+        {
+          "Symbol": "5201",
+          "Name": "凱衛",
+          "Streak": 13,
+          "Return": -0.75
         },
         {
           "Symbol": "8426",
           "Name": "紅木-KY",
-          "Streak": 12
+          "Streak": 12,
+          "Return": -0.23
         },
         {
           "Symbol": "00740B",
           "Name": "富邦全球投等債",
-          "Streak": 11
+          "Streak": 11,
+          "Return": -0.7
         },
         {
           "Symbol": "3293",
           "Name": "鈊象",
-          "Streak": 10
+          "Streak": 10,
+          "Return": 1.91
         },
         {
           "Symbol": "3558",
           "Name": "神準",
-          "Streak": 10
+          "Streak": 10,
+          "Return": -0.78
         },
         {
           "Symbol": "3611",
           "Name": "鼎翰",
-          "Streak": 10
+          "Streak": 10,
+          "Return": 0.27
         },
         {
           "Symbol": "5278",
           "Name": "尚凡*",
-          "Streak": 10
+          "Streak": 10,
+          "Return": 0.0
         },
         {
           "Symbol": "6150",
           "Name": "撼訊",
-          "Streak": 10
+          "Streak": 10,
+          "Return": 0.35
         },
         {
           "Symbol": "6763",
           "Name": "綠界科技*",
-          "Streak": 10
+          "Streak": 10,
+          "Return": 2.71
         }
-      ]
+      ],
+      "AvgReturn": -0.18,
+      "WinRate": 40.0,
+      "Scored": 10
     },
     {
       "Signal": "TrustBuy",
