@@ -179,28 +179,6 @@
 
         </section>
 
-        <!-- 大盤指數／外資淨OI／成交量走勢圖：放在最上面，一進頁面先看大盤怎麼走 -->
-        <section class="card" style="margin-bottom: 24px;">
-            <div class="card-header">
-                <h2 class="card-title">📊 台股大盤指數與外資期貨淨未平倉口數走勢</h2>
-                <div class="card-header-actions">
-                    <span id="trend-chart-updated" class="date-badge">載入中...</span>
-                </div>
-            </div>
-            <div class="trend-legend">
-                <span class="trend-legend-item"><i class="trend-legend-swatch trend-legend-line"></i>大盤指數</span>
-                <span class="trend-legend-item"><i class="trend-legend-swatch trend-legend-up"></i>外資淨OI（買超）</span>
-                <span class="trend-legend-item"><i class="trend-legend-swatch trend-legend-down"></i>外資淨OI（賣超）</span>
-                <span class="trend-legend-item"><i class="trend-legend-swatch trend-legend-volume"></i>成交量</span>
-            </div>
-            <div class="chart-container trend-chart-container" id="trend-chart-container">
-                <svg id="futures-trend-svg" class="trend-chart-svg" viewBox="0 0 700 320" preserveAspectRatio="xMidYMid meet" role="img" aria-label="大盤指數、外資期貨淨未平倉口數與成交量走勢疊圖"></svg>
-                <div id="trend-chart-tooltip" class="trend-chart-tooltip hidden"></div>
-                <div id="chart-fallback" class="chart-fallback-text hidden">無法加載走勢圖</div>
-            </div>
-        </section>
-
-        <!-- Watchlist Section (My Favorites) -->
         <!-- Pre-open brief: hidden entirely when data/morning_brief.json is absent or stale -->
         <section id="morning-brief-section" class="card hidden" style="margin-bottom: 24px;">
             <div class="card-header">
@@ -223,6 +201,27 @@
                     美股與 ADR 為前一交易日收盤；夜盤為台指期盤後交易時段（前日 15:00–05:00）。
                     本頁為公開資訊整理，非投資建議。
                 </p>
+            </div>
+        </section>
+
+        <!-- 大盤指數／外資淨OI／成交量走勢圖 -->
+        <section class="card" style="margin-bottom: 24px;">
+            <div class="card-header">
+                <h2 class="card-title">📊 台股大盤指數與外資期貨淨未平倉口數走勢</h2>
+                <div class="card-header-actions">
+                    <span id="trend-chart-updated" class="date-badge">載入中...</span>
+                </div>
+            </div>
+            <div class="trend-legend">
+                <span class="trend-legend-item"><i class="trend-legend-swatch trend-legend-line"></i>大盤指數</span>
+                <span class="trend-legend-item"><i class="trend-legend-swatch trend-legend-up"></i>外資淨OI（買超）</span>
+                <span class="trend-legend-item"><i class="trend-legend-swatch trend-legend-down"></i>外資淨OI（賣超）</span>
+                <span class="trend-legend-item"><i class="trend-legend-swatch trend-legend-volume"></i>成交量</span>
+            </div>
+            <div class="chart-container trend-chart-container" id="trend-chart-container">
+                <svg id="futures-trend-svg" class="trend-chart-svg" viewBox="0 0 700 320" preserveAspectRatio="xMidYMid meet" role="img" aria-label="大盤指數、外資期貨淨未平倉口數與成交量走勢疊圖"></svg>
+                <div id="trend-chart-tooltip" class="trend-chart-tooltip hidden"></div>
+                <div id="chart-fallback" class="chart-fallback-text hidden">無法加載走勢圖</div>
             </div>
         </section>
 

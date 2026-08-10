@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-TW" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BRC4C5P0KX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-BRC4C5P0KX');
+    </script>
+
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16x16.png">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/styles.css">
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1343288422175015" crossorigin="anonymous"></script>
+
+    <title>大盤指數、外資OI與成交量走勢圖怎麼看？ | TWStockWatch</title>
+    <meta name="description" content="TWStockWatch 首頁走勢圖把大盤指數、外資期貨淨未平倉量與成交量疊在同一張圖裡。本文說明指數線、OI柱狀圖、成交量背景層各自代表什麼，以及為什麼最新一天的成交量有時候是空的。">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://www.twstockwatch.com/articles/trend-chart-guide.html">
+    <script>
+      (function () {
+        const savedTheme = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+          document.documentElement.setAttribute('data-theme', 'dark');
+        }
+      })();
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": "大盤指數、外資OI與成交量走勢圖怎麼看？",
+      "description": "TWStockWatch 首頁走勢圖把大盤指數、外資期貨淨未平倉量與成交量疊在同一張圖裡。本文說明指數線、OI柱狀圖、成交量背景層各自代表什麼，以及為什麼最新一天的成交量有時候是空的。",
+      "author": { "@type": "Person", "name": "股市神偷" },
+      "publisher": { "@type": "Organization", "name": "TWStockWatch", "url": "https://www.twstockwatch.com" },
+      "datePublished": "2026-08-10",
+      "dateModified": "2026-08-10",
+      "mainEntityOfPage": "https://www.twstockwatch.com/articles/trend-chart-guide.html",
+      "inLanguage": "zh-TW"
+    }
+    </script>
+</head>
+<body>
+    <header class="main-header">
+        <div class="header-container">
+            <h1 class="app-title">
+                <a href="/"><span aria-hidden="true">📈</span>台灣股市法人籌碼與連買連賣看板</a>
+            </h1>
+            <nav class="main-nav">
+                <a href="/scoreboard.html">📋 訊號計分板</a>
+                <a href="/articles/">📚 文章專區</a>
+                <a href="/about.html">關於我</a>
+            </nav>
+            <div class="header-controls">
+                <button id="theme-toggle" class="theme-btn" aria-label="切換深淺模式">🌓</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <article class="instruction-section">
+                <p style="margin-bottom: 12px;"><a href="/articles/">← 回文章專區</a></p>
+                <h2 class="instruction-title">📊 大盤指數、外資OI與成交量走勢圖怎麼看？</h2>
+                <div class="instruction-body">
+                    <p><em>作者：股市神偷 ｜ 發佈日期：2026-08-10 ｜ 分類：工具與功能教學</em></p>
+
+                    <p><a href="/">TWStockWatch 首頁</a>最上面那張圖，把三個不同性質的數字疊在同一張圖裡：大盤收盤指數、外資期貨淨未平倉量、還有大盤成交量。三個指標放一起看，比分開三張圖更容易抓到「量、價、籌碼」是不是同一個方向。這篇說明每一層在畫什麼、怎麼互動，以及一個常見的疑問——為什麼最新一天的成交量有時候看不到。</p>
+
+                    <div class="instruction-subtitle">📈 藍色線：大盤收盤指數</div>
+                    <p>最上層的藍色折線是近 20 個交易日的加權指數收盤價，進頁面時線會從左到右「畫出來」。滑鼠移到任一個資料點（手機點一下）會跳出提示框，顯示當天的指數、外資淨OI 與成交量三個數字，不用另外對照日期。</p>
+
+                    <div class="instruction-subtitle">📊 中間柱狀圖：外資期貨淨未平倉量</div>
+                    <p>圖中央有一條虛線，是外資台指期淨部位的零軸。柱狀圖以這條線為基準，往上代表淨多單（買超），往下代表淨空單（賣超）——紅色（往上）對應買超、綠色（往下）對應賣超，跟台股慣例的紅漲綠跌顏色邏輯一致。想完整搞懂大台、小台、微台跟外資淨部位的意義，可以看<a href="/articles/futures-oi-guide.html">期貨未平倉量（OI）解讀</a>這篇。</p>
+
+                    <div class="instruction-subtitle">🌫️ 背景灰柱：成交量</div>
+                    <p>最底層的淡灰色柱狀圖是大盤成交量，畫在零軸<strong>以上</strong>——這是刻意的版面安排：外資 OI 最近一段時間持續偏空，零軸以上原本是空的，把成交量放上去剛好補滿這塊空間，不用另外多開一個副圖占版面。柱子的高度也被限制在整體圖高的 4 成以內，維持「背景層」的角色，不會搶走 OI 柱狀圖跟指數線的視覺焦點。如果哪天外資轉為淨多單，OI 的紅色柱子會疊在成交量的灰色柱子前面，兩層還是分得出來，只是會有局部重疊。</p>
+
+                    <div class="instruction-subtitle">❓ 為什麼最新一天常常沒有成交量柱子？</div>
+                    <p>這是最多人問的問題：圖表最右邊、最新一天的成交量位置有時候是空的，其他資料都正常，只有這格沒有柱子。原因是資料來源（Yahoo Finance）結算大盤指數的收盤價跟結算成交量，不是同一個時間點——收盤價通常收盤後就定案了，但成交量的統計會晚一點，我們觀察到往往要跨過一個晚上才會確定下來。</p>
+                    <p>如果當天成交量還沒結算，系統直接抓到的會是 <code>0</code>，但 0 對整個大盤來說從來不是合理的數字（不可能整天零成交量），所以我們的作法是：<strong>抓到 0 就當作「還沒有資料」，不畫柱子，也不假裝那天成交量是 0</strong>。等下一次排程重新抓取、成交量已經確定下來，那一天的柱子就會自動補上。這跟<a href="/articles/morning-brief-guide.html">盤前晨報</a>裡「夜盤資料有時候不顯示」是同一種設計精神：寧可留白，也不要顯示一個看起來正常、實際上是錯的數字。</p>
+
+                    <div class="instruction-subtitle">🕐 圖表卡片右上角的「更新於」</div>
+                    <p>卡片標題旁邊會顯示「更新於 MM/DD HH:MM」，這是整個網站這批資料最後一次成功更新的時間，跟頁面最下方「最後更新時間」是同一份資料，只是精簡成月/日 時:分方便一眼看到新鮮度。</p>
+
+                    <div class="instruction-subtitle">💬 我的實戰做法：先看方向一不一致，再看細節</div>
+                    <p>我看這張圖的習慣是先抓「三條線走的方向一不一致」：指數在漲、外資 OI 也在往買超方向走、成交量同步放大，這種同向的組合我會多一分信心；如果指數在漲但外資 OI 持續偏空、量也縮，我會提醒自己這段漲勢可能不是外資主導的，得更謹慎看待。這張圖本身不是買賣訊號，只是幫我快速抓「這幾天的量價籌碼是不是同一個故事」。</p>
+
+                    <div class="instruction-summary-box">
+                        📌 <strong>總結：</strong>指數線看方向、OI柱狀圖看外資多空、成交量背景柱看量能，三層疊在同一張圖裡互相對照。最新一天成交量偶爾留白是資料結算時間差造成的正常現象，不是網站故障，隔天就會自動補上。隨時可以到<a href="/">TWStockWatch 首頁</a>看最新走勢。
+                    </div>
+
+                    <p><em>本文僅供教學參考，不構成任何投資建議，圖表資訊不代表即時報價，請自行評估風險，詳見<a href="/disclaimer.html">免責聲明</a>。</em></p>
+                </div>
+            </article>
+        </div>
+    </main>
+
+    <footer class="app-footer">
+        <div class="footer-container">
+            <p>
+                <a href="/">首頁</a> ｜
+                <a href="/articles/">文章專區</a> ｜
+                <a href="/about.html">關於我</a> ｜
+                <a href="/privacy.html">隱私權政策</a> ｜
+                <a href="/disclaimer.html">免責聲明</a>
+            </p>
+            <p>© 2026 TWStockWatch. 本網站內容僅供參考，不構成任何投資建議。</p>
+        </div>
+    </footer>
+
+    <script>
+      document.getElementById('theme-toggle').addEventListener('click', function () {
+        const current = document.documentElement.getAttribute('data-theme');
+        const next = current === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem('theme', next);
+      });
+    </script>
+</body>
+</html>

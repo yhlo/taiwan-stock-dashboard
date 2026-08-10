@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-TW" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BRC4C5P0KX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-BRC4C5P0KX');
+    </script>
+
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16x16.png">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/styles.css">
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1343288422175015" crossorigin="anonymous"></script>
+
+    <title>融資是什麼？跟融券放空、借券差在哪？ | TWStockWatch</title>
+    <meta name="description" content="融資餘額增減代表什麼？融資維持率、融資斷頭是怎麼一回事？本文說明融資（多方槓桿）的運作機制，並與融券放空、借券賣出對照，搞懂三種槓桿工具的本質差異。">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://www.twstockwatch.com/articles/margin-trading-guide.html">
+    <script>
+      (function () {
+        const savedTheme = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+          document.documentElement.setAttribute('data-theme', 'dark');
+        }
+      })();
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": "融資是什麼？跟融券放空、借券差在哪？",
+      "description": "融資餘額增減代表什麼？融資維持率、融資斷頭是怎麼一回事？本文說明融資（多方槓桿）的運作機制，並與融券放空、借券賣出對照，搞懂三種槓桿工具的本質差異。",
+      "author": { "@type": "Person", "name": "股市神偷" },
+      "publisher": { "@type": "Organization", "name": "TWStockWatch", "url": "https://www.twstockwatch.com" },
+      "datePublished": "2026-08-10",
+      "dateModified": "2026-08-10",
+      "mainEntityOfPage": "https://www.twstockwatch.com/articles/margin-trading-guide.html",
+      "inLanguage": "zh-TW"
+    }
+    </script>
+</head>
+<body>
+    <header class="main-header">
+        <div class="header-container">
+            <h1 class="app-title">
+                <a href="/"><span aria-hidden="true">📈</span>台灣股市法人籌碼與連買連賣看板</a>
+            </h1>
+            <nav class="main-nav">
+                <a href="/scoreboard.html">📋 訊號計分板</a>
+                <a href="/articles/">📚 文章專區</a>
+                <a href="/about.html">關於我</a>
+            </nav>
+            <div class="header-controls">
+                <button id="theme-toggle" class="theme-btn" aria-label="切換深淺模式">🌓</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <article class="instruction-section">
+                <p style="margin-bottom: 12px;"><a href="/articles/">← 回文章專區</a></p>
+                <h2 class="instruction-title">💳 融資是什麼？跟融券放空、借券差在哪？</h2>
+                <div class="instruction-body">
+                    <p><em>作者：股市神偷 ｜ 發佈日期：2026-08-10 ｜ 分類：空方與衍生性商品籌碼</em></p>
+
+                    <p>新聞常說「融資餘額創新高」或「融資大減」，這是散戶籌碼最常被拿來解讀的指標之一。但融資到底是什麼、跟放空用的融券、借券有什麼不同，很多人其實混在一起講。這篇把融資的運作機制講清楚，也把三種槓桿工具放在一起對照，看完就不會再搞混。</p>
+
+                    <div class="instruction-subtitle">📖 融資是什麼？</div>
+                    <p><strong>融資</strong>是向證券商借錢買股票，用比較少的自備款操作比較大的部位，是<strong>放大多方部位的槓桿工具</strong>。以現行常見的融資成數 6 成為例，買 100 萬元的股票，自己只要出 40 萬（自備款），剩下 60 萬跟券商借，股票則作為擔保品質押給券商。</p>
+                    <p>用融資買股票，等於是「借錢加碼作多」——股價漲的時候，因為本金比較少，報酬率會被放大；但股價跌的時候，虧損同樣被放大，風險是雙向的。</p>
+
+                    <div class="instruction-subtitle">⚠️ 融資維持率與融資斷頭</div>
+                    <p>融資帳戶會有一個<strong>融資維持率</strong>，簡單講就是「擔保品（股票市值）÷ 融資金額」的比率。股價下跌時，擔保品價值縮水，維持率跟著降低；一旦跌破券商規定的最低維持率（通常在 120%~130% 左右，各券商略有不同），就會被要求補繳保證金，補不出來，券商就會強制賣出股票——這就是俗稱的<strong>融資斷頭</strong>。</p>
+                    <p>融資斷頭最麻煩的地方在於它會<strong>自我強化</strong>：股價跌 → 維持率不足 → 券商強制賣出 → 賣壓進一步壓低股價 → 更多融資戶維持率不足 → 更多斷頭賣壓。大盤重挫時常見的「無量下跌」，背後有一部分就是融資斷頭的連鎖效應。</p>
+
+                    <div class="instruction-subtitle">📊 融資餘額增減怎麼解讀？</div>
+                    <p>融資餘額反映的主要是<strong>散戶的槓桿部位規模</strong>，跟外資、投信的中長期布局邏輯不太一樣，市場上常把它當成一種「反指標」參考：</p>
+                    <ul class="instruction-list">
+                        <li><strong>融資餘額持續攀升、股價也在高檔：</strong>代表散戶追高情緒濃厚，籌碼相對浮動，一旦反轉，潛在的斷頭賣壓也比較大。</li>
+                        <li><strong>融資餘額在下跌段快速減少：</strong>可能是主動停損，也可能是斷頭潮，通常伴隨著恐慌性的殺盤，但也常是短線超跌的訊號之一。</li>
+                        <li><strong>融資餘額低檔緩步回升：</strong>散戶籌碼相對乾淨，如果股價同步表現，籌碼結構會比較健康。</li>
+                    </ul>
+                    <p>要注意的是，融資餘額是<strong>落後指標</strong>，反映的是「已經發生」的槓桿部位，不是预測未來，搭配<a href="/articles/three-institutional-investors.html">三大法人</a>的即時買賣超一起看，才能比較完整地拼出籌碼全貌。</p>
+
+                    <div class="instruction-subtitle">🔀 融資、融券、借券：三種槓桿工具的差異</div>
+                    <p>這三個名詞很容易搞混，用一張表整理核心差異：</p>
+                    <ul class="instruction-list">
+                        <li><strong>融資：</strong>借錢買股票，看多，賺的是股價上漲的價差。</li>
+                        <li><strong>融券：</strong>跟券商借股票先賣出，看空，賺的是股價下跌的價差，之後要買回股票還給券商（回補）。</li>
+                        <li><strong>借券：</strong>本質上也是先借股票賣出、之後歸還，但主要參與者是機構法人，額度與費率跟融券制度不同，且沒有融券常見的「融券使用率過高、被要求強制回補」那種與除權息連動的規則。</li>
+                    </ul>
+                    <p>融券跟借券都是「先借股票賣出」的放空管道，差別主要在參與者身份與制度細節；融資則是完全相反的方向——借錢做多。想完整搞懂融券跟借券的差異，特別是除權息前的強制回補與軋空風險，可以看<a href="/articles/sbl-vs-margin-short.html">借券賣出與融券放空差在哪？</a>這篇，跟這篇合著看，槓桿交易的多空兩個方向就都補齊了。</p>
+
+                    <div class="instruction-subtitle">💬 我的實戰做法：融資餘額我當警示燈，不是主要判斷依據</div>
+                    <p>我自己很少用融資融券操作，主要是抱長期部位、賺股利跟公司成長的錢，不太想承擔槓桿帶來的斷頭風險。但我會留意融資餘額的變化，尤其是<strong>股價在相對高檔、融資餘額又同步創新高</strong>的時候，我會提醒自己這檔股票的籌碼可能比較浮動，拉回時修正幅度容易放大，進場時機會更謹慎一點。融資餘額對我來說比較像是一盞警示燈，不是決定買賣的主要依據。</p>
+
+                    <div class="instruction-summary-box">
+                        📌 <strong>總結：</strong>融資是借錢做多的槓桿工具，維持率不足會被強制斷頭，融資餘額增減常被當成散戶籌碼浮動與追高情緒的參考指標，但屬於落後指標。搭配<a href="/articles/sbl-vs-margin-short.html">融券／借券</a>與<a href="/">首頁</a>的三大法人籌碼一起看，能更完整判斷市場多空結構。
+                    </div>
+
+                    <p><em>本文僅供教學參考，不構成任何投資建議，融資融券涉及槓桿與斷頭風險，請自行評估風險承受度，詳見<a href="/disclaimer.html">免責聲明</a>。</em></p>
+                </div>
+            </article>
+        </div>
+    </main>
+
+    <footer class="app-footer">
+        <div class="footer-container">
+            <p>
+                <a href="/">首頁</a> ｜
+                <a href="/articles/">文章專區</a> ｜
+                <a href="/about.html">關於我</a> ｜
+                <a href="/privacy.html">隱私權政策</a> ｜
+                <a href="/disclaimer.html">免責聲明</a>
+            </p>
+            <p>© 2026 TWStockWatch. 本網站內容僅供參考，不構成任何投資建議。</p>
+        </div>
+    </footer>
+
+    <script>
+      document.getElementById('theme-toggle').addEventListener('click', function () {
+        const current = document.documentElement.getAttribute('data-theme');
+        const next = current === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem('theme', next);
+      });
+    </script>
+</body>
+</html>

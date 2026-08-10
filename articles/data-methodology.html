@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh-TW" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BRC4C5P0KX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-BRC4C5P0KX');
+    </script>
+
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16x16.png">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/styles.css">
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1343288422175015" crossorigin="anonymous"></script>
+
+    <title>TWStockWatch 的資料從哪裡來？多久更新一次？ | TWStockWatch</title>
+    <meta name="description" content="TWStockWatch 的三大法人籌碼、期貨未平倉、選擇權、借券等資料，全部來自證交所、櫃買中心、期交所官方公開資料。本文說明各項資料來源、更新排程，以及遇到假日、資料延遲時的處理原則。">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://www.twstockwatch.com/articles/data-methodology.html">
+    <script>
+      (function () {
+        const savedTheme = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+          document.documentElement.setAttribute('data-theme', 'dark');
+        }
+      })();
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": "TWStockWatch 的資料從哪裡來？多久更新一次？",
+      "description": "TWStockWatch 的三大法人籌碼、期貨未平倉、選擇權、借券等資料，全部來自證交所、櫃買中心、期交所官方公開資料。本文說明各項資料來源、更新排程，以及遇到假日、資料延遲時的處理原則。",
+      "author": { "@type": "Person", "name": "股市神偷" },
+      "publisher": { "@type": "Organization", "name": "TWStockWatch", "url": "https://www.twstockwatch.com" },
+      "datePublished": "2026-08-10",
+      "dateModified": "2026-08-10",
+      "mainEntityOfPage": "https://www.twstockwatch.com/articles/data-methodology.html",
+      "inLanguage": "zh-TW"
+    }
+    </script>
+</head>
+<body>
+    <header class="main-header">
+        <div class="header-container">
+            <h1 class="app-title">
+                <a href="/"><span aria-hidden="true">📈</span>台灣股市法人籌碼與連買連賣看板</a>
+            </h1>
+            <nav class="main-nav">
+                <a href="/scoreboard.html">📋 訊號計分板</a>
+                <a href="/articles/">📚 文章專區</a>
+                <a href="/about.html">關於我</a>
+            </nav>
+            <div class="header-controls">
+                <button id="theme-toggle" class="theme-btn" aria-label="切換深淺模式">🌓</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <article class="instruction-section">
+                <p style="margin-bottom: 12px;"><a href="/articles/">← 回文章專區</a></p>
+                <h2 class="instruction-title">🗂️ TWStockWatch 的資料從哪裡來？多久更新一次？</h2>
+                <div class="instruction-body">
+                    <p><em>作者：股市神偷 ｜ 發佈日期：2026-08-10 ｜ 分類：資料來源與方法</em></p>
+
+                    <p>常有人問，這個網站的數字到底準不準、從哪裡抓的。這篇把資料來源、更新時間跟遇到問題時的處理原則講清楚，方便大家判斷這些數字可以怎麼用、不能怎麼用。</p>
+
+                    <div class="instruction-subtitle">📡 資料來源：只用交易所官方公開資料</div>
+                    <p>網站上的每一項數字都能追到對應的官方來源，沒有任何轉載或第三方加工的資料：</p>
+                    <ul class="instruction-list">
+                        <li><strong>三大法人買賣超（T86）：</strong>上市資料來自台灣證券交易所，上櫃資料來自證券櫃買中心，兩邊分開抓、分開驗證後再合併，才不會漏掉任一個市場。</li>
+                        <li><strong>期貨未平倉量（OI）、選擇權最大 OI：</strong>來自台灣期貨交易所每日交易行情報表，大台、小台、微台分開計算。</li>
+                        <li><strong>借券賣出（SBL）：</strong>上市部分來自證交所，上櫃部分來自櫃買中心。</li>
+                        <li><strong>大盤指數與成交量：</strong>來自 Yahoo Finance 的加權指數歷史資料。</li>
+                    </ul>
+                    <p>這代表網站上看到的每一個買賣超、未平倉數字，都可以回頭到交易所官網查證，不是黑盒子。</p>
+
+                    <div class="instruction-subtitle">⏰ 更新排程：追著資料公布時間跑</div>
+                    <p>三大法人買賣超（T86）通常在<strong>收盤後約 15:00</strong>公布，網站的主要排程一天執行 4 次（約 15:10、16:30、18:30、21:30 台北時間），第一次抓到就會更新，後面幾次是補漏跟修正用的。<a href="/articles/morning-brief-guide.html">盤前晨報</a>則是完全獨立的排程，目標是在日盤開盤（08:45）前把美股、ADR、夜盤資訊準備好。</p>
+                    <p>這些排程時間點不是隨便訂的——我們實際統計過 GitHub Actions 排程系統的延遲情況，發現預定時間跟實際開始執行常常有 1 小時以上的落差，所以正式排的時間都比「理論上資料公布的時間」提早一段，抓的是「大概率已經來得及」的空檔，而不是資料一公布就準時觸發。</p>
+
+                    <div class="instruction-subtitle">🕳️ 遇到假日、資料延遲、來源本身出錯時怎麼辦？</div>
+                    <p>幾個實際會遇到的情況，以及我們的處理原則：</p>
+                    <ul class="instruction-list">
+                        <li><strong>國定假日、颱風假：</strong>交易所當天不開盤，系統會直接跳過，不會用前一天的舊資料冒充當天數字。</li>
+                        <li><strong>單一來源當下抓取失敗：</strong>寧可讓那一項數字暫時留白，也不會用另一個市場的資料補位，避免產生「看起來正常、實際上是錯的」數字。舉例來說，之前我們發現上櫃報價來源沒有日期參數，改用有日期參數的官方端點後才修正，過程中都是選擇「查不到就顯示查不到」，不是硬湊一個數字出來。</li>
+                        <li><strong>資料還沒最終結算：</strong>像大盤成交量，收盤價通常比成交量早定案，最新一天的成交量偶爾會抓到 <code>0</code>——0 對整個大盤而言從來不是合理數字，所以系統會把它當成「還沒結算」直接留白，等下一次排程資料確定了才補上。細節可以看<a href="/articles/trend-chart-guide.html">走勢圖怎麼看</a>那篇。</li>
+                        <li><strong>訊號計分板的結算時間：</strong>任何連買訊號都用「次一交易日」的收盤價結算，絕不用訊號當天自己的收盤價回頭算報酬，避免看了答案再下注。詳見<a href="/articles/scoreboard-guide.html">訊號計分板怎麼看</a>。</li>
+                    </ul>
+                    <p>整體原則就是一句話：<strong>寧可慢一點、留白一點，也不要顯示一個看起來正常、實際上是錯的數字。</strong></p>
+
+                    <div class="instruction-subtitle">⚠️ 這不是即時看盤軟體</div>
+                    <p>TWStockWatch 是<strong>盤後籌碼分析工具</strong>，抓的是交易所公布的正式資料，不是逐筆委買委賣的即時報價。如果需要即時股價、下單，請使用券商 App 或即時看盤軟體；這裡的數字適合用來做盤後的籌碼判讀與趨勢觀察，不建議當作當沖或極短線操作的依據。</p>
+
+                    <div class="instruction-summary-box">
+                        📌 <strong>總結：</strong>所有資料都來自證交所、櫃買中心、期交所官方公開資料，排程時間追著資料公布節奏走，遇到抓不到或還沒結算的情況，一律選擇留白而不是硬湊數字。想看今天最新的籌碼資料，歡迎回到<a href="/">TWStockWatch 首頁</a>。
+                    </div>
+
+                    <p><em>本文僅供教學參考，不構成任何投資建議，本站資料非即時報價，重要決策請以交易所官方公告或即時看盤軟體為準，詳見<a href="/disclaimer.html">免責聲明</a>。</em></p>
+                </div>
+            </article>
+        </div>
+    </main>
+
+    <footer class="app-footer">
+        <div class="footer-container">
+            <p>
+                <a href="/">首頁</a> ｜
+                <a href="/articles/">文章專區</a> ｜
+                <a href="/about.html">關於我</a> ｜
+                <a href="/privacy.html">隱私權政策</a> ｜
+                <a href="/disclaimer.html">免責聲明</a>
+            </p>
+            <p>© 2026 TWStockWatch. 本網站內容僅供參考，不構成任何投資建議。</p>
+        </div>
+    </footer>
+
+    <script>
+      document.getElementById('theme-toggle').addEventListener('click', function () {
+        const current = document.documentElement.getAttribute('data-theme');
+        const next = current === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem('theme', next);
+      });
+    </script>
+</body>
+</html>
