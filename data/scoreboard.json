@@ -1,20 +1,20 @@
 {
-  "UpdatedFor": "20260811",
+  "UpdatedFor": "20260812",
   "Note": "訊號於當日收盤後產生，報酬以次一交易日收盤價計算，未計交易成本。報酬僅涵蓋可取得歷史股價的上市個股，Scored 為實際計入檔數。",
   "Summary": {
     "ForeignBuy": {
       "Label": "外資連買",
-      "Sessions": 26,
-      "AvgReturn": 0.31,
-      "PositiveSessionRate": 69.2,
+      "Sessions": 27,
+      "AvgReturn": 0.3,
+      "PositiveSessionRate": 66.7,
       "BestReturn": 2.88,
       "WorstReturn": -2.59
     },
     "TrustBuy": {
       "Label": "投信連買",
-      "Sessions": 26,
-      "AvgReturn": -0.53,
-      "PositiveSessionRate": 30.8,
+      "Sessions": 27,
+      "AvgReturn": -0.44,
+      "PositiveSessionRate": 33.3,
       "BestReturn": 7.69,
       "WorstReturn": -7.54
     }
@@ -23,65 +23,65 @@
     {
       "Signal": "TrustBuy",
       "Label": "投信連買",
-      "SignalDate": "20260811",
+      "SignalDate": "20260812",
       "EvalDate": null,
       "Stocks": [
         {
           "Symbol": "2880",
           "Name": "華南金",
-          "Streak": 18
+          "Streak": 19
         },
         {
           "Symbol": "2886",
           "Name": "兆豐金",
-          "Streak": 18
+          "Streak": 19
         },
         {
           "Symbol": "2379",
           "Name": "瑞昱",
-          "Streak": 17
+          "Streak": 18
         },
         {
           "Symbol": "1477",
           "Name": "聚陽",
-          "Streak": 13
+          "Streak": 14
         },
         {
           "Symbol": "1717",
           "Name": "長興",
-          "Streak": 13
-        },
-        {
-          "Symbol": "3044",
-          "Name": "健鼎",
-          "Streak": 13
+          "Streak": 14
         },
         {
           "Symbol": "3529",
           "Name": "力旺",
-          "Streak": 12
-        },
-        {
-          "Symbol": "3711",
-          "Name": "日月光投控",
-          "Streak": 12
+          "Streak": 13
         },
         {
           "Symbol": "4938",
           "Name": "和碩",
-          "Streak": 12
+          "Streak": 13
         },
         {
           "Symbol": "00980A",
           "Name": "主動野村臺灣優選",
-          "Streak": 9
+          "Streak": 10
+        },
+        {
+          "Symbol": "2207",
+          "Name": "和泰車",
+          "Streak": 7
+        },
+        {
+          "Symbol": "2542",
+          "Name": "興富發",
+          "Streak": 7
         }
       ]
     },
     {
       "Signal": "ForeignBuy",
       "Label": "外資連買",
-      "SignalDate": "20260811",
+      "SignalDate": "20260812",
       "EvalDate": null,
       "Stocks": [
         {
@@ -102,39 +102,181 @@
         {
           "Symbol": "009819",
           "Name": "中信數據及電力",
-          "Streak": 15
+          "Streak": 16
         },
         {
           "Symbol": "00916",
           "Name": "國泰全球品牌50",
-          "Streak": 13
-        },
-        {
-          "Symbol": "3293",
-          "Name": "鈊象",
-          "Streak": 13
+          "Streak": 14
         },
         {
           "Symbol": "3558",
           "Name": "神準",
-          "Streak": 13
+          "Streak": 14
         },
         {
           "Symbol": "5278",
           "Name": "尚凡*",
-          "Streak": 13
+          "Streak": 14
         },
         {
           "Symbol": "1786",
           "Name": "科妍",
-          "Streak": 12
+          "Streak": 13
         },
         {
           "Symbol": "1907",
           "Name": "永豐餘",
+          "Streak": 13
+        },
+        {
+          "Symbol": "1216",
+          "Name": "統一",
           "Streak": 12
         }
       ]
+    },
+    {
+      "Signal": "TrustBuy",
+      "Label": "投信連買",
+      "SignalDate": "20260811",
+      "EvalDate": "20260812",
+      "Stocks": [
+        {
+          "Symbol": "2880",
+          "Name": "華南金",
+          "Streak": 18,
+          "Return": -1.03
+        },
+        {
+          "Symbol": "2886",
+          "Name": "兆豐金",
+          "Streak": 18,
+          "Return": -1.42
+        },
+        {
+          "Symbol": "2379",
+          "Name": "瑞昱",
+          "Streak": 17,
+          "Return": -0.78
+        },
+        {
+          "Symbol": "1477",
+          "Name": "聚陽",
+          "Streak": 13,
+          "Return": -1.13
+        },
+        {
+          "Symbol": "1717",
+          "Name": "長興",
+          "Streak": 13,
+          "Return": 9.32
+        },
+        {
+          "Symbol": "3044",
+          "Name": "健鼎",
+          "Streak": 13,
+          "Return": 9.97
+        },
+        {
+          "Symbol": "3529",
+          "Name": "力旺",
+          "Streak": 12,
+          "Return": 0.0
+        },
+        {
+          "Symbol": "3711",
+          "Name": "日月光投控",
+          "Streak": 12,
+          "Return": -1.27
+        },
+        {
+          "Symbol": "4938",
+          "Name": "和碩",
+          "Streak": 12,
+          "Return": 2.7
+        },
+        {
+          "Symbol": "00980A",
+          "Name": "主動野村臺灣優選",
+          "Streak": 9,
+          "Return": 1.81
+        }
+      ],
+      "AvgReturn": 1.82,
+      "WinRate": 40.0,
+      "Scored": 10
+    },
+    {
+      "Signal": "ForeignBuy",
+      "Label": "外資連買",
+      "SignalDate": "20260811",
+      "EvalDate": "20260812",
+      "Stocks": [
+        {
+          "Symbol": "00717",
+          "Name": "富邦美國特別股",
+          "Streak": 20,
+          "Return": 0.54
+        },
+        {
+          "Symbol": "1402",
+          "Name": "遠東新",
+          "Streak": 20,
+          "Return": 0.92
+        },
+        {
+          "Symbol": "3034",
+          "Name": "聯詠",
+          "Streak": 20,
+          "Return": -0.19
+        },
+        {
+          "Symbol": "009819",
+          "Name": "中信數據及電力",
+          "Streak": 15,
+          "Return": 0.0
+        },
+        {
+          "Symbol": "00916",
+          "Name": "國泰全球品牌50",
+          "Streak": 13,
+          "Return": -0.36
+        },
+        {
+          "Symbol": "3293",
+          "Name": "鈊象",
+          "Streak": 13,
+          "Return": -2.86
+        },
+        {
+          "Symbol": "3558",
+          "Name": "神準",
+          "Streak": 13,
+          "Return": 0.0
+        },
+        {
+          "Symbol": "5278",
+          "Name": "尚凡*",
+          "Streak": 13,
+          "Return": -0.2
+        },
+        {
+          "Symbol": "1786",
+          "Name": "科妍",
+          "Streak": 12,
+          "Return": 0.78
+        },
+        {
+          "Symbol": "1907",
+          "Name": "永豐餘",
+          "Streak": 12,
+          "Return": -0.33
+        }
+      ],
+      "AvgReturn": -0.17,
+      "WinRate": 30.0,
+      "Scored": 10
     },
     {
       "Signal": "TrustBuy",
