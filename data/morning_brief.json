@@ -1,177 +1,177 @@
 {
-  "Date": "20260819",
-  "GeneratedAt": "2026-08-19T05:51:55+08:00",
+  "Date": "20260820",
+  "GeneratedAt": "2026-08-20T05:34:52+08:00",
   "UsMarkets": [
     {
       "Name": "道瓊工業",
-      "Close": 53343.4,
-      "ChangePct": -0.22,
-      "Date": "20260818"
+      "Close": 53463.05,
+      "ChangePct": 0.22,
+      "Date": "20260819"
     },
     {
       "Name": "那斯達克",
-      "Close": 26289.71,
-      "ChangePct": -1.33,
-      "Date": "20260818"
+      "Close": 26331.09,
+      "ChangePct": 0.16,
+      "Date": "20260819"
     },
     {
       "Name": "標普500",
-      "Close": 7691.76,
-      "ChangePct": -0.69,
-      "Date": "20260818"
+      "Close": 7707.98,
+      "ChangePct": 0.21,
+      "Date": "20260819"
     },
     {
       "Name": "費城半導體",
-      "Close": 11992.46,
-      "ChangePct": -4.98,
-      "Date": "20260818"
+      "Close": 11738.23,
+      "ChangePct": -2.12,
+      "Date": "20260819"
     }
   ],
   "Adr": {
-    "Close": 413.41,
-    "ChangePct": -4.07,
-    "Date": "20260818",
-    "FxRate": 31.902,
-    "ImpliedTwd": 2637.7,
-    "TwClose": 2380.0,
-    "TwCloseDate": "20260818",
-    "PremiumPct": 10.83
+    "Close": 412.09,
+    "ChangePct": -0.32,
+    "Date": "20260819",
+    "FxRate": 31.844,
+    "ImpliedTwd": 2624.5,
+    "TwClose": 2350.0,
+    "TwCloseDate": "20260819",
+    "PremiumPct": 11.68
   },
   "NightSession": {
-    "Contract": "202608",
-    "Open": "45137",
-    "High": "45208",
-    "Low": "44424",
-    "Close": 44527.0,
-    "PrevClose": 45085.0,
-    "PrevCloseDate": "20260818",
-    "GapPoints": -558.0,
-    "GapPct": -1.24
+    "Contract": "202609",
+    "Open": "44631",
+    "High": "45196",
+    "Low": "44538",
+    "Close": 44802.0,
+    "PrevClose": 44612.0,
+    "PrevCloseDate": "20260819",
+    "GapPoints": 190.0,
+    "GapPct": 0.43
   },
   "Chips": {
     "ForeignFuturesNet": {
-      "Date": "20260818",
-      "Net": -83078,
-      "Change": 396
+      "Date": "20260819",
+      "Net": -81501,
+      "Change": 1577
     },
     "OptionLevels": {
       "Resistance": 48000,
-      "ResistanceOI": 4539,
-      "Support": 34000,
-      "SupportOI": 4734,
+      "ResistanceOI": 4374,
+      "Support": 44000,
+      "SupportOI": 4588,
       "ActiveMonth": "202608"
     },
-    "ChipDate": "20260818",
+    "ChipDate": "20260819",
     "ForeignBuyStreak": [
       {
-        "Symbol": "1216",
-        "Name": "統一",
-        "Streak": 16,
-        "Close": 76.2,
-        "Change": 1.0
+        "Symbol": "00400A",
+        "Name": "主動國泰動能高息",
+        "Streak": 4,
+        "Close": 14.51,
+        "Change": -0.25
       },
       {
-        "Symbol": "6279",
-        "Name": "胡連",
-        "Streak": 15,
-        "Close": 126.5,
-        "Change": -1.5
+        "Symbol": "00401A",
+        "Name": "主動摩根台灣鑫收",
+        "Streak": 4,
+        "Close": 13.26,
+        "Change": -0.19
       },
       {
-        "Symbol": "5351",
-        "Name": "鈺創",
-        "Streak": 13,
-        "Close": 122.0,
-        "Change": -13.5
+        "Symbol": "00405A",
+        "Name": "主動富邦台灣龍耀",
+        "Streak": 4,
+        "Close": 8.47,
+        "Change": -0.13
       },
       {
         "Symbol": "0051",
         "Name": "元大中型100",
-        "Streak": 12,
-        "Close": 142.25,
-        "Change": -2.3
+        "Streak": 4,
+        "Close": 141.0,
+        "Change": -1.25
       },
       {
-        "Symbol": "00900",
-        "Name": "富邦特選高股息30",
-        "Streak": 12,
-        "Close": 18.61,
-        "Change": 0.0
+        "Symbol": "00706L",
+        "Name": "期元大S&P日圓正2",
+        "Streak": 4,
+        "Close": 18.98,
+        "Change": 0.1
       }
     ],
     "TrustBuyStreak": [
       {
-        "Symbol": "2886",
-        "Name": "兆豐金",
-        "Streak": 20,
-        "Close": 46.9,
-        "Change": 0.3
+        "Symbol": "1402",
+        "Name": "遠東新",
+        "Streak": 4,
+        "Close": 28.0,
+        "Change": 0.2
+      },
+      {
+        "Symbol": "1476",
+        "Name": "儒鴻",
+        "Streak": 4,
+        "Close": 311.5,
+        "Change": 1.0
       },
       {
         "Symbol": "1477",
         "Name": "聚陽",
-        "Streak": 18,
-        "Close": 197.5,
-        "Change": -7.0
+        "Streak": 4,
+        "Close": 192.5,
+        "Change": -5.0
+      },
+      {
+        "Symbol": "2105",
+        "Name": "正新",
+        "Streak": 4,
+        "Close": 31.05,
+        "Change": -0.05
       },
       {
         "Symbol": "2207",
         "Name": "和泰車",
-        "Streak": 11,
-        "Close": 512.0,
-        "Change": -3.0
-      },
-      {
-        "Symbol": "2542",
-        "Name": "興富發",
-        "Streak": 11,
-        "Close": 47.75,
-        "Change": 0.95
-      },
-      {
-        "Symbol": "2609",
-        "Name": "陽明",
-        "Streak": 11,
-        "Close": 56.2,
-        "Change": 1.5
+        "Streak": 4,
+        "Close": 506.0,
+        "Change": -6.0
       }
     ],
     "TrustFreshBuys": [
       {
-        "Symbol": "3481",
-        "Name": "群創",
-        "Shares": 13592224,
-        "Close": 49.5
+        "Symbol": "00980A",
+        "Name": "主動野村臺灣優選",
+        "Shares": 1139000,
+        "Close": 23.88
       },
       {
-        "Symbol": "2301",
-        "Name": "光寶科",
-        "Shares": 3150697,
-        "Close": 273.5
+        "Symbol": "3231",
+        "Name": "緯創",
+        "Shares": 1039000,
+        "Close": 182.0
       },
       {
-        "Symbol": "3450",
-        "Name": "聯鈞",
-        "Shares": 1892000,
-        "Close": 579.0
+        "Symbol": "009814",
+        "Name": "富邦標普500",
+        "Shares": 800000,
+        "Close": 11.4
       },
       {
-        "Symbol": "1504",
-        "Name": "東元",
-        "Shares": 1453000,
-        "Close": 71.0
+        "Symbol": "1326",
+        "Name": "台化",
+        "Shares": 789000,
+        "Close": 56.7
       },
       {
-        "Symbol": "3265",
-        "Name": "台星科",
-        "Shares": 1358000,
-        "Close": 171.0
+        "Symbol": "3017",
+        "Name": "奇鋐",
+        "Shares": 601000,
+        "Close": 3095.0
       }
     ]
   },
   "Settlement": {
-    "IsSettlementWeek": true,
-    "SettlementDate": "2026/08/19",
-    "IsSettlementDay": true
+    "IsSettlementWeek": false,
+    "SettlementDate": null,
+    "IsSettlementDay": false
   }
 }
