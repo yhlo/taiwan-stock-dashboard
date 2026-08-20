@@ -733,17 +733,19 @@ function renderFuturesTrendChart() {
 
     const histOldestFirst = (futuresOptions && futuresOptions.FuturesHistory)
         ? [...futuresOptions.FuturesHistory].reverse() : [];
-    const prices = (futuresOptions && futuresOptions.AlignedPrices) || [];
-    const volumesRaw = (futuresOptions && futuresOptions.AlignedVolumes) || [];
 
-    // AlignedPrices/AlignedVolumes are bare number arrays with no dates of
-    // their own -- only safe to zip against FuturesHistory positionally when
-    // they came out the same length. A mismatch means the backend silently
-    // dropped a day while aligning to Yahoo's trading calendar, and there's
-    // no way to tell which one from here, so refuse to guess at the price
-    // line. Volume is treated as independently optional: an older cached
-    // file without AlignedVolumes yet should still show price + OI.
-    if (!histOldestFirst.length || prices.length !== histOldestFirst.length) {
+    // IndexHistory is keyed by Date rather than a bare array positionally
+    // matched to FuturesHistory: Yahoo's calendar occasionally drops a day
+    // mid-fetch (seen in practice), and with a bare array that meant a
+    // single missing day forced hiding the *entire* chart rather than just
+    // that one point. OI comes from our own T86 pipeline and doesn't depend
+    // on Yahoo at all, so it should never go missing just because Yahoo had
+    // a bad day.
+    const indexByDate = new Map(
+        ((futuresOptions && futuresOptions.IndexHistory) || []).map(h => [h.Date, h])
+    );
+
+    if (!histOldestFirst.length) {
         svg.classList.add('hidden');
         if (fallback) fallback.classList.remove('hidden');
         return;
@@ -751,11 +753,15 @@ function renderFuturesTrendChart() {
     svg.classList.remove('hidden');
     if (fallback) fallback.classList.add('hidden');
 
-    const hasVolume = volumesRaw.length === histOldestFirst.length;
-    const volumes = hasVolume ? volumesRaw : [];
-
     const dates = histOldestFirst.map(h => h.Date);
     const nets = histOldestFirst.map(h => h.Foreign_Net || 0);
+    // null on a given day means "Yahoo had no row for this date" -- distinct
+    // from Volume's own null ("row existed, not yet settled"), but both are
+    // handled the same way downstream: skip that one point.
+    const prices = dates.map(d => (indexByDate.has(d) ? indexByDate.get(d).Close : null));
+    const volumes = dates.map(d => (indexByDate.has(d) ? indexByDate.get(d).Volume : null));
+    const hasAnyPrice = prices.some(p => p !== null && p !== undefined);
+    const hasVolume = volumes.some(v => v !== null && v !== undefined);
     const n = dates.length;
 
     const W = 700, H = 320;
@@ -765,14 +771,16 @@ function renderFuturesTrendChart() {
     const mainTop = padT;
     const panelBottom = mainTop + mainH;
 
-    const priceMin = Math.min(...prices);
-    const priceMax = Math.max(...prices);
+    const validPrices = prices.filter(p => p !== null && p !== undefined);
+    const priceMin = validPrices.length ? Math.min(...validPrices) : 0;
+    const priceMax = validPrices.length ? Math.max(...validPrices) : 1;
     const pricePad = (priceMax - priceMin) * 0.12 || 1;
     const pMin = priceMin - pricePad, pMax = priceMax + pricePad;
 
     const netAbsMax = Math.max(1, ...nets.map(v => Math.abs(v)));
     const nMax = netAbsMax * 1.2;
-    const volMax = hasVolume ? Math.max(1, ...volumes) * 1.1 : 1;
+    const validVolumes = volumes.filter(v => v !== null && v !== undefined);
+    const volMax = hasVolume ? Math.max(1, ...validVolumes) * 1.1 : 1;
     // Volume bars only ever reach 40% up the panel so they stay a background
     // texture behind the OI bars and price line rather than competing scale.
     const volMaxBarH = mainH * 0.4;
@@ -832,12 +840,20 @@ function renderFuturesTrendChart() {
     }
 
     // pathLength="1" normalizes the dash animation to the point count
-    // instead of the polyline's actual on-screen length in pixels.
-    const linePoints = prices.map((p, i) => `${xFor(i).toFixed(1)},${yForPrice(p).toFixed(1)}`).join(' ');
-    const lineSvg = `<polyline class="trend-line" points="${linePoints}" pathLength="1"></polyline>`;
+    // instead of the polyline's actual on-screen length in pixels. A day
+    // with no price (Yahoo gap) is simply omitted, which draws the line
+    // straight across the gap rather than fabricating a value for it.
+    const linePoints = prices
+        .map((p, i) => (p === null || p === undefined) ? null : `${xFor(i).toFixed(1)},${yForPrice(p).toFixed(1)}`)
+        .filter(Boolean)
+        .join(' ');
+    const lineSvg = hasAnyPrice
+        ? `<polyline class="trend-line" points="${linePoints}" pathLength="1"></polyline>`
+        : '';
 
     let dotsSvg = '';
     prices.forEach((p, i) => {
+        if (p === null || p === undefined) return;
         const cx = xFor(i).toFixed(1);
         const cy = yForPrice(p).toFixed(1);
         // Hit target first so the CSS sibling selector (:hover + dot) can
@@ -1021,10 +1037,17 @@ function generateSentimentAnalysis() {
     // Step 2
     let step2 = "";
     let summarySentiment = "";
-    const prices = futuresOptions.AlignedPrices || [];
-    if (prices.length >= 2) {
-        const latestPrice = prices[prices.length - 1];
-        const prevPrice = prices[prices.length - 2];
+    // Look up by date rather than trusting array position: IndexHistory can
+    // be missing a day (Yahoo gap) independently of FuturesHistory, so
+    // "last two entries" is not reliably "latest and previous trading day".
+    const indexByDate = new Map((futuresOptions.IndexHistory || []).map(h => [h.Date, h]));
+    const latestIndexEntry = indexByDate.get(latest.Date);
+    const prevIndexEntry = indexByDate.get(prev.Date);
+    if (latestIndexEntry && prevIndexEntry &&
+        latestIndexEntry.Close !== null && latestIndexEntry.Close !== undefined &&
+        prevIndexEntry.Close !== null && prevIndexEntry.Close !== undefined) {
+        const latestPrice = latestIndexEntry.Close;
+        const prevPrice = prevIndexEntry.Close;
         const priceDiff = latestPrice - prevPrice;
         const priceTrend = priceDiff > 0 ? "up" : "down";
         

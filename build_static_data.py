@@ -1019,7 +1019,7 @@ def generate_trend_chart(futures_history, cache_dir):
     foreign_nets = [item["Foreign_Net"] for item in futures_history]
     
     if not dates:
-        return None, [], []
+        return None, []
 
     start_date_str = f"{dates[0][:4]}-{dates[0][4:6]}-{dates[0][6:]}"
     end_date = datetime.datetime.strptime(dates[-1], "%Y%m%d") + datetime.timedelta(days=2)
@@ -1031,22 +1031,27 @@ def generate_trend_chart(futures_history, cache_dir):
         hist = ticker.history(start=start_date_str, end=end_date_str)
         if hist.empty:
             print("Failed to download index quotes.", file=sys.stderr)
-            return None, [], []
-            
+            return None, []
+
         hist.index = hist.index.strftime("%Y%m%d")
-        
+
         aligned_dates = []
         aligned_prices = []
         aligned_nets = []
-        aligned_volumes = []
+        # Keyed by date (not position) so a single day Yahoo's calendar
+        # happens to be missing that day -- seen in practice, e.g. a
+        # transient gap in one day's history mid-fetch -- only drops that
+        # one point instead of forcing every consumer to fall back to
+        # trusting a bare array's position against FuturesHistory's, which
+        # silently breaks the moment the two lengths stop matching.
+        index_history = []
 
         for d, net in zip(dates, foreign_nets):
             if d in hist.index:
                 aligned_dates.append(f"{d[4:6]}/{d[6:]}")
-                aligned_prices.append(hist.loc[d]["Close"])
+                close_val = hist.loc[d]["Close"]
+                aligned_prices.append(close_val)
                 aligned_nets.append(net)
-                # Same row as Close, so it can't drift out of alignment with
-                # aligned_prices the way a separately-fetched series could.
                 # Yahoo finalizes the index's daily Close before its Volume
                 # aggregation catches up, so the most recent trading day can
                 # briefly report Volume=0 even though Close is already
@@ -1054,11 +1059,15 @@ def generate_trend_chart(futures_history, cache_dir):
                 # index, so treat it as "not yet available" (null) rather
                 # than a real zero -- it corrects itself on the next run.
                 vol = int(hist.loc[d]["Volume"])
-                aligned_volumes.append(vol if vol > 0 else None)
+                index_history.append({
+                    "Date": d,
+                    "Close": close_val,
+                    "Volume": vol if vol > 0 else None,
+                })
 
         if not aligned_dates:
             print("Failed to align dates.", file=sys.stderr)
-            return None, [], []
+            return None, []
             
         fig, ax1 = plt.subplots(figsize=(10, 5))
         
@@ -1093,10 +1102,10 @@ def generate_trend_chart(futures_history, cache_dir):
         plt.savefig(output_path, dpi=300)
         plt.close()
         print(f"Chart generated and saved to: {output_path}")
-        return output_path, aligned_prices, aligned_volumes
+        return output_path, index_history
     except Exception as e:
         print(f"Error generating chart: {e}", file=sys.stderr)
-    return None, [], []
+    return None, []
 
 def scrape_daily_sbl_data(date_str, cache_dir):
     sbl_map = {}
@@ -1708,8 +1717,8 @@ def main():
         load_published_futures_history(), fresh_entries, n=20
     )  # newest first
 
-    # Generate Chart & aligned prices/volumes (chart wants oldest to newest)
-    chart_path, aligned_prices, aligned_volumes = generate_trend_chart(
+    # Generate Chart & index history (chart wants oldest to newest)
+    chart_path, index_history = generate_trend_chart(
         list(reversed(futures_history)), cache_dir
     )
 
@@ -1724,8 +1733,9 @@ def main():
         },
         "Options": opt_data,
         "FuturesHistory": futures_history,
-        "AlignedPrices": aligned_prices,
-        "AlignedVolumes": aligned_volumes
+        # Keyed by Date rather than a bare positional array -- see
+        # generate_trend_chart's docstring note on why.
+        "IndexHistory": index_history
     }
     
     with open("data/futures_options.json", "w", encoding="utf-8") as f:
