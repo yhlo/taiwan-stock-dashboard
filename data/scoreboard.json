@@ -1,20 +1,20 @@
 {
-  "UpdatedFor": "20260819",
+  "UpdatedFor": "20260820",
   "Note": "訊號於當日收盤後產生，報酬以次一交易日收盤價計算，未計交易成本。報酬僅涵蓋可取得歷史股價的上市個股，Scored 為實際計入檔數。",
   "Summary": {
     "ForeignBuy": {
       "Label": "外資連買",
-      "Sessions": 32,
-      "AvgReturn": 0.15,
-      "PositiveSessionRate": 62.5,
+      "Sessions": 33,
+      "AvgReturn": 0.19,
+      "PositiveSessionRate": 63.6,
       "BestReturn": 2.88,
       "WorstReturn": -2.59
     },
     "TrustBuy": {
       "Label": "投信連買",
-      "Sessions": 32,
-      "AvgReturn": -0.51,
-      "PositiveSessionRate": 28.1,
+      "Sessions": 33,
+      "AvgReturn": -0.46,
+      "PositiveSessionRate": 30.3,
       "BestReturn": 7.69,
       "WorstReturn": -7.54
     }
@@ -23,27 +23,37 @@
     {
       "Signal": "TrustBuy",
       "Label": "投信連買",
-      "SignalDate": "20260819",
+      "SignalDate": "20260820",
       "EvalDate": null,
       "Stocks": [
         {
-          "Symbol": "3491",
-          "Name": "昇達科",
-          "Streak": 5
+          "Symbol": "1815",
+          "Name": "富喬",
+          "Streak": 3
         },
         {
-          "Symbol": "6121",
-          "Name": "新普",
-          "Streak": 5
+          "Symbol": "3081",
+          "Name": "聯亞",
+          "Streak": 3
         },
         {
-          "Symbol": "6488",
-          "Name": "環球晶",
-          "Streak": 4
+          "Symbol": "3105",
+          "Name": "穩懋",
+          "Streak": 3
         },
         {
           "Symbol": "3227",
           "Name": "原相",
+          "Streak": 3
+        },
+        {
+          "Symbol": "3265",
+          "Name": "台星科",
+          "Streak": 3
+        },
+        {
+          "Symbol": "3491",
+          "Name": "昇達科",
           "Streak": 3
         },
         {
@@ -52,8 +62,18 @@
           "Streak": 3
         },
         {
+          "Symbol": "5425",
+          "Name": "台半",
+          "Streak": 3
+        },
+        {
           "Symbol": "5483",
           "Name": "中美晶",
+          "Streak": 3
+        },
+        {
+          "Symbol": "6121",
+          "Name": "新普",
           "Streak": 3
         }
       ]
@@ -61,60 +81,178 @@
     {
       "Signal": "ForeignBuy",
       "Label": "外資連買",
-      "SignalDate": "20260819",
+      "SignalDate": "20260820",
       "EvalDate": null,
+      "Stocks": [
+        {
+          "Symbol": "00697B",
+          "Name": "元大美債7-10",
+          "Streak": 3
+        },
+        {
+          "Symbol": "00724B",
+          "Name": "群益投資級金融債",
+          "Streak": 3
+        },
+        {
+          "Symbol": "00772B",
+          "Name": "中信高評級公司債",
+          "Streak": 3
+        },
+        {
+          "Symbol": "00948B",
+          "Name": "中信優息投資級債",
+          "Streak": 3
+        },
+        {
+          "Symbol": "00955",
+          "Name": "中信日本商社",
+          "Streak": 3
+        },
+        {
+          "Symbol": "00967B",
+          "Name": "元大優息美債",
+          "Streak": 3
+        },
+        {
+          "Symbol": "009815",
+          "Name": "大華美國MAG7+",
+          "Streak": 3
+        },
+        {
+          "Symbol": "009823",
+          "Name": "群益S&P500",
+          "Streak": 3
+        },
+        {
+          "Symbol": "1565",
+          "Name": "精華",
+          "Streak": 3
+        },
+        {
+          "Symbol": "1586",
+          "Name": "和勤",
+          "Streak": 3
+        }
+      ]
+    },
+    {
+      "Signal": "TrustBuy",
+      "Label": "投信連買",
+      "SignalDate": "20260819",
+      "EvalDate": "20260820",
+      "Stocks": [
+        {
+          "Symbol": "3491",
+          "Name": "昇達科",
+          "Streak": 5,
+          "Return": 4.9
+        },
+        {
+          "Symbol": "6121",
+          "Name": "新普",
+          "Streak": 5,
+          "Return": -1.62
+        },
+        {
+          "Symbol": "6488",
+          "Name": "環球晶",
+          "Streak": 4,
+          "Return": 1.02
+        },
+        {
+          "Symbol": "3227",
+          "Name": "原相",
+          "Streak": 3,
+          "Return": 1.01
+        },
+        {
+          "Symbol": "4966",
+          "Name": "譜瑞-KY",
+          "Streak": 3,
+          "Return": -2.58
+        },
+        {
+          "Symbol": "5483",
+          "Name": "中美晶",
+          "Streak": 3,
+          "Return": 5.67
+        }
+      ],
+      "AvgReturn": 1.4,
+      "WinRate": 66.7,
+      "Scored": 6
+    },
+    {
+      "Signal": "ForeignBuy",
+      "Label": "外資連買",
+      "SignalDate": "20260819",
+      "EvalDate": "20260820",
       "Stocks": [
         {
           "Symbol": "00967B",
           "Name": "元大優息美債",
-          "Streak": 5
+          "Streak": 5,
+          "Return": 0.89
         },
         {
           "Symbol": "1780",
           "Name": "立弘",
-          "Streak": 5
+          "Streak": 5,
+          "Return": 0.81
         },
         {
           "Symbol": "1815",
           "Name": "富喬",
-          "Streak": 5
+          "Streak": 5,
+          "Return": 9.18
         },
         {
           "Symbol": "2756",
           "Name": "聯發國際",
-          "Streak": 5
+          "Streak": 5,
+          "Return": 1.15
         },
         {
           "Symbol": "3093",
           "Name": "港建*",
-          "Streak": 5
+          "Streak": 5,
+          "Return": -2.18
         },
         {
           "Symbol": "3205",
           "Name": "佰研",
-          "Streak": 5
+          "Streak": 5,
+          "Return": 0.62
         },
         {
           "Symbol": "3213",
           "Name": "茂訊",
-          "Streak": 5
+          "Streak": 5,
+          "Return": -1.13
         },
         {
           "Symbol": "3234",
           "Name": "光環",
-          "Streak": 5
+          "Streak": 5,
+          "Return": 2.37
         },
         {
           "Symbol": "3466",
           "Name": "德晉",
-          "Streak": 5
+          "Streak": 5,
+          "Return": -1.41
         },
         {
           "Symbol": "3490",
           "Name": "單井",
-          "Streak": 5
+          "Streak": 5,
+          "Return": 5.02
         }
-      ]
+      ],
+      "AvgReturn": 1.53,
+      "WinRate": 70.0,
+      "Scored": 10
     },
     {
       "Signal": "TrustBuy",
