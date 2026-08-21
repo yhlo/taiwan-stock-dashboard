@@ -1,32 +1,32 @@
 {
-  "Date": "20260820",
+  "Date": "20260821",
   "Settlement": {
     "IsSettlementWeek": false,
     "SettlementDate": null
   },
   "Options": {
-    "Date": "20260820",
+    "Date": "20260821",
     "ActiveMonth": "202608F3",
-    "MaxCallStrike": 47500,
-    "MaxCallOI": 3024,
-    "MaxPutStrike": 43000,
-    "MaxPutOI": 1975
+    "MaxCallStrike": 45200,
+    "MaxCallOI": 3342,
+    "MaxPutStrike": 45000,
+    "MaxPutOI": 4554
   },
   "FuturesHistory": [
     {
       "Date": "20260821",
-      "Foreign_Net": 0,
-      "Trust_Net": 0,
-      "Dealer_Net": 0,
-      "Total_Net": 0,
-      "MTX_Foreign_Net": 0,
-      "MTX_Trust_Net": 0,
-      "MTX_Dealer_Net": 0,
-      "MTX_Total_Net": 0,
-      "TMF_Foreign_Net": 0,
+      "Foreign_Net": -82594,
+      "Trust_Net": 76316,
+      "Dealer_Net": 1699,
+      "Total_Net": -4579,
+      "MTX_Foreign_Net": -704,
+      "MTX_Trust_Net": -44,
+      "MTX_Dealer_Net": -8266,
+      "MTX_Total_Net": -9014,
+      "TMF_Foreign_Net": 5463,
       "TMF_Trust_Net": 0,
-      "TMF_Dealer_Net": 0,
-      "TMF_Total_Net": 0
+      "TMF_Dealer_Net": -23917,
+      "TMF_Total_Net": -18454
     },
     {
       "Date": "20260820",
