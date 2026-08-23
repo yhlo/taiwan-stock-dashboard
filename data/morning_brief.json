@@ -1,171 +1,171 @@
 {
-  "Date": "20260821",
-  "GeneratedAt": "2026-08-21T05:56:26+08:00",
+  "Date": "20260824",
+  "GeneratedAt": "2026-08-24T05:30:40+08:00",
   "UsMarkets": [
     {
       "Name": "道瓊工業",
-      "Close": 52759.21,
-      "ChangePct": -1.32,
-      "Date": "20260820"
+      "Close": 53277.01,
+      "ChangePct": 0.98,
+      "Date": "20260821"
     },
     {
       "Name": "那斯達克",
-      "Close": 26067.17,
-      "ChangePct": -1.0,
-      "Date": "20260820"
+      "Close": 26180.46,
+      "ChangePct": 0.43,
+      "Date": "20260821"
     },
     {
       "Name": "標普500",
-      "Close": 7641.16,
-      "ChangePct": -0.87,
-      "Date": "20260820"
+      "Close": 7674.37,
+      "ChangePct": 0.43,
+      "Date": "20260821"
     },
     {
       "Name": "費城半導體",
-      "Close": 11800.02,
-      "ChangePct": 0.53,
-      "Date": "20260820"
+      "Close": 11740.37,
+      "ChangePct": -0.51,
+      "Date": "20260821"
     }
   ],
   "Adr": {
-    "Close": 416.0,
-    "ChangePct": 0.95,
-    "Date": "20260820",
-    "FxRate": 31.859,
-    "ImpliedTwd": 2650.7,
-    "TwClose": 2375.0,
-    "TwCloseDate": "20260820",
-    "PremiumPct": 11.61
+    "Close": 418.95,
+    "ChangePct": 0.71,
+    "Date": "20260821",
+    "FxRate": 31.819,
+    "ImpliedTwd": 2666.1,
+    "TwClose": 2410.0,
+    "TwCloseDate": "20260821",
+    "PremiumPct": 10.63
   },
   "NightSession": {
     "Contract": "202609",
-    "Open": "44982",
-    "High": "45000",
-    "Low": "44261",
-    "Close": 44804.0,
-    "PrevClose": 44868.0,
-    "PrevCloseDate": "20260820",
-    "GapPoints": -64.0,
-    "GapPct": -0.14
+    "Open": "45220",
+    "High": "45474",
+    "Low": "44978",
+    "Close": 45074.0,
+    "PrevClose": 45148.0,
+    "PrevCloseDate": "20260821",
+    "GapPoints": -74.0,
+    "GapPct": -0.16
   },
   "Chips": {
     "ForeignFuturesNet": {
-      "Date": "20260820",
-      "Net": -82423,
-      "Change": -922
+      "Date": "20260821",
+      "Net": -82594,
+      "Change": -171
     },
     "OptionLevels": {
-      "Resistance": 47500,
-      "ResistanceOI": 3024,
-      "Support": 43000,
-      "SupportOI": 1975,
+      "Resistance": 45200,
+      "ResistanceOI": 3342,
+      "Support": 45000,
+      "SupportOI": 4554,
       "ActiveMonth": "202608F3"
     },
-    "ChipDate": "20260820",
+    "ChipDate": "20260821",
     "ForeignBuyStreak": [
       {
-        "Symbol": "00401A",
-        "Name": "主動摩根台灣鑫收",
-        "Streak": 5,
-        "Close": 13.35,
-        "Change": 0.09
+        "Symbol": "1216",
+        "Name": "統一",
+        "Streak": 19,
+        "Close": 77.5,
+        "Change": -0.7
       },
       {
-        "Symbol": "00405A",
-        "Name": "主動富邦台灣龍耀",
-        "Streak": 5,
-        "Close": 8.57,
-        "Change": 0.1
+        "Symbol": "6279",
+        "Name": "胡連",
+        "Streak": 18,
+        "Close": 128.0,
+        "Change": 0.5
       },
       {
         "Symbol": "0051",
         "Name": "元大中型100",
-        "Streak": 5,
-        "Close": 141.8,
-        "Change": 0.8
+        "Streak": 15,
+        "Close": 142.0,
+        "Change": 0.2
       },
       {
-        "Symbol": "00706L",
-        "Name": "期元大S&P日圓正2",
-        "Streak": 5,
-        "Close": 19.13,
-        "Change": 0.15
+        "Symbol": "00900",
+        "Name": "富邦特選高股息30",
+        "Streak": 15,
+        "Close": 18.69,
+        "Change": 0.13
       },
       {
-        "Symbol": "00713",
-        "Name": "元大台灣高息低波",
-        "Streak": 5,
-        "Close": 61.15,
-        "Change": 0.3
+        "Symbol": "1319",
+        "Name": "東陽",
+        "Streak": 13,
+        "Close": 82.8,
+        "Change": -0.2
       }
     ],
     "TrustBuyStreak": [
       {
+        "Symbol": "6805",
+        "Name": "富世達",
+        "Streak": 14,
+        "Close": 1765.0,
+        "Change": -85.0
+      },
+      {
+        "Symbol": "8996",
+        "Name": "高力",
+        "Streak": 14,
+        "Close": 1090.0,
+        "Change": -45.0
+      },
+      {
         "Symbol": "1402",
         "Name": "遠東新",
-        "Streak": 5,
-        "Close": 29.2,
-        "Change": 1.2
+        "Streak": 13,
+        "Close": 30.35,
+        "Change": 1.15
       },
       {
-        "Symbol": "1476",
-        "Name": "儒鴻",
-        "Streak": 5,
-        "Close": 317.0,
-        "Change": 5.5
+        "Symbol": "2474",
+        "Name": "可成",
+        "Streak": 12,
+        "Close": 203.5,
+        "Change": -0.5
       },
       {
-        "Symbol": "1477",
-        "Name": "聚陽",
-        "Streak": 5,
-        "Close": 201.0,
-        "Change": 8.5
-      },
-      {
-        "Symbol": "2207",
-        "Name": "和泰車",
-        "Streak": 5,
-        "Close": 508.0,
-        "Change": 2.0
-      },
-      {
-        "Symbol": "2347",
-        "Name": "聯強",
-        "Streak": 5,
-        "Close": 87.0,
-        "Change": 0.7
+        "Symbol": "2855",
+        "Name": "統一證",
+        "Streak": 12,
+        "Close": 47.1,
+        "Change": 0.45
       }
     ],
     "TrustFreshBuys": [
       {
-        "Symbol": "00953B",
-        "Name": "群益優選非投等債",
-        "Shares": 21000000,
-        "Close": 9.7
+        "Symbol": "6278",
+        "Name": "台表科",
+        "Shares": 2851000,
+        "Close": 187.0
       },
       {
-        "Symbol": "1303",
-        "Name": "南亞",
-        "Shares": 3674000,
-        "Close": 186.0
+        "Symbol": "4979",
+        "Name": "華星光",
+        "Shares": 2360000,
+        "Close": 577.0
       },
       {
-        "Symbol": "3090",
-        "Name": "日電貿",
-        "Shares": 2864000,
-        "Close": 172.0
+        "Symbol": "3450",
+        "Name": "聯鈞",
+        "Shares": 914000,
+        "Close": 551.0
       },
       {
-        "Symbol": "8422",
-        "Name": "可寧衛*",
-        "Shares": 2559000,
-        "Close": 27.1
+        "Symbol": "2615",
+        "Name": "萬海",
+        "Shares": 829000,
+        "Close": 124.5
       },
       {
-        "Symbol": "2458",
-        "Name": "義隆",
-        "Shares": 1613000,
-        "Close": 146.0
+        "Symbol": "2303",
+        "Name": "聯電",
+        "Shares": 505718,
+        "Close": 116.5
       }
     ]
   },
