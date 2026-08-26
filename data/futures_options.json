@@ -14,6 +14,21 @@
   },
   "FuturesHistory": [
     {
+      "Date": "20260826",
+      "Foreign_Net": 0,
+      "Trust_Net": 0,
+      "Dealer_Net": 0,
+      "Total_Net": 0,
+      "MTX_Foreign_Net": 0,
+      "MTX_Trust_Net": 0,
+      "MTX_Dealer_Net": 0,
+      "MTX_Total_Net": 0,
+      "TMF_Foreign_Net": 0,
+      "TMF_Trust_Net": 0,
+      "TMF_Dealer_Net": 0,
+      "TMF_Total_Net": 0
+    },
+    {
       "Date": "20260825",
       "Foreign_Net": -85380,
       "Trust_Net": 76309,
@@ -297,29 +312,9 @@
       "TMF_Trust_Net": 0,
       "TMF_Dealer_Net": -56259,
       "TMF_Total_Net": -58357
-    },
-    {
-      "Date": "20260729",
-      "Foreign_Net": -82785,
-      "Trust_Net": 74742,
-      "Dealer_Net": 2552,
-      "Total_Net": -5491,
-      "MTX_Foreign_Net": -731,
-      "MTX_Trust_Net": 11,
-      "MTX_Dealer_Net": -6274,
-      "MTX_Total_Net": -6994,
-      "TMF_Foreign_Net": -5924,
-      "TMF_Trust_Net": 0,
-      "TMF_Dealer_Net": -65047,
-      "TMF_Total_Net": -70971
     }
   ],
   "IndexHistory": [
-    {
-      "Date": "20260729",
-      "Close": 40039.1796875,
-      "Volume": 6323100
-    },
     {
       "Date": "20260730",
       "Close": 39933.30078125,
@@ -414,6 +409,11 @@
       "Date": "20260825",
       "Close": 45169.4609375,
       "Volume": 3925500
+    },
+    {
+      "Date": "20260826",
+      "Close": 45832.62109375,
+      "Volume": null
     }
   ]
 }
