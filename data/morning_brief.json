@@ -1,161 +1,171 @@
 {
-  "Date": "20260828",
-  "GeneratedAt": "2026-08-28T13:35:40+08:00",
+  "Date": "20260831",
+  "GeneratedAt": "2026-08-31T07:24:56+08:00",
   "UsMarkets": [
     {
       "Name": "道瓊工業",
-      "Close": 53569.44,
-      "ChangePct": 0.2,
-      "Date": "20260827"
+      "Close": 53559.99,
+      "ChangePct": -0.02,
+      "Date": "20260828"
     },
     {
       "Name": "那斯達克",
-      "Close": 26541.35,
-      "ChangePct": 1.57,
-      "Date": "20260827"
+      "Close": 26402.42,
+      "ChangePct": -0.52,
+      "Date": "20260828"
     },
     {
       "Name": "標普500",
-      "Close": 7730.99,
-      "ChangePct": 0.72,
-      "Date": "20260827"
+      "Close": 7711.76,
+      "ChangePct": -0.25,
+      "Date": "20260828"
     },
     {
       "Name": "費城半導體",
-      "Close": 11882.17,
-      "ChangePct": 2.33,
-      "Date": "20260827"
+      "Close": 11469.66,
+      "ChangePct": -3.47,
+      "Date": "20260828"
     }
   ],
   "Adr": {
-    "Close": 427.3,
-    "ChangePct": 2.3,
-    "Date": "20260827",
-    "FxRate": 31.601,
-    "ImpliedTwd": 2700.6,
-    "TwClose": 2410.0,
-    "TwCloseDate": "20260827",
-    "PremiumPct": 12.06
+    "Close": 417.52,
+    "ChangePct": -2.29,
+    "Date": "20260828",
+    "FxRate": 31.625,
+    "ImpliedTwd": 2640.8,
+    "TwClose": 2420.0,
+    "TwCloseDate": "20260828",
+    "PremiumPct": 9.12
   },
-  "NightSession": null,
+  "NightSession": {
+    "Contract": "202609",
+    "Open": "46438",
+    "High": "46613",
+    "Low": "45826",
+    "Close": 45900.0,
+    "PrevClose": 46357.0,
+    "PrevCloseDate": "20260828",
+    "GapPoints": -457.0,
+    "GapPct": -0.99
+  },
   "Chips": {
     "ForeignFuturesNet": {
-      "Date": "20260827",
-      "Net": -84836,
-      "Change": -1182
+      "Date": "20260828",
+      "Net": -83655,
+      "Change": 1181
     },
     "OptionLevels": {
-      "Resistance": 47000,
-      "ResistanceOI": 1688,
-      "Support": 45000,
-      "SupportOI": 1684,
+      "Resistance": 46500,
+      "ResistanceOI": 6170,
+      "Support": 46000,
+      "SupportOI": 3937,
       "ActiveMonth": "202608F4"
     },
-    "ChipDate": "20260827",
+    "ChipDate": "20260828",
     "ForeignBuyStreak": [
-      {
-        "Symbol": "1216",
-        "Name": "統一",
-        "Streak": 20,
-        "Close": 77.1,
-        "Change": -0.6
-      },
       {
         "Symbol": "00900",
         "Name": "富邦特選高股息30",
-        "Streak": 19,
-        "Close": 19.04,
-        "Change": 0.1
+        "Streak": 20,
+        "Close": 19.03,
+        "Change": -0.01
       },
       {
         "Symbol": "00967B",
         "Name": "元大優息美債",
-        "Streak": 15,
-        "Close": 8.99,
-        "Change": -0.02
+        "Streak": 16,
+        "Close": 8.93,
+        "Change": -0.06
       },
       {
         "Symbol": "4974",
         "Name": "亞泰",
-        "Streak": 15,
-        "Close": 69.2,
-        "Change": 0.8
+        "Streak": 16,
+        "Close": 68.6,
+        "Change": -0.6
       },
       {
         "Symbol": "6423",
         "Name": "億而得",
+        "Streak": 16,
+        "Close": 80.9,
+        "Change": -0.6
+      },
+      {
+        "Symbol": "1524",
+        "Name": "耿鼎",
         "Streak": 15,
-        "Close": 81.5,
-        "Change": 0.3
+        "Close": 27.5,
+        "Change": 0.0
       }
     ],
     "TrustBuyStreak": [
       {
         "Symbol": "6805",
         "Name": "富世達",
-        "Streak": 18,
-        "Close": 2225.0,
-        "Change": 200.0
+        "Streak": 19,
+        "Close": 2345.0,
+        "Change": 120.0
       },
       {
         "Symbol": "8996",
         "Name": "高力",
-        "Streak": 18,
-        "Close": 1310.0,
-        "Change": 115.0
+        "Streak": 19,
+        "Close": 1265.0,
+        "Change": -45.0
       },
       {
         "Symbol": "2884",
         "Name": "玉山金",
-        "Streak": 16,
-        "Close": 38.55,
-        "Change": -0.15
+        "Streak": 17,
+        "Close": 38.75,
+        "Change": 0.2
       },
       {
         "Symbol": "3491",
         "Name": "昇達科",
-        "Streak": 12,
-        "Close": 1425.0,
-        "Change": 80.0
+        "Streak": 13,
+        "Close": 1510.0,
+        "Change": 85.0
       },
       {
-        "Symbol": "2486",
-        "Name": "一詮",
+        "Symbol": "1815",
+        "Name": "富喬",
         "Streak": 9,
-        "Close": 259.0,
-        "Change": -3.5
+        "Close": 125.5,
+        "Change": 9.0
       }
     ],
     "TrustFreshBuys": [
       {
-        "Symbol": "2881",
-        "Name": "富邦金",
-        "Shares": 3678630,
-        "Close": 141.5
+        "Symbol": "2303",
+        "Name": "聯電",
+        "Shares": 3935859,
+        "Close": 130.0
       },
       {
-        "Symbol": "00900",
-        "Name": "富邦特選高股息30",
-        "Shares": 2500000,
-        "Close": 19.04
+        "Symbol": "3374",
+        "Name": "精材",
+        "Shares": 3336000,
+        "Close": 386.0
       },
       {
-        "Symbol": "009814",
-        "Name": "富邦標普500",
-        "Shares": 1730000,
-        "Close": 11.39
+        "Symbol": "2891",
+        "Name": "中信金",
+        "Shares": 1953753,
+        "Close": 64.4
       },
       {
-        "Symbol": "00740B",
-        "Name": "富邦全球投等債",
-        "Shares": 432000,
-        "Close": 37.57
+        "Symbol": "009816",
+        "Name": "凱基台灣TOP50",
+        "Shares": 1500000,
+        "Close": 15.59
       },
       {
-        "Symbol": "8069",
-        "Name": "元太",
-        "Shares": 337664,
-        "Close": 159.0
+        "Symbol": "3406",
+        "Name": "玉晶光",
+        "Shares": 1343000,
+        "Close": 917.0
       }
     ]
   },
