@@ -1026,14 +1026,45 @@ def generate_trend_chart(futures_history, cache_dir):
     end_date_str = end_date.strftime("%Y-%m-%d")
 
     try:
-        print("Downloading Index prices from Yahoo Finance...")
-        ticker = yf.Ticker("^TWII")
-        hist = ticker.history(start=start_date_str, end=end_date_str)
-        if hist.empty:
+        # yfinance's ^TWII history has turned out to be flaky in a way that
+        # doesn't fit "not settled yet": repeat queries seconds apart, same
+        # parameters, sometimes come back missing a trading day -- and not
+        # consistently the newest one, different days go missing on
+        # different attempts. A settlement-lag explanation would single out
+        # the newest day consistently; this doesn't, so it's worth retrying
+        # for a genuinely complete response rather than accepting whichever
+        # gap this particular attempt happened to have.
+        hist = None
+        best_missing = None
+        for attempt in range(3):
+            print(f"Downloading Index prices from Yahoo Finance (Attempt {attempt + 1})...")
+            ticker = yf.Ticker("^TWII")
+            candidate = ticker.history(start=start_date_str, end=end_date_str)
+            if candidate.empty:
+                if hist is None:
+                    hist = candidate
+                if attempt < 2:
+                    time.sleep(3)
+                continue
+            candidate.index = candidate.index.strftime("%Y%m%d")
+            missing = [d for d in dates if d not in candidate.index]
+            # Keep whichever attempt was most complete, not just the last
+            # one -- if no attempt comes back fully complete, the smallest
+            # gap is still better than an arbitrary later attempt's larger
+            # one.
+            if best_missing is None or len(missing) < len(best_missing):
+                hist = candidate
+                best_missing = missing
+            if not missing:
+                break
+            print(f"{len(missing)} expected date(s) missing from Yahoo's response "
+                  f"on attempt {attempt + 1} ({missing}); retrying.", file=sys.stderr)
+            if attempt < 2:
+                time.sleep(3)
+
+        if hist is None or hist.empty:
             print("Failed to download index quotes.", file=sys.stderr)
             return None, []
-
-        hist.index = hist.index.strftime("%Y%m%d")
 
         aligned_dates = []
         aligned_prices = []
