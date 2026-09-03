@@ -1,18 +1,33 @@
 {
-  "Date": "20260902",
+  "Date": "20260903",
   "Settlement": {
     "IsSettlementWeek": false,
     "SettlementDate": null
   },
   "Options": {
-    "Date": "20260902",
-    "ActiveMonth": "202609W1",
-    "MaxCallStrike": 48000,
-    "MaxCallOI": 7505,
-    "MaxPutStrike": 46000,
-    "MaxPutOI": 5079
+    "Date": "20260903",
+    "ActiveMonth": "202609F1",
+    "MaxCallStrike": 47500,
+    "MaxCallOI": 8970,
+    "MaxPutStrike": 45000,
+    "MaxPutOI": 2645
   },
   "FuturesHistory": [
+    {
+      "Date": "20260903",
+      "Foreign_Net": -81575,
+      "Trust_Net": 74389,
+      "Dealer_Net": 1134,
+      "Total_Net": -6052,
+      "MTX_Foreign_Net": 2822,
+      "MTX_Trust_Net": -55,
+      "MTX_Dealer_Net": -3154,
+      "MTX_Total_Net": -387,
+      "TMF_Foreign_Net": 21753,
+      "TMF_Trust_Net": 0,
+      "TMF_Dealer_Net": -47438,
+      "TMF_Total_Net": -25685
+    },
     {
       "Date": "20260902",
       "Foreign_Net": -85329,
@@ -297,29 +312,9 @@
       "TMF_Trust_Net": 0,
       "TMF_Dealer_Net": -35440,
       "TMF_Total_Net": -25304
-    },
-    {
-      "Date": "20260806",
-      "Foreign_Net": -89383,
-      "Trust_Net": 84163,
-      "Dealer_Net": 2602,
-      "Total_Net": -2618,
-      "MTX_Foreign_Net": -6249,
-      "MTX_Trust_Net": 29,
-      "MTX_Dealer_Net": -4564,
-      "MTX_Total_Net": -10784,
-      "TMF_Foreign_Net": 8309,
-      "TMF_Trust_Net": 0,
-      "TMF_Dealer_Net": -38569,
-      "TMF_Total_Net": -30260
     }
   ],
   "IndexHistory": [
-    {
-      "Date": "20260806",
-      "Close": 44396.69921875,
-      "Volume": 4904700
-    },
     {
       "Date": "20260807",
       "Close": 44225.91015625,
@@ -396,6 +391,11 @@
       "Volume": 4494100
     },
     {
+      "Date": "20260828",
+      "Close": 46331.44921875,
+      "Volume": 5073800
+    },
+    {
       "Date": "20260831",
       "Close": 46128.46875,
       "Volume": 7217600
@@ -408,6 +408,11 @@
     {
       "Date": "20260902",
       "Close": 46164.71875,
+      "Volume": 4100600
+    },
+    {
+      "Date": "20260903",
+      "Close": 45857.66015625,
       "Volume": null
     }
   ]
