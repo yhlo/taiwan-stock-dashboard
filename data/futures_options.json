@@ -1,18 +1,33 @@
 {
-  "Date": "20260903",
+  "Date": "20260904",
   "Settlement": {
     "IsSettlementWeek": false,
     "SettlementDate": null
   },
   "Options": {
-    "Date": "20260903",
+    "Date": "20260904",
     "ActiveMonth": "202609F1",
     "MaxCallStrike": 47500,
-    "MaxCallOI": 8970,
-    "MaxPutStrike": 45000,
-    "MaxPutOI": 2645
+    "MaxCallOI": 9657,
+    "MaxPutStrike": 46000,
+    "MaxPutOI": 4611
   },
   "FuturesHistory": [
+    {
+      "Date": "20260904",
+      "Foreign_Net": -82389,
+      "Trust_Net": 76174,
+      "Dealer_Net": -697,
+      "Total_Net": -6912,
+      "MTX_Foreign_Net": 6255,
+      "MTX_Trust_Net": -50,
+      "MTX_Dealer_Net": -2959,
+      "MTX_Total_Net": 3246,
+      "TMF_Foreign_Net": 27278,
+      "TMF_Trust_Net": 0,
+      "TMF_Dealer_Net": -41049,
+      "TMF_Total_Net": -13771
+    },
     {
       "Date": "20260903",
       "Foreign_Net": -81575,
@@ -297,29 +312,9 @@
       "TMF_Trust_Net": 0,
       "TMF_Dealer_Net": -33634,
       "TMF_Total_Net": -23564
-    },
-    {
-      "Date": "20260807",
-      "Foreign_Net": -87911,
-      "Trust_Net": 83077,
-      "Dealer_Net": 2512,
-      "Total_Net": -2322,
-      "MTX_Foreign_Net": -2804,
-      "MTX_Trust_Net": 29,
-      "MTX_Dealer_Net": -5946,
-      "MTX_Total_Net": -8721,
-      "TMF_Foreign_Net": 10136,
-      "TMF_Trust_Net": 0,
-      "TMF_Dealer_Net": -35440,
-      "TMF_Total_Net": -25304
     }
   ],
   "IndexHistory": [
-    {
-      "Date": "20260807",
-      "Close": 44225.91015625,
-      "Volume": 4388800
-    },
     {
       "Date": "20260810",
       "Close": 44928.76171875,
@@ -391,6 +386,11 @@
       "Volume": 4494100
     },
     {
+      "Date": "20260828",
+      "Close": 46331.44921875,
+      "Volume": 5073800
+    },
+    {
       "Date": "20260831",
       "Close": 46128.46875,
       "Volume": 7217600
@@ -408,6 +408,11 @@
     {
       "Date": "20260903",
       "Close": 45857.66015625,
+      "Volume": 5351000
+    },
+    {
+      "Date": "20260904",
+      "Close": 46551.12890625,
       "Volume": null
     }
   ]
