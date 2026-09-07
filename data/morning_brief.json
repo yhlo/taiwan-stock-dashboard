@@ -1,6 +1,6 @@
 {
-  "Date": "20260907",
-  "GeneratedAt": "2026-09-07T07:04:54+08:00",
+  "Date": "20260908",
+  "GeneratedAt": "2026-09-08T07:26:47+08:00",
   "UsMarkets": [
     {
       "Name": "道瓊工業",
@@ -31,72 +31,72 @@
     "Close": 428.91,
     "ChangePct": 2.85,
     "Date": "20260904",
-    "FxRate": 31.62,
-    "ImpliedTwd": 2712.4,
-    "TwClose": 2410.0,
-    "TwCloseDate": "20260904",
-    "PremiumPct": 12.55
+    "FxRate": 31.621,
+    "ImpliedTwd": 2712.5,
+    "TwClose": 2460.0,
+    "TwCloseDate": "20260907",
+    "PremiumPct": 10.26
   },
   "NightSession": {
     "Contract": "202609",
-    "Open": "46622",
-    "High": "47236",
-    "Low": "46560",
-    "Close": 47182.0,
-    "PrevClose": 46704.0,
-    "PrevCloseDate": "20260904",
-    "GapPoints": 478.0,
-    "GapPct": 1.02
+    "Open": "47513",
+    "High": "47536",
+    "Low": "47251",
+    "Close": 47329.0,
+    "PrevClose": 47470.0,
+    "PrevCloseDate": "20260907",
+    "GapPoints": -141.0,
+    "GapPct": -0.3
   },
   "Chips": {
     "ForeignFuturesNet": {
-      "Date": "20260904",
-      "Net": -82389,
-      "Change": -814
+      "Date": "20260907",
+      "Net": -79399,
+      "Change": 2990
     },
     "OptionLevels": {
-      "Resistance": 47500,
-      "ResistanceOI": 9657,
+      "Resistance": 50000,
+      "ResistanceOI": 2192,
       "Support": 46000,
-      "SupportOI": 4611,
-      "ActiveMonth": "202609F1"
+      "SupportOI": 2622,
+      "ActiveMonth": "202609W2"
     },
-    "ChipDate": "20260904",
+    "ChipDate": "20260907",
     "ForeignBuyStreak": [
       {
         "Symbol": "00900",
         "Name": "富邦特選高股息30",
         "Streak": 20,
-        "Close": 19.75,
-        "Change": 0.22
+        "Close": 19.59,
+        "Change": -0.16
       },
       {
         "Symbol": "1524",
         "Name": "耿鼎",
         "Streak": 20,
-        "Close": 26.9,
-        "Change": 0.15
+        "Close": 26.75,
+        "Change": -0.15
       },
       {
         "Symbol": "3037",
         "Name": "欣興",
         "Streak": 20,
-        "Close": 902.0,
-        "Change": -21.0
+        "Close": 949.0,
+        "Change": 47.0
       },
       {
         "Symbol": "5213",
         "Name": "亞昕",
         "Streak": 20,
-        "Close": 20.9,
-        "Change": 0.0
+        "Close": 20.85,
+        "Change": -0.05
       },
       {
         "Symbol": "5903",
         "Name": "全家",
-        "Streak": 19,
+        "Streak": 20,
         "Close": 185.0,
-        "Change": 0.5
+        "Change": 0.0
       }
     ],
     "TrustBuyStreak": [
@@ -105,67 +105,67 @@
         "Name": "玉山金",
         "Streak": 20,
         "Close": 43.55,
-        "Change": 0.35
+        "Change": 0.0
       },
       {
         "Symbol": "2301",
         "Name": "光寶科",
-        "Streak": 14,
-        "Close": 308.0,
-        "Change": 9.0
-      },
-      {
-        "Symbol": "2313",
-        "Name": "華通",
-        "Streak": 12,
-        "Close": 249.5,
-        "Change": 13.5
+        "Streak": 15,
+        "Close": 299.0,
+        "Change": -9.0
       },
       {
         "Symbol": "2618",
         "Name": "長榮航",
-        "Streak": 9,
-        "Close": 42.5,
-        "Change": -0.3
+        "Streak": 10,
+        "Close": 42.1,
+        "Change": -0.4
       },
       {
         "Symbol": "2887",
         "Name": "台新新光金",
-        "Streak": 9,
-        "Close": 41.5,
-        "Change": 0.05
+        "Streak": 10,
+        "Close": 41.1,
+        "Change": -0.4
+      },
+      {
+        "Symbol": "1476",
+        "Name": "儒鴻",
+        "Streak": 7,
+        "Close": 306.0,
+        "Change": -7.0
       }
     ],
     "TrustFreshBuys": [
       {
-        "Symbol": "2801",
-        "Name": "彰銀",
-        "Shares": 4205000,
-        "Close": 26.6
+        "Symbol": "6770",
+        "Name": "力積電",
+        "Shares": 7427000,
+        "Close": 72.9
       },
       {
-        "Symbol": "2886",
-        "Name": "兆豐金",
-        "Shares": 3457000,
-        "Close": 49.55
+        "Symbol": "1303",
+        "Name": "南亞",
+        "Shares": 5483000,
+        "Close": 230.5
       },
       {
-        "Symbol": "2303",
-        "Name": "聯電",
-        "Shares": 2474000,
+        "Symbol": "1815",
+        "Name": "富喬",
+        "Shares": 4741000,
         "Close": 130.0
       },
       {
-        "Symbol": "2845",
-        "Name": "遠東銀",
-        "Shares": 1413000,
-        "Close": 13.65
+        "Symbol": "0056",
+        "Name": "元大高股息",
+        "Shares": 2860000,
+        "Close": 55.85
       },
       {
-        "Symbol": "2892",
-        "Name": "第一金",
-        "Shares": 1307000,
-        "Close": 37.3
+        "Symbol": "00982A",
+        "Name": "主動群益台灣強棒",
+        "Shares": 2774000,
+        "Close": 23.13
       }
     ]
   },
