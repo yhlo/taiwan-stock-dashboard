@@ -1,20 +1,20 @@
 {
-  "UpdatedFor": "20260904",
+  "UpdatedFor": "20260907",
   "Note": "訊號於當日收盤後產生，報酬以次一交易日收盤價計算，未計交易成本。報酬僅涵蓋可取得歷史股價的上市個股，Scored 為實際計入檔數。",
   "Summary": {
     "ForeignBuy": {
       "Label": "外資連買",
-      "Sessions": 44,
-      "AvgReturn": 0.16,
-      "PositiveSessionRate": 59.1,
+      "Sessions": 45,
+      "AvgReturn": 0.17,
+      "PositiveSessionRate": 60.0,
       "BestReturn": 2.88,
       "WorstReturn": -2.59
     },
     "TrustBuy": {
       "Label": "投信連買",
-      "Sessions": 44,
-      "AvgReturn": -0.2,
-      "PositiveSessionRate": 36.4,
+      "Sessions": 45,
+      "AvgReturn": -0.22,
+      "PositiveSessionRate": 35.6,
       "BestReturn": 7.69,
       "WorstReturn": -7.54
     }
@@ -23,7 +23,7 @@
     {
       "Signal": "TrustBuy",
       "Label": "投信連買",
-      "SignalDate": "20260904",
+      "SignalDate": "20260907",
       "EvalDate": null,
       "Stocks": [
         {
@@ -34,54 +34,54 @@
         {
           "Symbol": "2301",
           "Name": "光寶科",
-          "Streak": 14
-        },
-        {
-          "Symbol": "2313",
-          "Name": "華通",
-          "Streak": 12
+          "Streak": 15
         },
         {
           "Symbol": "2618",
           "Name": "長榮航",
-          "Streak": 9
+          "Streak": 10
         },
         {
           "Symbol": "2887",
           "Name": "台新新光金",
-          "Streak": 9
+          "Streak": 10
         },
         {
           "Symbol": "1476",
           "Name": "儒鴻",
-          "Streak": 6
+          "Streak": 7
         },
         {
           "Symbol": "2357",
           "Name": "華碩",
-          "Streak": 6
+          "Streak": 7
         },
         {
           "Symbol": "2379",
           "Name": "瑞昱",
-          "Streak": 6
+          "Streak": 7
         },
         {
           "Symbol": "2382",
           "Name": "廣達",
-          "Streak": 6
+          "Streak": 7
         },
         {
           "Symbol": "2542",
           "Name": "興富發",
-          "Streak": 6
+          "Streak": 7
+        },
+        {
+          "Symbol": "2891",
+          "Name": "中信金",
+          "Streak": 7
         }
       ]
     },
     {
       "Signal": "ForeignBuy",
       "Label": "外資連買",
-      "SignalDate": "20260904",
+      "SignalDate": "20260907",
       "EvalDate": null,
       "Stocks": [
         {
@@ -107,34 +107,176 @@
         {
           "Symbol": "5903",
           "Name": "全家",
-          "Streak": 19
+          "Streak": 20
         },
         {
           "Symbol": "6263",
           "Name": "普萊德",
-          "Streak": 18
+          "Streak": 19
         },
         {
           "Symbol": "2886",
           "Name": "兆豐金",
-          "Streak": 17
-        },
-        {
-          "Symbol": "912000",
-          "Name": "晨訊科-DR",
-          "Streak": 17
+          "Streak": 18
         },
         {
           "Symbol": "00955",
           "Name": "中信日本商社",
-          "Streak": 16
+          "Streak": 17
         },
         {
           "Symbol": "3045",
           "Name": "台灣大",
-          "Streak": 15
+          "Streak": 16
+        },
+        {
+          "Symbol": "5403",
+          "Name": "中菲",
+          "Streak": 16
         }
       ]
+    },
+    {
+      "Signal": "TrustBuy",
+      "Label": "投信連買",
+      "SignalDate": "20260904",
+      "EvalDate": "20260907",
+      "Stocks": [
+        {
+          "Symbol": "2884",
+          "Name": "玉山金",
+          "Streak": 20,
+          "Return": 0.0
+        },
+        {
+          "Symbol": "2301",
+          "Name": "光寶科",
+          "Streak": 14,
+          "Return": -2.92
+        },
+        {
+          "Symbol": "2313",
+          "Name": "華通",
+          "Streak": 12,
+          "Return": -3.81
+        },
+        {
+          "Symbol": "2618",
+          "Name": "長榮航",
+          "Streak": 9,
+          "Return": -0.94
+        },
+        {
+          "Symbol": "2887",
+          "Name": "台新新光金",
+          "Streak": 9,
+          "Return": -0.96
+        },
+        {
+          "Symbol": "1476",
+          "Name": "儒鴻",
+          "Streak": 6,
+          "Return": -2.24
+        },
+        {
+          "Symbol": "2357",
+          "Name": "華碩",
+          "Streak": 6,
+          "Return": -2.54
+        },
+        {
+          "Symbol": "2379",
+          "Name": "瑞昱",
+          "Streak": 6,
+          "Return": 2.24
+        },
+        {
+          "Symbol": "2382",
+          "Name": "廣達",
+          "Streak": 6,
+          "Return": 0.72
+        },
+        {
+          "Symbol": "2542",
+          "Name": "興富發",
+          "Streak": 6,
+          "Return": -1.13
+        }
+      ],
+      "AvgReturn": -1.16,
+      "WinRate": 20.0,
+      "Scored": 10
+    },
+    {
+      "Signal": "ForeignBuy",
+      "Label": "外資連買",
+      "SignalDate": "20260904",
+      "EvalDate": "20260907",
+      "Stocks": [
+        {
+          "Symbol": "00900",
+          "Name": "富邦特選高股息30",
+          "Streak": 20,
+          "Return": -0.81
+        },
+        {
+          "Symbol": "1524",
+          "Name": "耿鼎",
+          "Streak": 20,
+          "Return": -0.56
+        },
+        {
+          "Symbol": "3037",
+          "Name": "欣興",
+          "Streak": 20,
+          "Return": 5.21
+        },
+        {
+          "Symbol": "5213",
+          "Name": "亞昕",
+          "Streak": 20,
+          "Return": -0.24
+        },
+        {
+          "Symbol": "5903",
+          "Name": "全家",
+          "Streak": 19,
+          "Return": 0.0
+        },
+        {
+          "Symbol": "6263",
+          "Name": "普萊德",
+          "Streak": 18,
+          "Return": 0.59
+        },
+        {
+          "Symbol": "2886",
+          "Name": "兆豐金",
+          "Streak": 17,
+          "Return": 1.31
+        },
+        {
+          "Symbol": "912000",
+          "Name": "晨訊科-DR",
+          "Streak": 17,
+          "Return": -1.21
+        },
+        {
+          "Symbol": "00955",
+          "Name": "中信日本商社",
+          "Streak": 16,
+          "Return": 0.62
+        },
+        {
+          "Symbol": "3045",
+          "Name": "台灣大",
+          "Streak": 15,
+          "Return": -0.85
+        }
+      ],
+      "AvgReturn": 0.41,
+      "WinRate": 40.0,
+      "Scored": 10
     },
     {
       "Signal": "TrustBuy",
