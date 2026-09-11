@@ -23,6 +23,122 @@
     {
       "Signal": "TrustBuy",
       "Label": "投信連買",
+      "SignalDate": "20260911",
+      "EvalDate": null,
+      "Stocks": [
+        {
+          "Symbol": "2884",
+          "Name": "玉山金",
+          "Streak": 20
+        },
+        {
+          "Symbol": "2887",
+          "Name": "台新新光金",
+          "Streak": 14
+        },
+        {
+          "Symbol": "1476",
+          "Name": "儒鴻",
+          "Streak": 11
+        },
+        {
+          "Symbol": "2542",
+          "Name": "興富發",
+          "Streak": 11
+        },
+        {
+          "Symbol": "2891",
+          "Name": "中信金",
+          "Streak": 11
+        },
+        {
+          "Symbol": "1102",
+          "Name": "亞泥",
+          "Streak": 10
+        },
+        {
+          "Symbol": "1802",
+          "Name": "台玻",
+          "Streak": 10
+        },
+        {
+          "Symbol": "2353",
+          "Name": "宏碁",
+          "Streak": 10
+        },
+        {
+          "Symbol": "2633",
+          "Name": "台灣高鐵",
+          "Streak": 10
+        },
+        {
+          "Symbol": "4938",
+          "Name": "和碩",
+          "Streak": 10
+        }
+      ]
+    },
+    {
+      "Signal": "ForeignBuy",
+      "Label": "外資連買",
+      "SignalDate": "20260911",
+      "EvalDate": null,
+      "Stocks": [
+        {
+          "Symbol": "00900",
+          "Name": "富邦特選高股息30",
+          "Streak": 20
+        },
+        {
+          "Symbol": "3045",
+          "Name": "台灣大",
+          "Streak": 20
+        },
+        {
+          "Symbol": "5403",
+          "Name": "中菲",
+          "Streak": 20
+        },
+        {
+          "Symbol": "9919",
+          "Name": "康那香",
+          "Streak": 20
+        },
+        {
+          "Symbol": "5880",
+          "Name": "合庫金",
+          "Streak": 16
+        },
+        {
+          "Symbol": "2880",
+          "Name": "華南金",
+          "Streak": 12
+        },
+        {
+          "Symbol": "5314",
+          "Name": "世紀*",
+          "Streak": 12
+        },
+        {
+          "Symbol": "6805",
+          "Name": "富世達",
+          "Streak": 11
+        },
+        {
+          "Symbol": "2247",
+          "Name": "汎德永業",
+          "Streak": 10
+        },
+        {
+          "Symbol": "5245",
+          "Name": "智晶",
+          "Streak": 10
+        }
+      ]
+    },
+    {
+      "Signal": "TrustBuy",
+      "Label": "投信連買",
       "SignalDate": "20260910",
       "EvalDate": "20260911",
       "Stocks": [
