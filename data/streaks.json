@@ -16284,7 +16284,7 @@
       "Foreign_Streak": -1,
       "Foreign_Latest": -314121,
       "Trust_Streak": 3,
-      "Trust_Latest": 290000,
+      "Trust_Latest": 298000,
       "Dealer_Streak": -1,
       "Dealer_Latest": -807,
       "DealerProp_Streak": 4,
@@ -16292,7 +16292,7 @@
       "DealerHedge_Streak": -1,
       "DealerHedge_Latest": -11667,
       "Total_Streak": -1,
-      "Total_Latest": -24928,
+      "Total_Latest": -16928,
       "Dual_Buy_Streak": 0,
       "Dual_Sell_Streak": 0,
       "Open": 855.0,
@@ -16305,7 +16305,7 @@
       "SBL_Returned": 0,
       "SBL_Balance": 0,
       "Foreign_StreakAvgPrice": null,
-      "Trust_StreakAvgPrice": 845.7
+      "Trust_StreakAvgPrice": 846.17
     },
     {
       "Symbol": "1563",
@@ -18887,8 +18887,8 @@
       "Industry": "電子零組件業",
       "Foreign_Streak": 1,
       "Foreign_Latest": 11647126,
-      "Trust_Streak": 1,
-      "Trust_Latest": 1989000,
+      "Trust_Streak": -3,
+      "Trust_Latest": -827000,
       "Dealer_Streak": 1,
       "Dealer_Latest": 920274,
       "DealerProp_Streak": 1,
@@ -18896,8 +18896,8 @@
       "DealerHedge_Streak": 1,
       "DealerHedge_Latest": 659274,
       "Total_Streak": 1,
-      "Total_Latest": 14556400,
-      "Dual_Buy_Streak": 1,
+      "Total_Latest": 11740400,
+      "Dual_Buy_Streak": 0,
       "Dual_Sell_Streak": 0,
       "Open": 118.0,
       "High": 123.0,
@@ -18909,7 +18909,7 @@
       "SBL_Returned": 0,
       "SBL_Balance": 0,
       "Foreign_StreakAvgPrice": null,
-      "Trust_StreakAvgPrice": null
+      "Trust_StreakAvgPrice": 117.04
     },
     {
       "Symbol": "1817",
@@ -21430,7 +21430,7 @@
       "Foreign_Streak": 3,
       "Foreign_Latest": 28365568,
       "Trust_Streak": 11,
-      "Trust_Latest": 11741188,
+      "Trust_Latest": 13630188,
       "Dealer_Streak": 3,
       "Dealer_Latest": 3573793,
       "DealerProp_Streak": 2,
@@ -21438,7 +21438,7 @@
       "DealerHedge_Streak": 3,
       "DealerHedge_Latest": 1099901,
       "Total_Streak": 3,
-      "Total_Latest": 43680549,
+      "Total_Latest": 45569549,
       "Dual_Buy_Streak": 3,
       "Dual_Sell_Streak": 0,
       "Open": 155.0,
@@ -21451,7 +21451,7 @@
       "SBL_Returned": 0,
       "SBL_Balance": 0,
       "Foreign_StreakAvgPrice": 152.12,
-      "Trust_StreakAvgPrice": 143.86
+      "Trust_StreakAvgPrice": 144.1
     },
     {
       "Symbol": "2305",
@@ -21554,7 +21554,7 @@
       "Foreign_Streak": 1,
       "Foreign_Latest": 2897881,
       "Trust_Streak": -1,
-      "Trust_Latest": -379271,
+      "Trust_Latest": -13984,
       "Dealer_Streak": 3,
       "Dealer_Latest": 244279,
       "DealerProp_Streak": 2,
@@ -21562,7 +21562,7 @@
       "DealerHedge_Streak": 1,
       "DealerHedge_Latest": 63095,
       "Total_Streak": 1,
-      "Total_Latest": 2762889,
+      "Total_Latest": 3128176,
       "Dual_Buy_Streak": 0,
       "Dual_Sell_Streak": 0,
       "Open": 223.5,
@@ -21771,7 +21771,7 @@
       "Foreign_Streak": 1,
       "Foreign_Latest": 2423004,
       "Trust_Streak": 6,
-      "Trust_Latest": 254109,
+      "Trust_Latest": 637109,
       "Dealer_Streak": 2,
       "Dealer_Latest": 1004558,
       "DealerProp_Streak": 2,
@@ -21779,7 +21779,7 @@
       "DealerHedge_Streak": 2,
       "DealerHedge_Latest": 267984,
       "Total_Streak": 1,
-      "Total_Latest": 3681671,
+      "Total_Latest": 4064671,
       "Dual_Buy_Streak": 1,
       "Dual_Sell_Streak": 0,
       "Open": 543.0,
@@ -21792,7 +21792,7 @@
       "SBL_Returned": 0,
       "SBL_Balance": 0,
       "Foreign_StreakAvgPrice": null,
-      "Trust_StreakAvgPrice": 541.48
+      "Trust_StreakAvgPrice": 541.84
     },
     {
       "Symbol": "2328",
@@ -21863,8 +21863,8 @@
       "Industry": "半導體業",
       "Foreign_Streak": 2,
       "Foreign_Latest": 6039352,
-      "Trust_Streak": -2,
-      "Trust_Latest": -273476,
+      "Trust_Streak": 1,
+      "Trust_Latest": 478401,
       "Dealer_Streak": 5,
       "Dealer_Latest": 1361432,
       "DealerProp_Streak": 4,
@@ -21872,8 +21872,8 @@
       "DealerHedge_Streak": 7,
       "DealerHedge_Latest": 382887,
       "Total_Streak": 2,
-      "Total_Latest": 7127308,
-      "Dual_Buy_Streak": 0,
+      "Total_Latest": 7879185,
+      "Dual_Buy_Streak": 1,
       "Dual_Sell_Streak": 0,
       "Open": 2460.0,
       "High": 2460.0,
@@ -21885,7 +21885,7 @@
       "SBL_Returned": 0,
       "SBL_Balance": 0,
       "Foreign_StreakAvgPrice": 2439.13,
-      "Trust_StreakAvgPrice": 2446.6
+      "Trust_StreakAvgPrice": null
     },
     {
       "Symbol": "2331",
@@ -22081,7 +22081,7 @@
       "Foreign_Streak": 1,
       "Foreign_Latest": 42774232,
       "Trust_Streak": -2,
-      "Trust_Latest": -168886,
+      "Trust_Latest": -208886,
       "Dealer_Streak": 4,
       "Dealer_Latest": 3489976,
       "DealerProp_Streak": 4,
@@ -22089,7 +22089,7 @@
       "DealerHedge_Streak": 1,
       "DealerHedge_Latest": 468808,
       "Total_Streak": 1,
-      "Total_Latest": 46095322,
+      "Total_Latest": 46055322,
       "Dual_Buy_Streak": 0,
       "Dual_Sell_Streak": 0,
       "Open": 177.0,
@@ -22102,7 +22102,7 @@
       "SBL_Returned": 0,
       "SBL_Balance": 0,
       "Foreign_StreakAvgPrice": null,
-      "Trust_StreakAvgPrice": 176.53
+      "Trust_StreakAvgPrice": 176.68
     },
     {
       "Symbol": "2345",
@@ -22112,7 +22112,7 @@
       "Foreign_Streak": -1,
       "Foreign_Latest": -255616,
       "Trust_Streak": -3,
-      "Trust_Latest": -666784,
+      "Trust_Latest": -670784,
       "Dealer_Streak": 2,
       "Dealer_Latest": 170953,
       "DealerProp_Streak": 2,
@@ -22120,7 +22120,7 @@
       "DealerHedge_Streak": 3,
       "DealerHedge_Latest": 40714,
       "Total_Streak": -4,
-      "Total_Latest": -751447,
+      "Total_Latest": -755447,
       "Dual_Buy_Streak": 0,
       "Dual_Sell_Streak": -1,
       "Open": 1810.0,
@@ -22133,7 +22133,7 @@
       "SBL_Returned": 0,
       "SBL_Balance": 0,
       "Foreign_StreakAvgPrice": null,
-      "Trust_StreakAvgPrice": 1831.16
+      "Trust_StreakAvgPrice": 1831.18
     },
     {
       "Symbol": "2347",
@@ -22515,7 +22515,7 @@
       "Foreign_Streak": -1,
       "Foreign_Latest": -166234,
       "Trust_Streak": 1,
-      "Trust_Latest": 93874,
+      "Trust_Latest": 88874,
       "Dealer_Streak": 5,
       "Dealer_Latest": 82438,
       "DealerProp_Streak": 2,
@@ -22523,7 +22523,7 @@
       "DealerHedge_Streak": 5,
       "DealerHedge_Latest": 48010,
       "Total_Streak": 2,
-      "Total_Latest": 10078,
+      "Total_Latest": 5078,
       "Dual_Buy_Streak": 0,
       "Dual_Sell_Streak": 0,
       "Open": 2135.0,
@@ -23413,8 +23413,8 @@
       "Industry": "其他電子業",
       "Foreign_Streak": 1,
       "Foreign_Latest": 744459,
-      "Trust_Streak": -7,
-      "Trust_Latest": -60000,
+      "Trust_Streak": 1,
+      "Trust_Latest": 97000,
       "Dealer_Streak": 1,
       "Dealer_Latest": 131766,
       "DealerProp_Streak": 2,
@@ -23422,8 +23422,8 @@
       "DealerHedge_Streak": 1,
       "DealerHedge_Latest": 86575,
       "Total_Streak": 1,
-      "Total_Latest": 816225,
-      "Dual_Buy_Streak": 0,
+      "Total_Latest": 973225,
+      "Dual_Buy_Streak": 1,
       "Dual_Sell_Streak": 0,
       "Open": 1040.0,
       "High": 1130.0,
@@ -23435,7 +23435,7 @@
       "SBL_Returned": 0,
       "SBL_Balance": 0,
       "Foreign_StreakAvgPrice": null,
-      "Trust_StreakAvgPrice": 1044.6
+      "Trust_StreakAvgPrice": null
     },
     {
       "Symbol": "2405",
@@ -23507,7 +23507,7 @@
       "Foreign_Streak": 3,
       "Foreign_Latest": 32233006,
       "Trust_Streak": 3,
-      "Trust_Latest": 3994574,
+      "Trust_Latest": 3977574,
       "Dealer_Streak": 4,
       "Dealer_Latest": 1100734,
       "DealerProp_Streak": 4,
@@ -23515,7 +23515,7 @@
       "DealerHedge_Streak": 1,
       "DealerHedge_Latest": 195568,
       "Total_Streak": 3,
-      "Total_Latest": 37328314,
+      "Total_Latest": 37311314,
       "Dual_Buy_Streak": 3,
       "Dual_Sell_Streak": 0,
       "Open": 508.0,
@@ -23528,7 +23528,7 @@
       "SBL_Returned": 0,
       "SBL_Balance": 0,
       "Foreign_StreakAvgPrice": 513.82,
-      "Trust_StreakAvgPrice": 511.77
+      "Trust_StreakAvgPrice": 511.75
     },
     {
       "Symbol": "2409",
@@ -24561,7 +24561,7 @@
       "Foreign_Streak": -1,
       "Foreign_Latest": -641603,
       "Trust_Streak": 2,
-      "Trust_Latest": 217000,
+      "Trust_Latest": 211000,
       "Dealer_Streak": 2,
       "Dealer_Latest": 214503,
       "DealerProp_Streak": 2,
@@ -24569,7 +24569,7 @@
       "DealerHedge_Streak": -1,
       "DealerHedge_Latest": -7831,
       "Total_Streak": -1,
-      "Total_Latest": -210100,
+      "Total_Latest": -216100,
       "Dual_Buy_Streak": 0,
       "Dual_Sell_Streak": 0,
       "Open": 545.0,
@@ -24582,7 +24582,7 @@
       "SBL_Returned": 0,
       "SBL_Balance": 0,
       "Foreign_StreakAvgPrice": null,
-      "Trust_StreakAvgPrice": 540.59
+      "Trust_StreakAvgPrice": 540.55
     },
     {
       "Symbol": "2457",
@@ -32373,7 +32373,7 @@
       "Foreign_Streak": 1,
       "Foreign_Latest": 8879551,
       "Trust_Streak": 10,
-      "Trust_Latest": 20900,
+      "Trust_Latest": 235900,
       "Dealer_Streak": 3,
       "Dealer_Latest": 691966,
       "DealerProp_Streak": 3,
@@ -32381,7 +32381,7 @@
       "DealerHedge_Streak": 3,
       "DealerHedge_Latest": 230866,
       "Total_Streak": 5,
-      "Total_Latest": 9592417,
+      "Total_Latest": 9807417,
       "Dual_Buy_Streak": 1,
       "Dual_Sell_Streak": 0,
       "Open": 487.5,
@@ -32394,7 +32394,7 @@
       "SBL_Returned": 0,
       "SBL_Balance": 0,
       "Foreign_StreakAvgPrice": null,
-      "Trust_StreakAvgPrice": 458.94
+      "Trust_StreakAvgPrice": 459.46
     },
     {
       "Symbol": "3114",
@@ -35844,8 +35844,8 @@
       "Industry": "半導體業",
       "Foreign_Streak": -6,
       "Foreign_Latest": -515777,
-      "Trust_Streak": -1,
-      "Trust_Latest": -8453,
+      "Trust_Streak": 9,
+      "Trust_Latest": 90547,
       "Dealer_Streak": 1,
       "Dealer_Latest": 45855,
       "DealerProp_Streak": 1,
@@ -35853,9 +35853,9 @@
       "DealerHedge_Streak": 2,
       "DealerHedge_Latest": 33394,
       "Total_Streak": -1,
-      "Total_Latest": -478375,
+      "Total_Latest": -379375,
       "Dual_Buy_Streak": 0,
-      "Dual_Sell_Streak": -1,
+      "Dual_Sell_Streak": 0,
       "Open": 6600.0,
       "High": 7150.0,
       "Low": 6510.0,
@@ -35866,7 +35866,7 @@
       "SBL_Returned": 0,
       "SBL_Balance": 0,
       "Foreign_StreakAvgPrice": 6539.33,
-      "Trust_StreakAvgPrice": null
+      "Trust_StreakAvgPrice": 6308.15
     },
     {
       "Symbol": "3444",
@@ -45703,7 +45703,7 @@
       "Foreign_Streak": -2,
       "Foreign_Latest": -9026745,
       "Trust_Streak": -2,
-      "Trust_Latest": -477627,
+      "Trust_Latest": -432397,
       "Dealer_Streak": -3,
       "Dealer_Latest": -252538,
       "DealerProp_Streak": -3,
@@ -45711,7 +45711,7 @@
       "DealerHedge_Streak": -3,
       "DealerHedge_Latest": -82538,
       "Total_Streak": -2,
-      "Total_Latest": -9756910,
+      "Total_Latest": -9711680,
       "Dual_Buy_Streak": 0,
       "Dual_Sell_Streak": -2,
       "Open": 486.0,
@@ -45724,7 +45724,7 @@
       "SBL_Returned": 0,
       "SBL_Balance": 0,
       "Foreign_StreakAvgPrice": 481.35,
-      "Trust_StreakAvgPrice": 482.03
+      "Trust_StreakAvgPrice": 482.19
     },
     {
       "Symbol": "4960",
@@ -46075,7 +46075,7 @@
       "Foreign_Streak": 1,
       "Foreign_Latest": 824011,
       "Trust_Streak": 1,
-      "Trust_Latest": 113000,
+      "Trust_Latest": 622000,
       "Dealer_Streak": -3,
       "Dealer_Latest": -36311,
       "DealerProp_Streak": 1,
@@ -46083,7 +46083,7 @@
       "DealerHedge_Streak": -3,
       "DealerHedge_Latest": -41573,
       "Total_Streak": 1,
-      "Total_Latest": 900700,
+      "Total_Latest": 1409700,
       "Dual_Buy_Streak": 1,
       "Dual_Sell_Streak": 0,
       "Open": 578.0,
@@ -47315,7 +47315,7 @@
       "Foreign_Streak": -6,
       "Foreign_Latest": -12862,
       "Trust_Streak": 3,
-      "Trust_Latest": 37483,
+      "Trust_Latest": 44483,
       "Dealer_Streak": 1,
       "Dealer_Latest": 1129,
       "DealerProp_Streak": 1,
@@ -47323,7 +47323,7 @@
       "DealerHedge_Streak": 1,
       "DealerHedge_Latest": 129,
       "Total_Streak": 1,
-      "Total_Latest": 25750,
+      "Total_Latest": 32750,
       "Dual_Buy_Streak": 0,
       "Dual_Sell_Streak": 0,
       "Open": 18890.0,
@@ -47336,7 +47336,7 @@
       "SBL_Returned": 0,
       "SBL_Balance": 0,
       "Foreign_StreakAvgPrice": 18209.12,
-      "Trust_StreakAvgPrice": 18569.31
+      "Trust_StreakAvgPrice": 18610.97
     },
     {
       "Symbol": "5276",
@@ -52182,7 +52182,7 @@
       "Foreign_Streak": 1,
       "Foreign_Latest": 6827056,
       "Trust_Streak": 5,
-      "Trust_Latest": 2533000,
+      "Trust_Latest": 2565000,
       "Dealer_Streak": 5,
       "Dealer_Latest": 1734648,
       "DealerProp_Streak": 5,
@@ -52190,7 +52190,7 @@
       "DealerHedge_Streak": 3,
       "DealerHedge_Latest": 572479,
       "Total_Streak": 1,
-      "Total_Latest": 11094704,
+      "Total_Latest": 11126704,
       "Dual_Buy_Streak": 1,
       "Dual_Sell_Streak": 0,
       "Open": 217.0,
@@ -52203,7 +52203,7 @@
       "SBL_Returned": 0,
       "SBL_Balance": 0,
       "Foreign_StreakAvgPrice": null,
-      "Trust_StreakAvgPrice": 206.96
+      "Trust_StreakAvgPrice": 207.01
     },
     {
       "Symbol": "6148",
@@ -60366,7 +60366,7 @@
       "Foreign_Streak": -1,
       "Foreign_Latest": -403768,
       "Trust_Streak": -2,
-      "Trust_Latest": -335000,
+      "Trust_Latest": -265000,
       "Dealer_Streak": 1,
       "Dealer_Latest": 49587,
       "DealerProp_Streak": 4,
@@ -60374,7 +60374,7 @@
       "DealerHedge_Streak": 1,
       "DealerHedge_Latest": 48222,
       "Total_Streak": -1,
-      "Total_Latest": -689181,
+      "Total_Latest": -619181,
       "Dual_Buy_Streak": 0,
       "Dual_Sell_Streak": -1,
       "Open": 398.0,
@@ -60387,7 +60387,7 @@
       "SBL_Returned": 0,
       "SBL_Balance": 0,
       "Foreign_StreakAvgPrice": null,
-      "Trust_StreakAvgPrice": 410.55
+      "Trust_StreakAvgPrice": 409.84
     },
     {
       "Symbol": "6716",
@@ -61730,7 +61730,7 @@
       "Foreign_Streak": -2,
       "Foreign_Latest": -236676,
       "Trust_Streak": 2,
-      "Trust_Latest": 457000,
+      "Trust_Latest": 497000,
       "Dealer_Streak": 3,
       "Dealer_Latest": 45288,
       "DealerProp_Streak": 2,
@@ -61738,7 +61738,7 @@
       "DealerHedge_Streak": 3,
       "DealerHedge_Latest": 43288,
       "Total_Streak": 11,
-      "Total_Latest": 265612,
+      "Total_Latest": 305612,
       "Dual_Buy_Streak": 0,
       "Dual_Sell_Streak": 0,
       "Open": 2195.0,
@@ -61751,7 +61751,7 @@
       "SBL_Returned": 0,
       "SBL_Balance": 0,
       "Foreign_StreakAvgPrice": 2227.16,
-      "Trust_StreakAvgPrice": 2200.01
+      "Trust_StreakAvgPrice": 2202.47
     },
     {
       "Symbol": "6807",
@@ -63745,7 +63745,7 @@
       "Foreign_Streak": 1,
       "Foreign_Latest": 60714,
       "Trust_Streak": -1,
-      "Trust_Latest": -5800,
+      "Trust_Latest": -10600,
       "Dealer_Streak": 2,
       "Dealer_Latest": 26455,
       "DealerProp_Streak": 2,
@@ -63753,7 +63753,7 @@
       "DealerHedge_Streak": 2,
       "DealerHedge_Latest": 19455,
       "Total_Streak": 1,
-      "Total_Latest": 81369,
+      "Total_Latest": 76569,
       "Dual_Buy_Streak": 0,
       "Dual_Sell_Streak": 0,
       "Open": 690.0,
@@ -65325,8 +65325,8 @@
       "Industry": "半導體業",
       "Foreign_Streak": 2,
       "Foreign_Latest": 81659,
-      "Trust_Streak": 1,
-      "Trust_Latest": 39000,
+      "Trust_Streak": -2,
+      "Trust_Latest": -63000,
       "Dealer_Streak": 2,
       "Dealer_Latest": 1374,
       "DealerProp_Streak": 1,
@@ -65334,8 +65334,8 @@
       "DealerHedge_Streak": 2,
       "DealerHedge_Latest": 374,
       "Total_Streak": 1,
-      "Total_Latest": 122033,
-      "Dual_Buy_Streak": 1,
+      "Total_Latest": 20033,
+      "Dual_Buy_Streak": 0,
       "Dual_Sell_Streak": 0,
       "Open": 2660.0,
       "High": 2675.0,
@@ -65347,7 +65347,7 @@
       "SBL_Returned": 0,
       "SBL_Balance": 0,
       "Foreign_StreakAvgPrice": 2625.6,
-      "Trust_StreakAvgPrice": null
+      "Trust_StreakAvgPrice": 2624.57
     },
     {
       "Symbol": "7736",
@@ -67092,8 +67092,8 @@
       "Industry": "電子零組件業",
       "Foreign_Streak": 1,
       "Foreign_Latest": 1886851,
-      "Trust_Streak": 1,
-      "Trust_Latest": 20000,
+      "Trust_Streak": -2,
+      "Trust_Latest": -1991000,
       "Dealer_Streak": 1,
       "Dealer_Latest": 239993,
       "DealerProp_Streak": 1,
@@ -67101,8 +67101,8 @@
       "DealerHedge_Streak": 1,
       "DealerHedge_Latest": 43993,
       "Total_Streak": 1,
-      "Total_Latest": 2146844,
-      "Dual_Buy_Streak": 1,
+      "Total_Latest": 135844,
+      "Dual_Buy_Streak": 0,
       "Dual_Sell_Streak": 0,
       "Open": 260.5,
       "High": 271.0,
@@ -67114,7 +67114,7 @@
       "SBL_Returned": 0,
       "SBL_Balance": 0,
       "Foreign_StreakAvgPrice": null,
-      "Trust_StreakAvgPrice": null
+      "Trust_StreakAvgPrice": 265.09
     },
     {
       "Symbol": "8040",
