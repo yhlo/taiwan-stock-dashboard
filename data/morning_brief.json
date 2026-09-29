@@ -1,42 +1,33 @@
 {
-  "Date": "20260928",
-  "GeneratedAt": "2026-09-28T07:55:34+08:00",
+  "Date": "20260929",
+  "GeneratedAt": "2026-09-29T08:56:52+08:00",
   "UsMarkets": [
     {
       "Name": "道瓊工業",
-      "Close": 51828.62,
-      "ChangePct": 0.93,
-      "Date": "20260925"
+      "Close": 51481.51,
+      "ChangePct": -0.67,
+      "Date": "20260928"
     },
     {
       "Name": "那斯達克",
-      "Close": 27068.72,
-      "ChangePct": 0.48,
-      "Date": "20260925"
+      "Close": 26820.38,
+      "ChangePct": -0.92,
+      "Date": "20260928"
     },
     {
       "Name": "標普500",
-      "Close": 7743.41,
-      "ChangePct": 0.51,
-      "Date": "20260925"
+      "Close": 7683.69,
+      "ChangePct": -0.77,
+      "Date": "20260928"
     },
     {
       "Name": "費城半導體",
-      "Close": 12668.93,
-      "ChangePct": 1.41,
-      "Date": "20260925"
+      "Close": 12465.24,
+      "ChangePct": -1.61,
+      "Date": "20260928"
     }
   ],
-  "Adr": {
-    "Close": 450.61,
-    "ChangePct": -0.12,
-    "Date": "20260925",
-    "FxRate": 31.778,
-    "ImpliedTwd": 2863.9,
-    "TwClose": 2475.0,
-    "TwCloseDate": "20260924",
-    "PremiumPct": 15.71
-  },
+  "Adr": null,
   "NightSession": null,
   "Chips": {
     "ForeignFuturesNet": {
