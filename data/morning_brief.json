@@ -1,152 +1,162 @@
 {
-  "Date": "20260929",
-  "GeneratedAt": "2026-09-29T09:12:59+08:00",
+  "Date": "20260930",
+  "GeneratedAt": "2026-09-30T08:19:56+08:00",
   "UsMarkets": [
     {
       "Name": "道瓊工業",
-      "Close": 51481.51,
-      "ChangePct": -0.67,
-      "Date": "20260928"
+      "Close": 51349.92,
+      "ChangePct": -0.26,
+      "Date": "20260929"
     },
     {
       "Name": "那斯達克",
-      "Close": 26820.38,
-      "ChangePct": -0.92,
-      "Date": "20260928"
+      "Close": 26797.54,
+      "ChangePct": -0.09,
+      "Date": "20260929"
     },
     {
       "Name": "標普500",
-      "Close": 7683.69,
-      "ChangePct": -0.77,
-      "Date": "20260928"
+      "Close": 7670.84,
+      "ChangePct": -0.17,
+      "Date": "20260929"
     },
     {
       "Name": "費城半導體",
-      "Close": 12465.24,
-      "ChangePct": -1.61,
-      "Date": "20260928"
+      "Close": 12629.16,
+      "ChangePct": 1.32,
+      "Date": "20260929"
     }
   ],
   "Adr": null,
-  "NightSession": null,
+  "NightSession": {
+    "Contract": "202610",
+    "Open": "47992",
+    "High": "48619",
+    "Low": "47920",
+    "Close": 48479.0,
+    "PrevClose": 47767.0,
+    "PrevCloseDate": "20260929",
+    "GapPoints": 712.0,
+    "GapPct": 1.49
+  },
   "Chips": {
     "ForeignFuturesNet": {
-      "Date": "20260924",
-      "Net": -77031,
-      "Change": -947
+      "Date": "20260929",
+      "Net": -79029,
+      "Change": -1998
     },
     "OptionLevels": {
-      "Resistance": 51900,
-      "ResistanceOI": 2455,
-      "Support": 47800,
-      "SupportOI": 1832,
+      "Resistance": 48000,
+      "ResistanceOI": 4407,
+      "Support": 47700,
+      "SupportOI": 3785,
       "ActiveMonth": "202609F4"
     },
-    "ChipDate": "20260924",
+    "ChipDate": "20260929",
     "ForeignBuyStreak": [
       {
         "Symbol": "00898",
         "Name": "國泰基因免疫革命",
-        "Streak": 18,
-        "Close": 11.49,
-        "Change": -0.27
-      },
-      {
-        "Symbol": "2412",
-        "Name": "中華電",
-        "Streak": 18,
-        "Close": 145.0,
-        "Change": -0.5
+        "Streak": 19,
+        "Close": 11.75,
+        "Change": 0.26
       },
       {
         "Symbol": "3666",
         "Name": "光耀",
-        "Streak": 14,
-        "Close": 25.2,
-        "Change": 0.0
-      },
-      {
-        "Symbol": "2380",
-        "Name": "虹光",
-        "Streak": 13,
-        "Close": 16.8,
+        "Streak": 15,
+        "Close": 25.3,
         "Change": 0.1
       },
       {
         "Symbol": "2883B",
         "Name": "凱基金乙特",
-        "Streak": 13,
-        "Close": 8.52,
+        "Streak": 14,
+        "Close": 8.54,
         "Change": 0.02
+      },
+      {
+        "Symbol": "6526",
+        "Name": "達發",
+        "Streak": 14,
+        "Close": 814.0,
+        "Change": -26.0
+      },
+      {
+        "Symbol": "8464",
+        "Name": "億豐",
+        "Streak": 14,
+        "Close": 372.5,
+        "Change": 0.0
       }
     ],
     "TrustBuyStreak": [
       {
-        "Symbol": "2542",
-        "Name": "興富發",
+        "Symbol": "2353",
+        "Name": "宏碁",
         "Streak": 20,
-        "Close": 39.5,
-        "Change": -0.05
+        "Close": 31.4,
+        "Change": -0.35
+      },
+      {
+        "Symbol": "2633",
+        "Name": "台灣高鐵",
+        "Streak": 20,
+        "Close": 25.45,
+        "Change": -0.1
       },
       {
         "Symbol": "2884",
         "Name": "玉山金",
         "Streak": 20,
-        "Close": 45.6,
-        "Change": 0.0
-      },
-      {
-        "Symbol": "2353",
-        "Name": "宏碁",
-        "Streak": 19,
-        "Close": 31.75,
-        "Change": 0.2
-      },
-      {
-        "Symbol": "2633",
-        "Name": "台灣高鐵",
-        "Streak": 19,
-        "Close": 25.55,
-        "Change": -0.05
+        "Close": 44.9,
+        "Change": -0.7
       },
       {
         "Symbol": "9910",
         "Name": "豐泰",
-        "Streak": 19,
-        "Close": 69.4,
-        "Change": -0.6
+        "Streak": 20,
+        "Close": 69.1,
+        "Change": -0.3
+      },
+      {
+        "Symbol": "3026",
+        "Name": "禾伸堂",
+        "Streak": 16,
+        "Close": 796.0,
+        "Change": -14.0
       }
     ],
     "TrustFreshBuys": [
       {
-        "Symbol": "8028",
-        "Name": "昇陽半導體",
-        "Shares": 2309000,
-        "Close": 269.0
+        "Symbol": "2303",
+        "Name": "聯電",
+        "Shares": 9537000,
+        "Close": 153.5
       },
       {
-        "Symbol": "3042",
-        "Name": "晶技",
-        "Shares": 1179000,
-        "Close": 203.0
+        "Symbol": "4958",
+        "Name": "臻鼎-KY",
+        "Shares": 2941000,
+        "Close": 498.5
       },
       {
-        "Symbol": "00740B",
-        "Name": "富邦全球投等債",
-        "Shares": 1083000,
-        "Close": 36.67
+        "Symbol": "0050",
+        "Name": "元大台灣50",
+        "Shares": 2250000,
+        "Close": 111.3
       },
       {
-        "Symbol": "3189",
-        "Name": "景碩",
-        "Shares": 984001,
-        "Close": 962.0
+        "Symbol": "1303",
+        "Name": "南亞",
+        "Shares": 1825000,
+        "Close": 247.0
       },
       {
-        "Symbol": "4770",
-        "Name": "上品",
-        "Shares": 730000,
-        "Close": 281.5
+        "Symbol": "2885",
+        "Name": "元大金",
+        "Shares": 1331000,
+        "Close": 68.7
       }
     ]
   },
