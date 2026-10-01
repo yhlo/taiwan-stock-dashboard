@@ -32311,7 +32311,7 @@
       "Foreign_Streak": 2,
       "Foreign_Latest": 112604,
       "Trust_Streak": 17,
-      "Trust_Latest": 562800,
+      "Trust_Latest": 1100800,
       "Dealer_Streak": -1,
       "Dealer_Latest": -459505,
       "DealerProp_Streak": 2,
@@ -32319,7 +32319,7 @@
       "DealerHedge_Streak": -1,
       "DealerHedge_Latest": -597732,
       "Total_Streak": 2,
-      "Total_Latest": 215899,
+      "Total_Latest": 753899,
       "Dual_Buy_Streak": 2,
       "Dual_Sell_Streak": 0,
       "Open": 546.0,
@@ -32332,7 +32332,7 @@
       "SBL_Returned": 0,
       "SBL_Balance": 0,
       "Foreign_StreakAvgPrice": 531.06,
-      "Trust_StreakAvgPrice": 469.49
+      "Trust_StreakAvgPrice": 471.68
     },
     {
       "Symbol": "3114",
@@ -66721,7 +66721,7 @@
       "Foreign_Streak": -2,
       "Foreign_Latest": -30314,
       "Trust_Streak": 6,
-      "Trust_Latest": 79450,
+      "Trust_Latest": 102450,
       "Dealer_Streak": 3,
       "Dealer_Latest": 2000,
       "DealerProp_Streak": 3,
@@ -66729,7 +66729,7 @@
       "DealerHedge_Streak": 0,
       "DealerHedge_Latest": 0,
       "Total_Streak": 6,
-      "Total_Latest": 51136,
+      "Total_Latest": 74136,
       "Dual_Buy_Streak": 0,
       "Dual_Sell_Streak": 0,
       "Open": 4240.0,
@@ -66742,7 +66742,7 @@
       "SBL_Returned": 0,
       "SBL_Balance": 0,
       "Foreign_StreakAvgPrice": 4295.0,
-      "Trust_StreakAvgPrice": 4571.16
+      "Trust_StreakAvgPrice": 4562.1
     },
     {
       "Symbol": "8011",
