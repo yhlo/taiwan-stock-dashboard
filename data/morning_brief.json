@@ -1,6 +1,6 @@
 {
   "Date": "20261002",
-  "GeneratedAt": "2026-10-02T08:41:18+08:00",
+  "GeneratedAt": "2026-10-02T09:03:27+08:00",
   "UsMarkets": [
     {
       "Name": "道瓊工業",
@@ -28,17 +28,7 @@
     }
   ],
   "Adr": null,
-  "NightSession": {
-    "Contract": "202610",
-    "Open": "48622",
-    "High": "48661",
-    "Low": "48210",
-    "Close": 48475.0,
-    "PrevClose": 48685.0,
-    "PrevCloseDate": "20261001",
-    "GapPoints": -210.0,
-    "GapPct": -0.43
-  },
+  "NightSession": null,
   "Chips": {
     "ForeignFuturesNet": {
       "Date": "20261001",
