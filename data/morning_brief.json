@@ -1,161 +1,171 @@
 {
-  "Date": "20261006",
-  "GeneratedAt": "2026-10-06T09:51:39+08:00",
+  "Date": "20261007",
+  "GeneratedAt": "2026-10-07T08:36:36+08:00",
   "UsMarkets": [
     {
       "Name": "道瓊工業",
-      "Close": 51267.9,
-      "ChangePct": 0.18,
-      "Date": "20261005"
+      "Close": 51521.28,
+      "ChangePct": 0.49,
+      "Date": "20261006"
     },
     {
       "Name": "那斯達克",
-      "Close": 27477.31,
-      "ChangePct": 1.05,
-      "Date": "20261005"
+      "Close": 27599.89,
+      "ChangePct": 0.45,
+      "Date": "20261006"
     },
     {
       "Name": "標普500",
-      "Close": 7773.95,
-      "ChangePct": 0.66,
-      "Date": "20261005"
+      "Close": 7818.93,
+      "ChangePct": 0.58,
+      "Date": "20261006"
     },
     {
       "Name": "費城半導體",
-      "Close": 13172.74,
-      "ChangePct": 0.27,
-      "Date": "20261005"
+      "Close": 13217.82,
+      "ChangePct": 0.34,
+      "Date": "20261006"
     }
   ],
   "Adr": {
-    "Close": 485.8,
-    "ChangePct": 2.75,
-    "Date": "20261005",
-    "FxRate": 31.727,
-    "ImpliedTwd": 3082.6,
-    "TwClose": 2575.0,
-    "TwCloseDate": "20261005",
-    "PremiumPct": 19.71
+    "Close": 482.3,
+    "ChangePct": -0.72,
+    "Date": "20261006",
+    "FxRate": 31.773,
+    "ImpliedTwd": 3064.8,
+    "TwClose": 2585.0,
+    "TwCloseDate": "20261006",
+    "PremiumPct": 18.56
   },
-  "NightSession": null,
+  "NightSession": {
+    "Contract": "202610",
+    "Open": "50109",
+    "High": "50265",
+    "Low": "49950",
+    "Close": 50051.0,
+    "PrevClose": 50060.0,
+    "PrevCloseDate": "20261006",
+    "GapPoints": -9.0,
+    "GapPct": -0.02
+  },
   "Chips": {
     "ForeignFuturesNet": {
-      "Date": "20261005",
-      "Net": -77004,
-      "Change": 3300
+      "Date": "20261006",
+      "Net": -79517,
+      "Change": -2513
     },
     "OptionLevels": {
-      "Resistance": 52500,
-      "ResistanceOI": 2886,
+      "Resistance": 50000,
+      "ResistanceOI": 3247,
       "Support": 49000,
-      "SupportOI": 1918,
+      "SupportOI": 3319,
       "ActiveMonth": "202610W1"
     },
-    "ChipDate": "20261005",
+    "ChipDate": "20261006",
     "ForeignBuyStreak": [
-      {
-        "Symbol": "6526",
-        "Name": "達發",
-        "Streak": 18,
-        "Close": 841.0,
-        "Change": 6.0
-      },
-      {
-        "Symbol": "3272",
-        "Name": "東碩",
-        "Streak": 17,
-        "Close": 14.15,
-        "Change": 0.05
-      },
       {
         "Symbol": "3558",
         "Name": "神準",
-        "Streak": 17,
-        "Close": 130.5,
-        "Change": -0.5
+        "Streak": 18,
+        "Close": 132.0,
+        "Change": 1.5
       },
       {
         "Symbol": "3338",
         "Name": "泰碩",
-        "Streak": 15,
-        "Close": 70.1,
-        "Change": 1.1
+        "Streak": 16,
+        "Close": 70.7,
+        "Change": 0.6
       },
       {
         "Symbol": "1702",
         "Name": "南僑",
+        "Streak": 15,
+        "Close": 32.7,
+        "Change": -0.1
+      },
+      {
+        "Symbol": "3402",
+        "Name": "漢科",
+        "Streak": 15,
+        "Close": 140.5,
+        "Change": 0.5
+      },
+      {
+        "Symbol": "009813",
+        "Name": "貝萊德標普卓越50",
         "Streak": 14,
-        "Close": 32.8,
-        "Change": -0.35
+        "Close": 11.68,
+        "Change": 0.11
       }
     ],
     "TrustBuyStreak": [
       {
         "Symbol": "2308",
         "Name": "台達電",
-        "Streak": 9,
-        "Close": 2005.0,
-        "Change": 120.0
+        "Streak": 10,
+        "Close": 2050.0,
+        "Change": 45.0
       },
       {
         "Symbol": "6505",
         "Name": "台塑化",
-        "Streak": 9,
-        "Close": 98.6,
-        "Change": -1.4
+        "Streak": 10,
+        "Close": 101.5,
+        "Change": 2.9
       },
       {
         "Symbol": "6213",
         "Name": "聯茂",
-        "Streak": 8,
-        "Close": 751.0,
-        "Change": 68.0
+        "Streak": 9,
+        "Close": 787.0,
+        "Change": 36.0
       },
       {
         "Symbol": "7856",
         "Name": "漢測",
-        "Streak": 8,
-        "Close": 4280.0,
-        "Change": 85.0
+        "Streak": 9,
+        "Close": 4190.0,
+        "Change": -90.0
       },
       {
         "Symbol": "2379",
         "Name": "瑞昱",
-        "Streak": 7,
+        "Streak": 8,
         "Close": 755.0,
-        "Change": 1.0
+        "Change": 0.0
       }
     ],
     "TrustFreshBuys": [
       {
-        "Symbol": "3105",
-        "Name": "穩懋",
-        "Shares": 1023000,
-        "Close": 615.0
+        "Symbol": "00935",
+        "Name": "野村臺灣新科技50",
+        "Shares": 4268000,
+        "Close": 63.5
       },
       {
-        "Symbol": "00923",
-        "Name": "群益台ESG低碳50",
-        "Shares": 1000000,
-        "Close": 42.97
+        "Symbol": "00929",
+        "Name": "復華台灣科技優息",
+        "Shares": 2000000,
+        "Close": 30.15
       },
       {
-        "Symbol": "00696B",
-        "Name": "富邦美債20年",
-        "Shares": 757000,
-        "Close": 26.7
+        "Symbol": "1216",
+        "Name": "統一",
+        "Shares": 1681000,
+        "Close": 73.7
       },
       {
-        "Symbol": "00694B",
-        "Name": "富邦美債1-3",
-        "Shares": 553000,
-        "Close": 41.66
+        "Symbol": "1709",
+        "Name": "和益",
+        "Shares": 1355000,
+        "Close": 63.3
       },
       {
-        "Symbol": "00981A",
-        "Name": "主動統一台股增長",
-        "Shares": 550000,
-        "Close": 32.65
+        "Symbol": "2383",
+        "Name": "台光電",
+        "Shares": 595000,
+        "Close": 5995.0
       }
     ]
   },
