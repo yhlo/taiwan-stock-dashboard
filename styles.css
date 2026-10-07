@@ -2591,3 +2591,20 @@ section.card {
         content: none;
     }
 }
+
+/* 各區塊標題下方的「看文章教學」連結：把首頁流量導向對應的教學文章 */
+.howto-line {
+    margin: -6px 0 14px;
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.howto-line a {
+    color: var(--accent-blue);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.howto-line a:hover {
+    text-decoration: underline;
+}

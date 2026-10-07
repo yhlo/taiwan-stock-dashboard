@@ -1707,10 +1707,15 @@ def main():
 
     # Write streaks.json
     with open("data/streaks.json", "w", encoding="utf-8") as f:
+        # Compact on purpose: this is by far the largest file (~2400 rows),
+        # re-written in full every run. indent=2 made it ~2.0MB vs ~1.35MB
+        # compact and turned every daily git diff into tens of thousands of
+        # changed lines. (Transfer size barely moves -- Pages gzips it either
+        # way -- the win is parse size and repository growth.)
         json.dump({
             "Date": latest_active_date,
             "Data": final_streaks
-        }, f, ensure_ascii=False, indent=2)
+        }, f, ensure_ascii=False, separators=(",", ":"))
     print("Saved data/streaks.json")
 
     # 6c. Score yesterday's signals and open today's

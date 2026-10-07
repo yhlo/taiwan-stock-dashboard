@@ -15,6 +15,18 @@
       })();
     </script>
 
+    <!-- 自己瀏覽時不計入 GA：網址加 ?notrack=1 即在這個瀏覽器停用（存於 localStorage），?notrack=0 恢復 -->
+    <script>
+      (function () {
+        try {
+          var q = new URLSearchParams(location.search).get('notrack');
+          if (q === '1') localStorage.setItem('ga_optout', '1');
+          if (q === '0') localStorage.removeItem('ga_optout');
+          if (localStorage.getItem('ga_optout') === '1') window['ga-disable-G-BRC4C5P0KX'] = true;
+        } catch (e) {}
+      })();
+    </script>
+
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-BRC4C5P0KX"></script>
     <script>
@@ -37,7 +49,7 @@
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1343288422175015" crossorigin="anonymous"></script>
 
     <title>台灣股市法人籌碼與連買連賣看板 | TWStockWatch 外資投信連買雙買股查詢</title>
-    <meta name="description" content="TWStockWatch 提供即時台股三大法人籌碼動態、外資連買股、投信連買排行及獨家「雙買、雙賣」法人共識股統計。搭配期貨OI、選擇權最大未平倉支撐壓力及借券還券分析，幫助散戶精準掌握主力資金流向。">
+    <meta name="description" content="TWStockWatch 每日盤後整理台股三大法人籌碼：外資連買、投信連買排行與「雙買、雙賣」法人共識股統計，搭配期貨OI、選擇權最大未平倉支撐壓力及借券還券分析，幫助散戶掌握主力資金流向。">
     <meta name="author" content="TWStockWatch">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://www.twstockwatch.com">
@@ -63,9 +75,9 @@
                 <a href="/"><span aria-hidden="true">📈</span>台灣股市法人籌碼與連買連賣看板</a>
             </h1>
             <nav class="main-nav">
-                <a href="/scoreboard.html">📋 訊號計分板</a>
-                <a href="/articles/">📚 文章專區</a>
-                <a href="/about.html">關於我</a>
+                <a href="/scoreboard.html" data-track="nav_click" data-label="scoreboard">📋 訊號計分板</a>
+                <a href="/articles/" data-track="nav_click" data-label="articles">📚 文章專區</a>
+                <a href="/about.html" data-track="nav_click" data-label="about">關於我</a>
             </nav>
             <div class="header-controls">
                 <div class="search-box">
@@ -195,6 +207,7 @@
                     </button>
                 </div>
             </div>
+            <p class="howto-line"><a href="/articles/morning-brief-guide.html" data-track="howto_click" data-label="morning_brief">📖 不太懂這區？看「盤前晨報怎麼看？」</a></p>
             <div id="morning-brief-collapse" class="brief-collapse">
                 <div id="morning-brief-body" class="brief-body"></div>
                 <p class="brief-disclaimer">
@@ -212,6 +225,7 @@
                     <span id="trend-chart-updated" class="date-badge">載入中...</span>
                 </div>
             </div>
+            <p class="howto-line"><a href="/articles/trend-chart-guide.html" data-track="howto_click" data-label="trend_chart">📖 不太懂這區？看「走勢圖怎麼看？」</a></p>
             <div class="trend-legend">
                 <span class="trend-legend-item"><i class="trend-legend-swatch trend-legend-line"></i>大盤指數</span>
                 <span class="trend-legend-item"><i class="trend-legend-swatch trend-legend-up"></i>外資淨OI（買超）</span>
@@ -239,6 +253,7 @@
             <div class="card-header">
                 <h2 class="card-title">🔥 今日焦點 · 法人連買 Top 10</h2>
             </div>
+            <p class="howto-line"><a href="/articles/dual-buy-dual-sell.html" data-track="howto_click" data-label="today_focus">📖 不太懂這區？看「雙買雙賣是什麼？」</a></p>
             <!-- STATIC_RANKINGS:START -->
 <p style="margin-bottom: 14px; color: var(--text-secondary); font-size: 13px;">📅 資料日期：<strong>2026/10/06</strong>（每個交易日盤後自動更新）　以下為外資、投信連續買超天數與外資投信「雙買」共識股的當日前十名，完整排行與篩選請見下方<a href="#streaks-ranking">🏆 三大法人連買連賣天數排行榜</a>。</p><div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px;"><div class="table-container"><h3 class="table-subtitle">🌊 外資連買 Top 10</h3><table><thead><tr><th>代號</th><th>名稱</th><th class="text-right">連續天數</th><th class="text-right">最新買賣超</th></tr></thead><tbody><tr><td><strong>3558</strong></td><td>神準</td><td class="text-right">18 天</td><td class="text-right"><span style="color: var(--color-up); font-weight: 600;">+24 張</span></td></tr>
 <tr><td><strong>3338</strong></td><td>泰碩</td><td class="text-right">16 天</td><td class="text-right"><span style="color: var(--color-up); font-weight: 600;">+63 張</span></td></tr>
@@ -277,6 +292,7 @@
                 <h2 class="card-title">🏛️ 大盤三大法人進出統計</h2>
                 <span id="market-summary-date" class="date-badge">載入中...</span>
             </div>
+            <p class="howto-line"><a href="/articles/three-institutional-investors.html" data-track="howto_click" data-label="market_summary">📖 不太懂這區？看「三大法人是誰？」</a></p>
             <div class="market-parallel-tables">
                 <div class="table-container">
                     <h3 class="table-subtitle">🏛️ 上市市場 (TWSE)</h3>
@@ -331,6 +347,7 @@
                             <button class="futures-tab-btn" data-futures-type="tmf">微台 (TMF)</button>
                         </div>
                     </div>
+                    <p class="howto-line"><a href="/articles/futures-oi-guide.html" data-track="howto_click" data-label="futures_oi">📖 不太懂這區？看「期貨未平倉量（OI）解讀」</a></p>
                     <div class="table-container">
                         <table id="futures-oi-table">
                             <thead>
@@ -394,6 +411,7 @@
                     <div class="card-header">
                         <h2 class="card-title">🎯 選擇權最大 OI 支撐壓力與結算週判定</h2>
                     </div>
+                    <p class="howto-line"><a href="/articles/options-max-oi.html" data-track="howto_click" data-label="options">📖 不太懂這區？看「選擇權最大未平倉量怎麼看？」</a></p>
                     <div class="options-analysis-grid">
                         <div class="settlement-alert-container">
                             <div id="settlement-alert-banner" class="settlement-banner neutral">
@@ -447,6 +465,7 @@
                     </select>
                 </div>
             </div>
+            <p class="howto-line"><a href="/articles/beginner-guide.html" data-track="howto_click" data-label="streak_ranking">📖 不太懂這區？看「新手導讀」</a></p>
             <div class="tabs-container">
                 <div class="tabs-header">
                     <button class="tab-btn active" data-tab="foreign-buy">外資連買</button>

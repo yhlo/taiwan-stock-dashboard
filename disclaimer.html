@@ -4,6 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <!-- 自己瀏覽時不計入 GA：網址加 ?notrack=1 即在這個瀏覽器停用（存於 localStorage），?notrack=0 恢復 -->
+    <script>
+      (function () {
+        try {
+          var q = new URLSearchParams(location.search).get('notrack');
+          if (q === '1') localStorage.setItem('ga_optout', '1');
+          if (q === '0') localStorage.removeItem('ga_optout');
+          if (localStorage.getItem('ga_optout') === '1') window['ga-disable-G-BRC4C5P0KX'] = true;
+        } catch (e) {}
+      })();
+    </script>
+
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-BRC4C5P0KX"></script>
     <script>
