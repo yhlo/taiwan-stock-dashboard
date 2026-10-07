@@ -1,6 +1,6 @@
 {
   "Date": "20261007",
-  "GeneratedAt": "2026-10-07T08:36:36+08:00",
+  "GeneratedAt": "2026-10-07T08:59:30+08:00",
   "UsMarkets": [
     {
       "Name": "道瓊工業",
@@ -31,23 +31,13 @@
     "Close": 482.3,
     "ChangePct": -0.72,
     "Date": "20261006",
-    "FxRate": 31.773,
-    "ImpliedTwd": 3064.8,
+    "FxRate": 31.782,
+    "ImpliedTwd": 3065.7,
     "TwClose": 2585.0,
     "TwCloseDate": "20261006",
-    "PremiumPct": 18.56
+    "PremiumPct": 18.6
   },
-  "NightSession": {
-    "Contract": "202610",
-    "Open": "50109",
-    "High": "50265",
-    "Low": "49950",
-    "Close": 50051.0,
-    "PrevClose": 50060.0,
-    "PrevCloseDate": "20261006",
-    "GapPoints": -9.0,
-    "GapPct": -0.02
-  },
+  "NightSession": null,
   "Chips": {
     "ForeignFuturesNet": {
       "Date": "20261006",
