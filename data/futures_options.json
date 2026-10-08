@@ -1,18 +1,33 @@
 {
-  "Date": "20261007",
+  "Date": "20261008",
   "Settlement": {
     "IsSettlementWeek": false,
     "SettlementDate": null
   },
   "Options": {
-    "Date": "20261007",
-    "ActiveMonth": "202610W1",
-    "MaxCallStrike": 50000,
-    "MaxCallOI": 6574,
-    "MaxPutStrike": 49600,
-    "MaxPutOI": 3353
+    "Date": "20261008",
+    "ActiveMonth": "202610F2",
+    "MaxCallStrike": 53400,
+    "MaxCallOI": 3632,
+    "MaxPutStrike": 49000,
+    "MaxPutOI": 1544
   },
   "FuturesHistory": [
+    {
+      "Date": "20261008",
+      "Foreign_Net": -83194,
+      "Trust_Net": 76339,
+      "Dealer_Net": -534,
+      "Total_Net": -7389,
+      "MTX_Foreign_Net": -602,
+      "MTX_Trust_Net": -11,
+      "MTX_Dealer_Net": -8299,
+      "MTX_Total_Net": -8912,
+      "TMF_Foreign_Net": -10912,
+      "TMF_Trust_Net": 0,
+      "TMF_Dealer_Net": -13724,
+      "TMF_Total_Net": -24636
+    },
     {
       "Date": "20261007",
       "Foreign_Net": -79101,
@@ -297,29 +312,9 @@
       "TMF_Trust_Net": 0,
       "TMF_Dealer_Net": -32819,
       "TMF_Total_Net": -12402
-    },
-    {
-      "Date": "20260908",
-      "Foreign_Net": -82262,
-      "Trust_Net": 74598,
-      "Dealer_Net": -180,
-      "Total_Net": -7844,
-      "MTX_Foreign_Net": -1724,
-      "MTX_Trust_Net": -50,
-      "MTX_Dealer_Net": -2533,
-      "MTX_Total_Net": -4307,
-      "TMF_Foreign_Net": 14739,
-      "TMF_Trust_Net": 0,
-      "TMF_Dealer_Net": -35019,
-      "TMF_Total_Net": -20280
     }
   ],
   "IndexHistory": [
-    {
-      "Date": "20260908",
-      "Close": 47105.78125,
-      "Volume": 4458900
-    },
     {
       "Date": "20260909",
       "Close": 47183.359375,
@@ -409,6 +404,16 @@
       "Date": "20261006",
       "Close": 49822.55078125,
       "Volume": 4582800
+    },
+    {
+      "Date": "20261007",
+      "Close": 49806.37109375,
+      "Volume": 4441400
+    },
+    {
+      "Date": "20261008",
+      "Close": 49313.44140625,
+      "Volume": null
     }
   ]
 }
