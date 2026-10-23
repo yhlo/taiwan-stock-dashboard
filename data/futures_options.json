@@ -4,7 +4,14 @@
     "IsSettlementWeek": false,
     "SettlementDate": null
   },
-  "Options": null,
+  "Options": {
+    "Date": "20261022",
+    "ActiveMonth": "202610F4",
+    "MaxCallStrike": 49000,
+    "MaxCallOI": 2444,
+    "MaxPutStrike": 46000,
+    "MaxPutOI": 1829
+  },
   "FuturesHistory": [
     {
       "Date": "20261022",
@@ -406,7 +413,7 @@
     {
       "Date": "20261022",
       "Close": 46041.4296875,
-      "Volume": null
+      "Volume": 4348200
     }
   ]
 }
