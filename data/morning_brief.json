@@ -1,49 +1,55 @@
 {
-  "Date": "20261023",
-  "GeneratedAt": "2026-10-23T08:07:42+08:00",
+  "Date": "20261026",
+  "GeneratedAt": "2026-10-26T07:10:00+08:00",
   "UsMarkets": [
     {
       "Name": "道瓊工業",
-      "Close": 52867.98,
-      "ChangePct": 0.02,
-      "Date": "20261022"
+      "Close": 52215.16,
+      "ChangePct": -1.23,
+      "Date": "20261023"
     },
     {
       "Name": "那斯達克",
-      "Close": 26008.86,
-      "ChangePct": -2.6,
-      "Date": "20261022"
+      "Close": 25955.34,
+      "ChangePct": -0.21,
+      "Date": "20261023"
     },
     {
       "Name": "標普500",
-      "Close": 7663.43,
-      "ChangePct": -1.21,
-      "Date": "20261022"
+      "Close": 7623.68,
+      "ChangePct": -0.52,
+      "Date": "20261023"
     },
     {
       "Name": "費城半導體",
-      "Close": 10731.98,
-      "ChangePct": -6.72,
-      "Date": "20261022"
+      "Close": 10779.46,
+      "ChangePct": 0.44,
+      "Date": "20261023"
     }
   ],
-  "Adr": null,
-  "NightSession": {
-    "Contract": "202611",
-    "Open": "46270",
-    "High": "46399",
-    "Low": "45523",
-    "Close": 45654.0,
-    "PrevClose": 46272.0,
-    "PrevCloseDate": "20261022",
-    "GapPoints": -618.0,
-    "GapPct": -1.34
+  "Adr": {
+    "Close": 418.51,
+    "ChangePct": 1.49,
+    "Date": "20261023",
+    "FxRate": 32.567,
+    "ImpliedTwd": 2725.9,
+    "TwClose": 2385.0,
+    "TwCloseDate": "20261022",
+    "PremiumPct": 14.29
   },
+  "NightSession": null,
   "Chips": {
     "ForeignFuturesNet": {
       "Date": "20261022",
       "Net": -87297,
       "Change": -1225
+    },
+    "OptionLevels": {
+      "Resistance": 49000,
+      "ResistanceOI": 2444,
+      "Support": 46000,
+      "SupportOI": 1829,
+      "ActiveMonth": "202610F4"
     },
     "ChipDate": "20261022",
     "ForeignBuyStreak": [
