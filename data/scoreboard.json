@@ -1,5 +1,5 @@
 {
-  "UpdatedFor": "20261113",
+  "UpdatedFor": "20261116",
   "Note": "訊號於當日收盤後產生，報酬以次一交易日收盤價計算，未計交易成本。報酬僅涵蓋可取得歷史股價的上市個股，Scored 為實際計入檔數。",
   "Summary": {
     "ForeignBuy": {
@@ -8,29 +8,24 @@
       "AvgReturn": -0.08,
       "PositiveSessionRate": 47.5,
       "BestReturn": 2.02,
-      "WorstReturn": -2.14
+      "WorstReturn": -1.8
     },
     "TrustBuy": {
       "Label": "投信連買",
       "Sessions": 59,
-      "AvgReturn": -0.2,
+      "AvgReturn": -0.32,
       "PositiveSessionRate": 44.1,
       "BestReturn": 6.53,
-      "WorstReturn": -6.17
+      "WorstReturn": -7.85
     }
   },
   "Entries": [
     {
       "Signal": "TrustBuy",
       "Label": "投信連買",
-      "SignalDate": "20261113",
+      "SignalDate": "20261116",
       "EvalDate": null,
       "Stocks": [
-        {
-          "Symbol": "2330",
-          "Name": "台積電",
-          "Streak": 20
-        },
         {
           "Symbol": "2454",
           "Name": "聯發科",
@@ -42,46 +37,51 @@
           "Streak": 20
         },
         {
-          "Symbol": "4958",
-          "Name": "臻鼎-KY",
-          "Streak": 20
-        },
-        {
-          "Symbol": "5880",
-          "Name": "合庫金",
-          "Streak": 20
-        },
-        {
-          "Symbol": "6805",
-          "Name": "富世達",
-          "Streak": 19
-        },
-        {
           "Symbol": "8996",
           "Name": "高力",
-          "Streak": 19
-        },
-        {
-          "Symbol": "3711",
-          "Name": "日月光投控",
-          "Streak": 18
+          "Streak": 20
         },
         {
           "Symbol": "1303",
           "Name": "南亞",
+          "Streak": 15
+        },
+        {
+          "Symbol": "1605",
+          "Name": "華新",
           "Streak": 14
         },
         {
-          "Symbol": "1815",
-          "Name": "富喬",
+          "Symbol": "3443",
+          "Name": "創意",
           "Streak": 14
+        },
+        {
+          "Symbol": "6526",
+          "Name": "達發",
+          "Streak": 14
+        },
+        {
+          "Symbol": "2882",
+          "Name": "國泰金",
+          "Streak": 12
+        },
+        {
+          "Symbol": "3014",
+          "Name": "聯陽",
+          "Streak": 12
+        },
+        {
+          "Symbol": "8081",
+          "Name": "致新",
+          "Streak": 12
         }
       ]
     },
     {
       "Signal": "ForeignBuy",
       "Label": "外資連買",
-      "SignalDate": "20261113",
+      "SignalDate": "20261116",
       "EvalDate": null,
       "Stocks": [
         {
@@ -92,49 +92,191 @@
         {
           "Symbol": "7402",
           "Name": "邑錡",
-          "Streak": 17
+          "Streak": 18
         },
         {
           "Symbol": "00696B",
           "Name": "富邦美債20年",
-          "Streak": 16
+          "Streak": 17
         },
         {
           "Symbol": "4441",
           "Name": "振大環球",
-          "Streak": 16
-        },
-        {
-          "Symbol": "1810",
-          "Name": "和成",
-          "Streak": 12
+          "Streak": 17
         },
         {
           "Symbol": "2610",
           "Name": "華航",
-          "Streak": 12
+          "Streak": 13
         },
         {
           "Symbol": "2618",
           "Name": "長榮航",
-          "Streak": 12
-        },
-        {
-          "Symbol": "6235",
-          "Name": "華孚",
-          "Streak": 12
-        },
-        {
-          "Symbol": "6617",
-          "Name": "共信-KY",
-          "Streak": 12
+          "Streak": 13
         },
         {
           "Symbol": "7765",
           "Name": "中華資安",
-          "Streak": 12
+          "Streak": 13
+        },
+        {
+          "Symbol": "3703",
+          "Name": "欣陸",
+          "Streak": 11
+        },
+        {
+          "Symbol": "4147",
+          "Name": "中裕",
+          "Streak": 10
+        },
+        {
+          "Symbol": "6584",
+          "Name": "南俊國際",
+          "Streak": 10
         }
       ]
+    },
+    {
+      "Signal": "TrustBuy",
+      "Label": "投信連買",
+      "SignalDate": "20261113",
+      "EvalDate": "20261116",
+      "Stocks": [
+        {
+          "Symbol": "2330",
+          "Name": "台積電",
+          "Streak": 20,
+          "Return": -5.74
+        },
+        {
+          "Symbol": "2454",
+          "Name": "聯發科",
+          "Streak": 20,
+          "Return": -7.89
+        },
+        {
+          "Symbol": "3017",
+          "Name": "奇鋐",
+          "Streak": 20,
+          "Return": -9.87
+        },
+        {
+          "Symbol": "4958",
+          "Name": "臻鼎-KY",
+          "Streak": 20,
+          "Return": -10.0
+        },
+        {
+          "Symbol": "5880",
+          "Name": "合庫金",
+          "Streak": 20,
+          "Return": -1.05
+        },
+        {
+          "Symbol": "6805",
+          "Name": "富世達",
+          "Streak": 19,
+          "Return": -8.61
+        },
+        {
+          "Symbol": "8996",
+          "Name": "高力",
+          "Streak": 19,
+          "Return": -9.72
+        },
+        {
+          "Symbol": "3711",
+          "Name": "日月光投控",
+          "Streak": 18,
+          "Return": -8.03
+        },
+        {
+          "Symbol": "1303",
+          "Name": "南亞",
+          "Streak": 14,
+          "Return": -9.87
+        },
+        {
+          "Symbol": "1815",
+          "Name": "富喬",
+          "Streak": 14,
+          "Return": -7.75
+        }
+      ],
+      "AvgReturn": -7.85,
+      "WinRate": 0.0,
+      "Scored": 10
+    },
+    {
+      "Signal": "ForeignBuy",
+      "Label": "外資連買",
+      "SignalDate": "20261113",
+      "EvalDate": "20261116",
+      "Stocks": [
+        {
+          "Symbol": "00764B",
+          "Name": "群益25年美債",
+          "Streak": 20,
+          "Return": -0.07
+        },
+        {
+          "Symbol": "7402",
+          "Name": "邑錡",
+          "Streak": 17,
+          "Return": -7.29
+        },
+        {
+          "Symbol": "00696B",
+          "Name": "富邦美債20年",
+          "Streak": 16,
+          "Return": 0.07
+        },
+        {
+          "Symbol": "4441",
+          "Name": "振大環球",
+          "Streak": 16,
+          "Return": 0.27
+        },
+        {
+          "Symbol": "1810",
+          "Name": "和成",
+          "Streak": 12,
+          "Return": -4.98
+        },
+        {
+          "Symbol": "2610",
+          "Name": "華航",
+          "Streak": 12,
+          "Return": -2.16
+        },
+        {
+          "Symbol": "2618",
+          "Name": "長榮航",
+          "Streak": 12,
+          "Return": -0.73
+        },
+        {
+          "Symbol": "6235",
+          "Name": "華孚",
+          "Streak": 12,
+          "Return": -6.04
+        },
+        {
+          "Symbol": "6617",
+          "Name": "共信-KY",
+          "Streak": 12,
+          "Return": -6.93
+        },
+        {
+          "Symbol": "7765",
+          "Name": "中華資安",
+          "Streak": 12,
+          "Return": 9.83
+        }
+      ],
+      "AvgReturn": -1.8,
+      "WinRate": 30.0,
+      "Scored": 10
     },
     {
       "Signal": "TrustBuy",
@@ -8346,148 +8488,6 @@
       ],
       "AvgReturn": 0.13,
       "WinRate": 40.0,
-      "Scored": 10
-    },
-    {
-      "Signal": "TrustBuy",
-      "Label": "投信連買",
-      "SignalDate": "20260817",
-      "EvalDate": "20260818",
-      "Stocks": [
-        {
-          "Symbol": "2886",
-          "Name": "兆豐金",
-          "Streak": 20,
-          "Return": 0.64
-        },
-        {
-          "Symbol": "1477",
-          "Name": "聚陽",
-          "Streak": 17,
-          "Return": -3.42
-        },
-        {
-          "Symbol": "00980A",
-          "Name": "主動野村臺灣優選",
-          "Streak": 13,
-          "Return": -4.49
-        },
-        {
-          "Symbol": "2207",
-          "Name": "和泰車",
-          "Streak": 10,
-          "Return": -0.58
-        },
-        {
-          "Symbol": "2542",
-          "Name": "興富發",
-          "Streak": 10,
-          "Return": 2.03
-        },
-        {
-          "Symbol": "2609",
-          "Name": "陽明",
-          "Streak": 10,
-          "Return": 2.74
-        },
-        {
-          "Symbol": "6805",
-          "Name": "富世達",
-          "Streak": 10,
-          "Return": 1.82
-        },
-        {
-          "Symbol": "8996",
-          "Name": "高力",
-          "Streak": 10,
-          "Return": -3.29
-        },
-        {
-          "Symbol": "9904",
-          "Name": "寶成",
-          "Streak": 10,
-          "Return": -1.21
-        },
-        {
-          "Symbol": "9910",
-          "Name": "豐泰",
-          "Streak": 10,
-          "Return": -1.0
-        }
-      ],
-      "AvgReturn": -0.68,
-      "WinRate": 40.0,
-      "Scored": 10
-    },
-    {
-      "Signal": "ForeignBuy",
-      "Label": "外資連買",
-      "SignalDate": "20260817",
-      "EvalDate": "20260818",
-      "Stocks": [
-        {
-          "Symbol": "00717",
-          "Name": "富邦美國特別股",
-          "Streak": 20,
-          "Return": -1.07
-        },
-        {
-          "Symbol": "1216",
-          "Name": "統一",
-          "Streak": 15,
-          "Return": 1.33
-        },
-        {
-          "Symbol": "6235",
-          "Name": "華孚",
-          "Streak": 14,
-          "Return": -3.33
-        },
-        {
-          "Symbol": "6279",
-          "Name": "胡連",
-          "Streak": 14,
-          "Return": -1.17
-        },
-        {
-          "Symbol": "8411",
-          "Name": "福貞-KY",
-          "Streak": 14,
-          "Return": -1.54
-        },
-        {
-          "Symbol": "6104",
-          "Name": "創惟",
-          "Streak": 13,
-          "Return": -2.37
-        },
-        {
-          "Symbol": "5351",
-          "Name": "鈺創",
-          "Streak": 12,
-          "Return": -9.96
-        },
-        {
-          "Symbol": "0051",
-          "Name": "元大中型100",
-          "Streak": 11,
-          "Return": -1.59
-        },
-        {
-          "Symbol": "00900",
-          "Name": "富邦特選高股息30",
-          "Streak": 11,
-          "Return": -0.69
-        },
-        {
-          "Symbol": "1904",
-          "Name": "正隆",
-          "Streak": 11,
-          "Return": -1.01
-        }
-      ],
-      "AvgReturn": -2.14,
-      "WinRate": 10.0,
       "Scored": 10
     }
   ]
