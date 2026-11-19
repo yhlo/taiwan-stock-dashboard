@@ -1,16 +1,16 @@
 {
-  "Date": "20261118",
+  "Date": "20261119",
   "Settlement": {
-    "IsSettlementWeek": true,
-    "SettlementDate": "2026/11/18"
+    "IsSettlementWeek": false,
+    "SettlementDate": null
   },
   "Options": {
-    "Date": "20261118",
-    "ActiveMonth": "202611",
-    "MaxCallStrike": 46000,
-    "MaxCallOI": 7825,
-    "MaxPutStrike": 33700,
-    "MaxPutOI": 11549
+    "Date": "20261119",
+    "ActiveMonth": "202611F3",
+    "MaxCallStrike": 45000,
+    "MaxCallOI": 6670,
+    "MaxPutStrike": 35700,
+    "MaxPutOI": 3728
   },
   "FuturesHistory": [
     {
@@ -409,6 +409,11 @@
       "Date": "20261117",
       "Close": 40092.109375,
       "Volume": 4545600
+    },
+    {
+      "Date": "20261118",
+      "Close": 40194.91015625,
+      "Volume": 4771900
     }
   ]
 }
