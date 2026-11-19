@@ -1,6 +1,6 @@
 {
   "Date": "20261119",
-  "GeneratedAt": "2026-11-19T10:29:00+08:00",
+  "GeneratedAt": "2026-11-19T10:45:42+08:00",
   "UsMarkets": [
     {
       "Name": "道瓊工業",
@@ -31,11 +31,11 @@
     "Close": 362.62,
     "ChangePct": 0.81,
     "Date": "20261118",
-    "FxRate": 32.953,
-    "ImpliedTwd": 2389.9,
+    "FxRate": 32.968,
+    "ImpliedTwd": 2391.0,
     "TwClose": 2175.0,
     "TwCloseDate": "20261118",
-    "PremiumPct": 9.88
+    "PremiumPct": 9.93
   },
   "NightSession": null,
   "Chips": {
