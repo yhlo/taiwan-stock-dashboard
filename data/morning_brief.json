@@ -1,92 +1,92 @@
 {
-  "Date": "20261120",
-  "GeneratedAt": "2026-11-20T10:32:06+08:00",
+  "Date": "20261123",
+  "GeneratedAt": "2026-11-23T09:33:54+08:00",
   "UsMarkets": [
     {
       "Name": "道瓊工業",
-      "Close": 49097.06,
-      "ChangePct": -2.19,
-      "Date": "20261119"
+      "Close": 48147.33,
+      "ChangePct": -1.93,
+      "Date": "20261120"
     },
     {
       "Name": "那斯達克",
-      "Close": 23879.2,
-      "ChangePct": -2.25,
-      "Date": "20261119"
+      "Close": 22617.73,
+      "ChangePct": -5.28,
+      "Date": "20261120"
     },
     {
       "Name": "標普500",
-      "Close": 7175.83,
-      "ChangePct": -2.02,
-      "Date": "20261119"
+      "Close": 6910.39,
+      "ChangePct": -3.7,
+      "Date": "20261120"
     },
     {
       "Name": "費城半導體",
-      "Close": 9419.72,
-      "ChangePct": -2.41,
-      "Date": "20261119"
+      "Close": 8408.59,
+      "ChangePct": -10.73,
+      "Date": "20261120"
     }
   ],
   "Adr": {
-    "Close": 352.09,
-    "ChangePct": -2.9,
-    "Date": "20261119",
-    "FxRate": 32.982,
-    "ImpliedTwd": 2322.5,
-    "TwClose": 2100.0,
-    "TwCloseDate": "20261119",
-    "PremiumPct": 10.6
+    "Close": 318.71,
+    "ChangePct": -9.48,
+    "Date": "20261120",
+    "FxRate": 32.941,
+    "ImpliedTwd": 2099.7,
+    "TwClose": 2000.0,
+    "TwCloseDate": "20261120",
+    "PremiumPct": 4.99
   },
   "NightSession": null,
   "Chips": {
     "ForeignFuturesNet": {
-      "Date": "20261119",
-      "Net": -99219,
-      "Change": 219
+      "Date": "20261120",
+      "Net": -97863,
+      "Change": 1356
     },
     "OptionLevels": {
       "Resistance": 45000,
-      "ResistanceOI": 6670,
-      "Support": 35700,
-      "SupportOI": 3728,
+      "ResistanceOI": 6609,
+      "Support": 35000,
+      "SupportOI": 11591,
       "ActiveMonth": "202611F3"
     },
-    "ChipDate": "20261119",
+    "ChipDate": "20261120",
     "ForeignBuyStreak": [
       {
         "Symbol": "00696B",
         "Name": "富邦美債20年",
         "Streak": 20,
-        "Close": 28.41,
-        "Change": 0.15
+        "Close": 28.48,
+        "Change": 0.07
       },
       {
         "Symbol": "7402",
         "Name": "邑錡",
         "Streak": 20,
-        "Close": 68.0,
-        "Change": -7.3
+        "Close": 62.4,
+        "Change": -5.6
       },
       {
         "Symbol": "2610",
         "Name": "華航",
-        "Streak": 16,
-        "Close": 22.5,
-        "Change": -0.4
+        "Streak": 17,
+        "Close": 21.3,
+        "Change": -1.2
       },
       {
         "Symbol": "00989B",
         "Name": "台新美國非投等債",
-        "Streak": 12,
-        "Close": 9.86,
-        "Change": 0.0
+        "Streak": 13,
+        "Close": 9.82,
+        "Change": -0.04
       },
       {
-        "Symbol": "4749",
-        "Name": "新應材",
+        "Symbol": "00653L",
+        "Name": "富邦印度正2",
         "Streak": 12,
-        "Close": 655.0,
-        "Change": -18.0
+        "Close": 51.5,
+        "Change": 0.85
       }
     ],
     "TrustBuyStreak": [
@@ -94,68 +94,68 @@
         "Symbol": "2454",
         "Name": "聯發科",
         "Streak": 20,
-        "Close": 3720.0,
-        "Change": -220.0
-      },
-      {
-        "Symbol": "2882",
-        "Name": "國泰金",
-        "Streak": 15,
-        "Close": 103.5,
-        "Change": -6.5
+        "Close": 3350.0,
+        "Change": -370.0
       },
       {
         "Symbol": "1476",
         "Name": "儒鴻",
-        "Streak": 14,
-        "Close": 384.5,
-        "Change": 0.5
+        "Streak": 15,
+        "Close": 364.0,
+        "Change": -20.5
       },
       {
         "Symbol": "0050",
         "Name": "元大台灣50",
-        "Streak": 12,
-        "Close": 90.2,
-        "Change": -3.9
+        "Streak": 13,
+        "Close": 84.45,
+        "Change": -5.75
       },
       {
         "Symbol": "6223",
         "Name": "旺矽",
-        "Streak": 11,
-        "Close": 3955.0,
-        "Change": -435.0
+        "Streak": 12,
+        "Close": 3560.0,
+        "Change": -395.0
+      },
+      {
+        "Symbol": "2027",
+        "Name": "大成鋼",
+        "Streak": 10,
+        "Close": 42.5,
+        "Change": -3.3
       }
     ],
     "TrustFreshBuys": [
       {
-        "Symbol": "3596",
-        "Name": "智易",
-        "Shares": 646000,
-        "Close": 134.0
+        "Symbol": "2886",
+        "Name": "兆豐金",
+        "Shares": 13412520,
+        "Close": 51.8
       },
       {
-        "Symbol": "00687B",
-        "Name": "國泰20年美債",
-        "Shares": 490000,
-        "Close": 27.39
+        "Symbol": "2883",
+        "Name": "凱基金",
+        "Shares": 6319560,
+        "Close": 29.9
       },
       {
-        "Symbol": "2352",
-        "Name": "佳世達",
-        "Shares": 460000,
-        "Close": 25.15
+        "Symbol": "3045",
+        "Name": "台灣大",
+        "Shares": 1967871,
+        "Close": 123.0
       },
       {
-        "Symbol": "6187",
-        "Name": "萬潤",
-        "Shares": 453000,
-        "Close": 694.0
+        "Symbol": "3037",
+        "Name": "欣興",
+        "Shares": 1735563,
+        "Close": 537.0
       },
       {
-        "Symbol": "00998A",
-        "Name": "主動復華金融股息",
-        "Shares": 388000,
-        "Close": 16.13
+        "Symbol": "3189",
+        "Name": "景碩",
+        "Shares": 1097000,
+        "Close": 470.0
       }
     ]
   },
