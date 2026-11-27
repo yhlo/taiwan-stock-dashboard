@@ -43,6 +43,12 @@ os.makedirs("data/cache", exist_ok=True)
 def is_in_ipython():
     return False
 
+def taipei_today_str():
+    """Today's date in Taipei (YYYYMMDD), from the real clock."""
+    return (datetime.datetime.now(datetime.timezone.utc)
+            + datetime.timedelta(hours=8)).strftime("%Y%m%d")
+
+
 def western_to_roc_date(date_str):
     year = int(date_str[:4])
     month = date_str[4:6]
@@ -233,6 +239,11 @@ def parse_tpex_t86(api_response):
     return pd.DataFrame(rows)
 
 def load_t86_both_markets(date_str, cache_dir, is_today=False):
+    # An empty reply for today (or a later date) means "not published yet",
+    # never "holiday" -- whatever the caller passed. Otherwise a manual
+    # backfill run before 15:00 would cache today as a holiday.
+    is_today = is_today or date_str >= taipei_today_str()
+
     twse_url = f"https://www.twse.com.tw/rwd/zh/fund/T86?response=json&date={date_str}&selectType=ALLBUT0999"
     twse_cache = os.path.join(cache_dir, f"T86_{date_str}.json")
     twse_data = fetch_data_with_cache(twse_url, twse_cache, is_today)
@@ -242,24 +253,25 @@ def load_t86_both_markets(date_str, cache_dir, is_today=False):
         # Say so rather than reporting "no data" and letting the day disappear.
         raise T86FetchError(f"TWSE T86 unavailable for {date_str}")
 
-    if twse_data.get("stat") == "NO_DATA":
-        if not is_today:
-            tpex_cache = os.path.join(cache_dir, f"TPEX_T86_{date_str}.json")
-            if not os.path.exists(tpex_cache):
-                try:
-                    with open(tpex_cache, "w", encoding="utf-8") as f:
-                        json.dump({"stat": "NO_DATA"}, f)
-                except Exception:
-                    pass
-        return None
-
+    # TPEx is asked even when TWSE reports no data: a day only counts as a
+    # holiday when *both* markets agree. A single empty reply from one side
+    # can be a glitch, and treating it as a holiday would splice the days
+    # around it together and inflate every streak.
     roc_date = western_to_roc_date(date_str)
     tpex_url = f"https://www.tpex.org.tw/web/stock/3insti/daily_trade/3itrade_hedge_result.php?l=zh-tw&o=json&se=EW&t=D&d={roc_date}"
     tpex_cache = os.path.join(cache_dir, f"TPEX_T86_{date_str}.json")
     tpex_data = fetch_data_with_cache(tpex_url, tpex_cache, is_today)
 
     if tpex_data is None:
-        # TWSE answered but TPEx did not: publishing now would record a
+        has_twse_rows = (twse_data.get("stat") == "OK"
+                         and len(twse_data.get("data") or []) > 0)
+        if not has_twse_rows:
+            # TPEx can't be reached to confirm, but TWSE says no session:
+            # fall back to TWSE's verdict (the pre-cross-check behaviour)
+            # rather than truncating every streak at a holiday. Nothing is
+            # cached for TPEx, so a later run still asks it.
+            return None
+        # TWSE traded but TPEx did not answer: publishing now would record a
         # listed-only day and corrupt every OTC streak. Treat the whole day as
         # unknown so the caller keeps whatever was published before.
         raise T86FetchError(f"TPEx T86 unavailable for {date_str}")
@@ -273,8 +285,31 @@ def load_t86_both_markets(date_str, cache_dir, is_today=False):
             has_tpex = True
             
     if not (has_twse or has_tpex):
-        return None
-        
+        return None  # both markets agree: holiday (or today, not out yet)
+
+    if has_twse != has_tpex:
+        # Exactly one market has data. Publishing that would record a
+        # one-market day and reset every streak in the other market to 0.
+        missing = "TPEx" if has_twse else "TWSE"
+        if is_today:
+            # The other market just hasn't published today's T86 yet: treat
+            # today as not out, so the build uses the previous session.
+            print(f"Note: {missing} T86 for {date_str} not published yet; "
+                  f"waiting for both markets.", file=sys.stderr)
+            return None
+        # A past trading day the other market reported as empty: that reply
+        # was wrong, not a holiday. Drop its cached "no data" so a later run
+        # asks again, and report the day as unknown.
+        # The empty side's reply has no rows by definition, so its cache
+        # file (whatever shape it was stored in) is never worth keeping.
+        bad_cache = tpex_cache if has_twse else twse_cache
+        try:
+            if os.path.exists(bad_cache):
+                os.remove(bad_cache)
+        except OSError:
+            pass
+        raise T86FetchError(f"{missing} T86 empty on a day the other market traded ({date_str})")
+
     df_twse = pd.DataFrame()
     if has_twse:
         df_twse = parse_twse_t86(twse_data)
@@ -295,8 +330,9 @@ def collect_t86_history(latest_date_str, cache_dir, n=20, today_str=None,
 
     Walks calendar weekdays backwards and asks TWSE/TPEx about each one directly.
     T86 itself is the source of the streak data, so it -- not Yahoo's ^TWII
-    calendar -- decides which days are trading days: a day TWSE reports as
-    NO_DATA is a holiday and skipped over.
+    calendar -- decides which days are trading days: a day both TWSE and TPEx
+    report as empty is a holiday and skipped over (see load_t86_both_markets;
+    one market empty while the other traded is an error, not a holiday).
 
     Streaks are derived over a contiguous window, so a day that fails to fetch is
     NOT skipped: doing so would splice the days on either side together and
@@ -344,11 +380,10 @@ def collect_t86_history(latest_date_str, cache_dir, n=20, today_str=None,
 def load_daily_quotes(date_str, cache_dir):
     """Listed + OTC OHLC for one past date, cached by date.
 
-    TPEx's live quote endpoint (used for "today") takes no date parameter and
-    always answers with the most recent session, so it cannot serve history.
-    `otc_quotes_no1430` is the dated report instead: it honours `d=` the same
-    way TWSE's MI_INDEX does, so OTC history is fetched from there rather than
-    left out.
+    OTC prices come from TPEx's dated `otc_quotes_no1430` report, which
+    honours `d=` the same way TWSE's MI_INDEX does (TPEx's OpenAPI quote
+    endpoint takes no date and always answers with the newest session, so it
+    is not used anywhere).
 
     Historical days never change, so caching keeps a 20-day walk to one live
     fetch per run instead of twenty.
@@ -422,9 +457,9 @@ def compute_streak_avg_prices(day_dfs, cache_dir, columns=("Foreign", "Trust")):
     Only streaks of two days or more get a value: a single day's average is
     just that day's price and would dress up nothing as insight.
 
-    Coverage is effectively listed-only, since historical prices come from the
-    one endpoint that honours a date (see load_daily_quotes). OTC symbols get
-    no value rather than a wrong one.
+    Covers listed and OTC symbols (see load_daily_quotes). A symbol whose price
+    is missing on any streak day stops there rather than averaging over an
+    incomplete streak.
     """
     if not day_dfs:
         return {}
@@ -506,7 +541,8 @@ def _pick_signal_stocks(rows, streak_field, top_n=SCOREBOARD_TOP_N,
     ]
 
 
-def update_scoreboard(latest_date, rows, cache_dir, path="data/scoreboard.json"):
+def update_scoreboard(latest_date, rows, cache_dir, trading_days,
+                      path="data/scoreboard.json", window_complete=False):
     """Record what each signal flagged, and score it once the next day is in.
 
     A signal computed from session T's chips is only actionable from T+1, so an
@@ -517,6 +553,16 @@ def update_scoreboard(latest_date, rows, cache_dir, path="data/scoreboard.json")
     The ledger is append-only and self-contained: it accumulates as the site
     runs rather than being recomputed, so a bad day upstream cannot silently
     rewrite past results.
+
+    `trading_days` is the list of known trading sessions (any order). An entry
+    is scored only against the session immediately after its signal day --
+    never a later one -- so a run that misses T+1's prices leaves the entry
+    pending for a retry instead of recording a multi-day move as "next day".
+
+    `window_complete` says `trading_days` is the full, untruncated window. Only
+    then can an entry older than the window be declared unscorable -- its T+1
+    is gone for good -- instead of staying "pending" forever. Pass False when
+    the window may be short (a truncated build, or a backfill).
     """
     try:
         with open(path, "r", encoding="utf-8") as f:
@@ -526,28 +572,46 @@ def update_scoreboard(latest_date, rows, cache_dir, path="data/scoreboard.json")
 
     entries = board.get("Entries") or []
 
+    # Sessions known as of this run, oldest first. Only sessions up to
+    # latest_date: the backfill replays history and must not see the future.
+    sessions = sorted({d for d in trading_days if d <= latest_date} | {latest_date})
+
+    closes_by_date = {}
+
+    def closes_for(date_str):
+        if date_str not in closes_by_date:
+            closes_by_date[date_str] = load_daily_closes(date_str, cache_dir)
+        return closes_by_date[date_str]
+
     # 1. Score any entry still waiting for a follow-up session.
-    closes_today = None
     for entry in entries:
-        if entry.get("EvalDate") or entry.get("SignalDate") >= latest_date:
+        signal_date = entry.get("SignalDate")
+        if entry.get("EvalDate") or signal_date >= latest_date:
             continue
-        if closes_today is None:
-            closes_today = load_daily_closes(latest_date, cache_dir)
-        closes_signal = load_daily_closes(entry["SignalDate"], cache_dir)
-        if not closes_signal or not closes_today:
+        if signal_date not in sessions:
+            if window_complete and signal_date < sessions[0]:
+                # Its T+1 fell out of a full window without ever getting
+                # prices: say so, rather than showing "pending" forever.
+                entry["Unscorable"] = True
+            # Otherwise the window may just be truncated right now: wait.
+            continue
+        eval_date = sessions[sessions.index(signal_date) + 1]
+        closes_signal = closes_for(signal_date)
+        closes_next = closes_for(eval_date)
+        if not closes_signal or not closes_next:
             continue
 
         scored = []
         for stock in entry.get("Stocks", []):
             before = closes_signal.get(stock["Symbol"])
-            after = closes_today.get(stock["Symbol"])
+            after = closes_next.get(stock["Symbol"])
             if not before or not after:
                 continue
             stock["Return"] = round((after / before - 1) * 100, 2)
             scored.append(stock["Return"])
 
         if scored:
-            entry["EvalDate"] = latest_date
+            entry["EvalDate"] = eval_date
             entry["AvgReturn"] = round(sum(scored) / len(scored), 2)
             entry["WinRate"] = round(
                 100.0 * sum(1 for r in scored if r > 0) / len(scored), 1
@@ -596,7 +660,7 @@ def update_scoreboard(latest_date, rows, cache_dir, path="data/scoreboard.json")
     board = {
         "UpdatedFor": latest_date,
         "Note": ("訊號於當日收盤後產生，報酬以次一交易日收盤價計算，未計交易成本。"
-                 "報酬僅涵蓋可取得歷史股價的上市個股，Scored 為實際計入檔數。"),
+                 "報酬僅涵蓋可取得歷史股價的上市、上櫃個股，Scored 為實際計入檔數。"),
         "Summary": summary,
         "Entries": entries,
     }
@@ -1269,51 +1333,24 @@ def scrape_daily_sbl_data(date_str, cache_dir):
     return sbl_map
 
 def scrape_daily_stock_quotes(date_str):
+    """Listed + OTC OHLC for `date_str`, the session the T86 data belongs to.
+
+    OTC comes from TPEx's dated closing-quote report rather than the OpenAPI
+    endpoint, which takes no date and always returns the newest session --
+    pairing that with an older session's T86 (a --date rerun, or a run before
+    today's T86 is out) put the wrong day's prices next to the flows.
+    """
     quotes_map = {}
-    headers = HEADERS
-    
     quotes_map.update(scrape_twse_quotes(date_str))
-
-    # 2. TPEx
-    tpex_success = False
-    for attempt in range(3):
-        try:
-            url_tpex = "https://www.tpex.org.tw/openapi/v1/tpex_mainboard_daily_close_quotes"
-            print(f"Fetching TPEx OpenAPI quotes (Attempt {attempt+1})...")
-            res = requests.get(url_tpex, headers=headers, timeout=25)
-            if res.status_code == 200:
-                data = res.json()
-                print(f"Parsing TPEx quotes ({len(data)} stocks)...")
-                for r in data:
-                    sym = str(r.get("SecuritiesCompanyCode", "")).strip()
-
-                    vol = _clean_float(r.get("TradingShares", 0)) // 1000
-                    open_p = _clean_float(r.get("Open", 0))
-                    high_p = _clean_float(r.get("High", 0))
-                    low_p = _clean_float(r.get("Low", 0))
-                    close_p = _clean_float(r.get("Close", 0))
-                    change_val = _clean_float(r.get("Change", 0))
-
-                    quotes_map[sym] = {
-                        "Open": open_p,
-                        "High": high_p,
-                        "Low": low_p,
-                        "Close": close_p,
-                        "Change": change_val,
-                        "Volume": int(vol)
-                    }
-                tpex_success = True
-                break
-            else:
-                print(f"TPEx returned status code {res.status_code} on attempt {attempt+1}")
-        except Exception as e:
-            print(f"Error fetching TPEx daily quotes on attempt {attempt+1}: {e}", file=sys.stderr)
-        if not tpex_success and attempt < 2:
-            time.sleep(2)
-
-    if not tpex_success:
-        raise RuntimeError("Failed to fetch TPEx daily quotes after 3 attempts.")
-
+    try:
+        quotes_map.update(scrape_tpex_quotes_historical(date_str))
+    except Exception as e:
+        # The chip data is the point of the build; don't throw it away
+        # because TPEx's closing-quote report isn't out yet. OTC rows publish
+        # without a price (the UI shows "no quote") and a later run fills
+        # them in.
+        print(f"Warning: OTC quotes unavailable for {date_str}, publishing "
+              f"without OTC prices: {e}", file=sys.stderr)
     return quotes_map
 
 
@@ -1385,9 +1422,9 @@ def scrape_twse_quotes(date_str):
 def scrape_tpex_quotes_historical(date_str):
     """OTC OHLC for `date_str` from TPEx's dated closing-quote report.
 
-    Unlike the live `tpex_mainboard_daily_close_quotes` endpoint used for
-    "today", this one takes an ROC date and actually honours it, so it is safe
-    to use for history.
+    Unlike TPEx's OpenAPI `tpex_mainboard_daily_close_quotes` (no date
+    parameter; always the newest session), this one takes an ROC date and
+    actually honours it, so it is safe for any session, including today's.
     """
     quotes_map = {}
     roc_date = western_to_roc_date(date_str)
@@ -1402,6 +1439,16 @@ def scrape_tpex_quotes_historical(date_str):
             if res.status_code == 200:
                 data = res.json()
                 rows = (data.get("tables") or [{}])[0].get("data", [])
+                if not rows:
+                    # Only ever called for trading days, so an empty report
+                    # means "not published / glitch", not "no OTC trades".
+                    # Treating it as success would let load_daily_quotes
+                    # cache this date as listed-only for good.
+                    print(f"TPEx historical quotes for {date_str} came back empty "
+                          f"on attempt {attempt+1}", file=sys.stderr)
+                    if attempt < 2:
+                        time.sleep(2)
+                    continue
                 print(f"Parsing TPEx historical quotes ({len(rows)} stocks)...")
                 for r in rows:
                     if len(r) >= 7:
@@ -1720,7 +1767,10 @@ def main():
 
     # 6c. Score yesterday's signals and open today's
     try:
-        update_scoreboard(latest_active_date, final_streaks, cache_dir)
+        update_scoreboard(latest_active_date, final_streaks, cache_dir,
+                          trading_days=[d for d, _ in day_dfs],
+                          window_complete=(t86_truncated_at is None
+                                           and len(day_dfs) >= 20))
         print("Saved data/scoreboard.json")
     except Exception as e:
         # The scoreboard is a retrospective extra; never let it fail the build.

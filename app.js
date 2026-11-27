@@ -6,6 +6,15 @@ function track(eventName, params) {
     } catch (e) { /* analytics must never affect the app */ }
 }
 
+// Everything rendered via innerHTML that came from upstream data (stock
+// names, symbols, industries from TWSE/TPEx) goes through this, so a stray
+// `<`, `"` or `'` in a name can never become markup or script.
+function escapeHtml(value) {
+    return String(value ?? '').replace(/[&<>"']/g, ch => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[ch]));
+}
+
 // Global State Variables
 let streaksData = null;
 let marketSummary = null;
@@ -269,6 +278,14 @@ function setupEventListeners() {
         if (el) track(el.dataset.track, { label: el.dataset.label || '' });
     });
 
+    // Rows/chips that open a stock carry data-stock="<symbol>" instead of an
+    // inline onclick: interpolating a symbol into a JS string inside an HTML
+    // attribute can't be made safe by HTML escaping alone.
+    document.addEventListener('click', e => {
+        const el = e.target.closest && e.target.closest('[data-stock]');
+        if (el) window.searchStockDirectly(el.dataset.stock);
+    });
+
     // Tab switching
     const tabBtns = document.querySelectorAll('.tab-btn');
     tabBtns.forEach(btn => {
@@ -357,10 +374,10 @@ function setupEventListeners() {
             if (suggestionsContainer) {
                 if (slicedMatches.length > 0) {
                     suggestionsContainer.innerHTML = slicedMatches.map((item, index) => `
-                        <div class="suggestion-item" data-symbol="${item.Symbol}">
-                            <span class="suggestion-symbol">${item.Symbol}</span>
-                            <span class="suggestion-name">${item.Name}</span>
-                            <span class="suggestion-market">${item.Market}</span>
+                        <div class="suggestion-item" data-symbol="${escapeHtml(item.Symbol)}">
+                            <span class="suggestion-symbol">${escapeHtml(item.Symbol)}</span>
+                            <span class="suggestion-name">${escapeHtml(item.Name)}</span>
+                            <span class="suggestion-market">${escapeHtml(item.Market)}</span>
                         </div>
                     `).join('');
                     suggestionsContainer.classList.remove('hidden');
@@ -629,25 +646,30 @@ function renderWatchlist() {
         }
         
         if (stock) {
-            const changePercent = ((stock.Change / (stock.Close - stock.Change)) * 100).toFixed(2);
+            const sym = escapeHtml(stock.Symbol);
+            // A stock with no quote that day is published with Close/Change 0;
+            // show a dash rather than "0.00 元 (NaN%)".
+            const prevClose = (stock.Close || 0) - (stock.Change || 0);
+            const hasQuote = typeof stock.Change === 'number' && stock.Close > 0 && prevClose > 0;
+            const changePercent = hasQuote ? ((stock.Change / prevClose) * 100).toFixed(2) : null;
             const changeColor = stock.Change > 0 ? 'var(--color-up)' : (stock.Change < 0 ? 'var(--color-down)' : 'var(--text-secondary)');
             const changeSign = stock.Change > 0 ? '+' : '';
             
             html += `
-                <div class="watchlist-chip" onclick="window.searchStockDirectly('${stock.Symbol}')">
-                    <span class="watchlist-chip-title">${stock.Symbol} ${stock.Name}</span>
-                    <span class="watchlist-chip-price">${stock.Close.toFixed(2)} 元</span>
+                <div class="watchlist-chip" data-stock="${sym}">
+                    <span class="watchlist-chip-title">${sym} ${escapeHtml(stock.Name)}</span>
+                    <span class="watchlist-chip-price">${hasQuote ? `${stock.Close.toFixed(2)} 元` : '—'}</span>
                     <span class="watchlist-chip-change" style="color: ${changeColor}">
-                        ${changeSign}${stock.Change.toFixed(2)} (${changeSign}${changePercent}%)
+                        ${hasQuote ? `${changeSign}${stock.Change.toFixed(2)} (${changeSign}${changePercent}%)` : '暫無報價'}
                     </span>
-                    <button class="watchlist-chip-remove" data-symbol="${stock.Symbol}" title="移出關注名單">&times;</button>
+                    <button class="watchlist-chip-remove" data-symbol="${sym}" title="移出關注名單">&times;</button>
                 </div>
             `;
         } else {
             html += `
-                <div class="watchlist-chip" onclick="window.searchStockDirectly('${symbol}')">
-                    <span class="watchlist-chip-title">${symbol}</span>
-                    <button class="watchlist-chip-remove" data-symbol="${symbol}" title="移出關注名單">&times;</button>
+                <div class="watchlist-chip" data-stock="${escapeHtml(symbol)}">
+                    <span class="watchlist-chip-title">${escapeHtml(symbol)}</span>
+                    <button class="watchlist-chip-remove" data-symbol="${escapeHtml(symbol)}" title="移出關注名單">&times;</button>
                 </div>
             `;
         }
@@ -733,7 +755,7 @@ function renderMarketSummary() {
     const buildTableHtml = (rows) => {
         return rows.map(row => `
             <tr>
-                <td><strong>${row.Category}</strong></td>
+                <td><strong>${escapeHtml(row.Category)}</strong></td>
                 <td class="text-right">${formatBillionValue(row.Buy)}</td>
                 <td class="text-right">${formatBillionValue(row.Sell)}</td>
                 <td class="text-right">${formatBillion(row.Net)}</td>
@@ -1163,9 +1185,9 @@ function generateSentimentAnalysis() {
     const settle = futuresOptions.Settlement;
     if (settle && settle.IsSettlementWeek) {
         if (latestOI < -20000) {
-            finalSummary += ` 由於本週為結算週 (結算日：${settle.SettlementDate})，且外資持有較多空單部位 (${latestOI.toLocaleString()} 口)，主力利用期貨空單壓低結算價的風險較高，操作上建議防範結算前後行情劇烈波動。`;
+            finalSummary += ` 由於本週為結算週 (結算日：${escapeHtml(settle.SettlementDate)})，且外資持有較多空單部位 (${latestOI.toLocaleString()} 口)，主力利用期貨空單壓低結算價的風險較高，操作上建議防範結算前後行情劇烈波動。`;
         } else {
-            finalSummary += ` 由於本週為結算週 (結算日：${settle.SettlementDate})，主力可能在進行換倉或拉高壓低結算，操作上請特別注意風險。`;
+            finalSummary += ` 由於本週為結算週 (結算日：${escapeHtml(settle.SettlementDate)})，主力可能在進行換倉或拉高壓低結算，操作上請特別注意風險。`;
         }
     }
     
@@ -1535,7 +1557,7 @@ async function renderMorningBrief(dataVersion) {
     }
     if (chipTiles.length) {
         groups.push(`<div class="brief-group">
-                        <h3 class="brief-group-title">🎯 昨日籌碼（${c.ChipDate || ''}）</h3>
+                        <h3 class="brief-group-title">🎯 昨日籌碼（${escapeHtml(c.ChipDate || '')}）</h3>
                         <div class="brief-tiles">${chipTiles.join('')}</div>
                      </div>`);
     }
@@ -1555,7 +1577,7 @@ async function renderMorningBrief(dataVersion) {
                 </div>`;
     };
     listGroups.push(mkList('投信昨日新進場', c.TrustFreshBuys,
-        s => `<li><span class="brief-li-name" onclick="searchStockDirectly('${s.Symbol}')">${s.Symbol} ${s.Name}</span><span class="text-secondary">${Math.round((s.Shares || 0) / 1000).toLocaleString()} 張</span></li>`));
+        s => `<li><span class="brief-li-name" data-stock="${escapeHtml(s.Symbol)}">${escapeHtml(s.Symbol)} ${escapeHtml(s.Name)}</span><span class="text-secondary">${Math.round((s.Shares || 0) / 1000).toLocaleString()} 張</span></li>`));
     const listsHtml = listGroups.filter(Boolean).join('');
     if (listsHtml) {
         groups.push(`<div class="brief-group"><div class="brief-lists">${listsHtml}</div></div>`);
@@ -1572,7 +1594,7 @@ async function renderMorningBrief(dataVersion) {
         const s = brief.Settlement;
         groups.push(`<div class="brief-alert">
                         ${s.IsSettlementDay ? '⚠️ <strong>今日為結算日</strong>' : '📅 本週為結算週'}
-                        ${s.SettlementDate ? `，結算日 ${s.SettlementDate}` : ''}
+                        ${s.SettlementDate ? `，結算日 ${escapeHtml(s.SettlementDate)}` : ''}
                      </div>`);
     }
 
@@ -1636,11 +1658,11 @@ function populateRankingTable(tableId, list, streakCol, latestCol) {
             ? 'Trust' : 'Foreign';
 
         html += `
-            <tr style="cursor: pointer;" onclick="searchStockDirectly('${row.Symbol}')">
-                <td><strong>${row.Symbol}</strong></td>
-                <td>${row.Name}</td>
-                <td>${row.Industry}</td>
-                <td>${row.Market}</td>
+            <tr style="cursor: pointer;" data-stock="${escapeHtml(row.Symbol)}">
+                <td><strong>${escapeHtml(row.Symbol)}</strong></td>
+                <td>${escapeHtml(row.Name)}</td>
+                <td>${escapeHtml(row.Industry)}</td>
+                <td>${escapeHtml(row.Market)}</td>
                 <td class="text-right">${streakLabel}</td>
                 <td class="text-right">${amountLabel}</td>
                 <td class="text-right">${renderStreakAvgPrice(row, avgWhich)}</td>
@@ -1709,7 +1731,7 @@ function showStockDetails(stock) {
     const yahooLink = document.getElementById('yahoo-stock-link');
     if (yahooLink) {
         const suffix = stock.Market.includes('上櫃') || stock.Market.includes('TPEx') ? 'TWO' : 'TW';
-        yahooLink.href = `https://tw.stock.yahoo.com/quote/${stock.Symbol}.${suffix}`;
+        yahooLink.href = `https://tw.stock.yahoo.com/quote/${encodeURIComponent(stock.Symbol)}.${suffix}`;
     }
 
     // Update Intraday Live warning banner

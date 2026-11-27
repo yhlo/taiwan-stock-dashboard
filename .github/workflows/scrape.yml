@@ -24,6 +24,16 @@ on:
 permissions:
   contents: write
 
+# GitHub starts scheduled runs hours late and unevenly, so two of the four
+# daily slots can land at the same time. Overlapping runs both rewrite the
+# same data files and the second one's rebase/push fails, dropping its data.
+# Queue instead of running in parallel. Never cancel the running one (it may
+# be the first after T86 is published); GitHub keeps at most one run waiting,
+# so a newer queued run replaces an older waiting one -- fine, it is fresher.
+concurrency:
+  group: scrape-data
+  cancel-in-progress: false
+
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest

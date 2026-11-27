@@ -5,6 +5,13 @@
 
 const SMALL_SAMPLE_SESSIONS = 20;
 
+// Stock names come from upstream data: escape before any innerHTML use.
+function escapeHtml(value) {
+    return String(value ?? '').replace(/[&<>"']/g, ch => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[ch]));
+}
+
 function fmtDate(s) {
     if (!s || s.length !== 8) return s || '—';
     return `${s.slice(4, 6)}/${s.slice(6)}`;
@@ -34,7 +41,7 @@ function renderSummary(summary) {
         minSessions = Math.min(minSessions, s.Sessions);
         return `
             <div class="score-card">
-                <div class="score-card-title">${s.Label}</div>
+                <div class="score-card-title">${escapeHtml(s.Label)}</div>
                 <div class="score-card-main ${pctClass(s.AvgReturn)}">${fmtPct(s.AvgReturn)}</div>
                 <div class="score-card-sub">每日平均報酬 · 共 ${s.Sessions} 個交易日</div>
                 <div class="score-card-grid">
@@ -85,13 +92,15 @@ function renderEntries(entries) {
     }
 
     tbody.innerHTML = entries.map(e => {
+        const unscorable = !e.EvalDate && e.Unscorable;
         const pending = !e.EvalDate;
         const stocks = (e.Stocks || []).map(s => {
             const ret = s.Return;
             const retHtml = (ret === undefined || ret === null)
                 ? ''
                 : `<span class="chip-ret ${pctClass(ret)}">${fmtPct(ret, 1)}</span>`;
-            return `<span class="stock-chip" title="${s.Name}">${s.Name}${retHtml}</span>`;
+            const name = escapeHtml(s.Name);
+            return `<span class="stock-chip" title="${name}">${name}${retHtml}</span>`;
         }).join('');
 
         const scoredNote = (!pending && e.Scored && e.Scored < (e.Stocks || []).length)
@@ -103,8 +112,10 @@ function renderEntries(entries) {
         return `
             <tr>
                 <td data-label="訊號日"><strong>${fmtDate(e.SignalDate)}</strong></td>
-                <td data-label="訊號">${e.Label}</td>
-                <td data-label="結算日" class="text-right">${pending
+                <td data-label="訊號">${escapeHtml(e.Label)}</td>
+                <td data-label="結算日" class="text-right">${unscorable
+                    ? `<span class="score-pending" title="次一交易日的股價始終無法取得，此筆不列入統計。">無法結算</span>`
+                    : pending
                     ? `<span class="score-pending" title="訊號於 ${fmtDate(e.SignalDate)} 收盤後產生，需等次一交易日收盤才能結算，以免用當天自己的收盤價回頭評分。">待次一交易日結算</span>`
                     : fmtDate(e.EvalDate)}</td>
                 <td data-label="平均報酬" class="text-right ${pctClass(e.AvgReturn)}">

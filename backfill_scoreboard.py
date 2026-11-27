@@ -18,6 +18,7 @@ import sys
 from build_static_data import (
     calculate_streaks,
     collect_t86_history,
+    taipei_today_str,
     update_scoreboard,
 )
 
@@ -25,7 +26,7 @@ from build_static_data import (
 def streak_rows_as_of(date_str, cache_dir, window=20):
     """The streak table exactly as the daily build would have seen it on `date_str`."""
     history, truncated = collect_t86_history(
-        date_str, cache_dir, n=window, today_str=None
+        date_str, cache_dir, n=window, today_str=taipei_today_str()
     )
     if not history or history[0][0] != date_str:
         # No session on that date (holiday, or data unavailable): nothing to sign.
@@ -56,7 +57,8 @@ def main():
     cache_dir = "data/cache"
 
     # Identify the trading days to replay, oldest first.
-    history, _ = collect_t86_history(args.end, cache_dir, n=args.days, today_str=None)
+    history, _ = collect_t86_history(args.end, cache_dir, n=args.days,
+                                     today_str=taipei_today_str())
     if not history:
         print("No trading days found to backfill.", file=sys.stderr)
         sys.exit(1)
@@ -68,7 +70,7 @@ def main():
         if not rows:
             print(f"{date_str}: skipped (no session)")
             continue
-        update_scoreboard(date_str, rows, cache_dir)
+        update_scoreboard(date_str, rows, cache_dir, trading_days=dates)
         print(f"{date_str}: recorded")
 
     print("Backfill complete.")
